@@ -21,15 +21,21 @@ void Robot::TeleopPeriodic()
 	else if(DriveController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
 		speedVal = DriveController.GetY(GenericHID::JoystickHand::kLeftHand);
-		turnVal = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
+		turnVal = DriveController.GetX(GenericHID::JoystickHand::kRightHand);
 	}
 	// If they press the right bumper, use the right joystick for forward and
 	// backward motion and the left joystick for turning
 	else if(DriveController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
-		speedVal = DriveController.GetY(GenericHID::JoystickHand::kLeftHand);
+		speedVal = DriveController.GetY(GenericHID::JoystickHand::kRightHand);
 		turnVal = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
 	}
 
 	DriveTrain.ArcadeDrive(speedVal, turnVal);
+
+	// Encoder testing
+	SmartDashboard::PutNumber("Front Left Encoder", FrontLeftMotor.GetSelectedSensorPosition(0));
+	SmartDashboard::PutNumber("Front Right Encoder", FrontRightMotor.GetSelectedSensorPosition(0));
+	SmartDashboard::PutNumber("Back Left Encoder", BackLeftMotor.GetSelectedSensorPosition(0));
+	SmartDashboard::PutNumber("Back Right Encoder", BackRightMotor.GetSelectedSensorPosition(0));
 }
