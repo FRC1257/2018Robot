@@ -21,15 +21,15 @@ void Robot::TeleopPeriodic()
 	else if(DriveController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
 		speedVal = DriveController.GetY(GenericHID::JoystickHand::kLeftHand);
-		turnVal = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
+		turnVal = DriveController.GetX(GenericHID::JoystickHand::kRightHand);
 	}
 	// If they press the right bumper, use the right joystick for forward and
 	// backward motion and the left joystick for turning
 	else if(DriveController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
-		speedVal = DriveController.GetY(GenericHID::JoystickHand::kLeftHand);
+		speedVal = DriveController.GetY(GenericHID::JoystickHand::kRightHand);
 		turnVal = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
 	}
-
-	DriveTrain.ArcadeDrive(speedVal, turnVal);
+	//Negative is used to invert the speed (make forward <--> backward)
+	DriveTrain.ArcadeDrive(-speedVal, turnVal);
 }
