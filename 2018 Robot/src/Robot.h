@@ -36,6 +36,8 @@ public:
 	void AutonomousPeriodic() override;
 	void TeleopInit() override;
 	void TeleopPeriodic() override;
+	static void VisionThread();
+
 };
 
 

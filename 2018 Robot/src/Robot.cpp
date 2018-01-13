@@ -16,7 +16,8 @@ Robot::Robot() :
 
 void Robot::RobotInit()
 {
-
+	std::thread visionThread(VisionThread);
+	visionThread.detach();
 }
 
 
