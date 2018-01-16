@@ -1,0 +1,41 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.out
+*.d
+ctdt.c
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Project Files and makefiles
+.*
+Makefile*
+PPC603GNU
+bin
+bin/*
+bin/*/*
+
+# Backup Files
+*~
+
+# frcmake stuff
+CMakeFiles
+CMakeFiles/*
+CMakeFiles/*/*
+*.cmake
+CMakeCache.txt
+
+# Exception for .gitignores
+!.gitignore
+
+# Eclipse
+Debug/
+Debug/*
