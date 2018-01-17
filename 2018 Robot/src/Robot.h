@@ -5,6 +5,9 @@
 #include <ctre/Phoenix.h>
 using namespace frc;
 
+inline double dabs(double d) { return d > 0.0 ? d : -d; } // Absolute value of a double precision floating point number
+inline bool inDeadZone(double axisVal) { return dabs(axisVal) > 0.2; }
+
 class Robot: public TimedRobot
 {
 private:
@@ -18,9 +21,13 @@ private:
 	WPI_TalonSRX BackLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
 	WPI_TalonSRX BackRightMotor;
+	WPI_TalonSRX ElevatorMotor;
+	WPI_TalonSRX IntakeMotor;
+	WPI_TalonSRX ClimbMotor;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
+	XboxController OperatorController;
 	DifferentialDrive DriveTrain;
 
 public:
