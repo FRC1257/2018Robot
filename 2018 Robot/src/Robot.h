@@ -6,7 +6,7 @@
 using namespace frc;
 
 inline double dabs(double d) { return d > 0.0 ? d : -d; } // Absolute value of a double precision floating point number
-inline bool inDeadZone(double axisVal) { return dabs(axisVal) > 0.2; }
+inline bool inDeadZone(double axisVal) { return dabs(axisVal) < 0.2; }
 
 class Robot: public TimedRobot
 {

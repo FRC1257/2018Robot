@@ -35,11 +35,11 @@ void Robot::TeleopPeriodic()
 		turnVal = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
 	}
 
-	if(!inDeadZone(speedVal))
+	if(inDeadZone(speedVal))
 	{
 		speedVal = 0;
 	}
-	if(!inDeadZone(turnVal))
+	if(inDeadZone(turnVal))
 	{
 		turnVal = 0;
 	}
