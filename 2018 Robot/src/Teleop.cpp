@@ -5,12 +5,16 @@ void Robot::TeleopInit()
 	ClimbMotor.Set(0);
 	ElevatorMotor.Set(0);
 	IntakeMotor.Set(0);
+
 }
 
 void Robot::TeleopPeriodic()
 {
 	double speedVal = 0;
 	double turnVal = 0;
+	int m_desiredStep = 0;
+	bool m_elevatorPIDEnabled = false;
+	double m_stepVals[5] = {0, 4, 8, 12, 16};
 
 	//Driver Controls
 
@@ -69,6 +73,20 @@ void Robot::TeleopPeriodic()
 		ElevatorMotor.Set(0);
 	}
 
+
+
+	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
+	{
+		m_desiredStep++;
+		elevatorPID.SetSetpoint(m_stepVals[m_desiredStep]);
+	}
+	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
+	{
+		elevatorPID.SetSetpoint(0);
+	}
+
+
+	/* prototype preset code
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
 		if(0 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 4) // TODO fix values
@@ -112,6 +130,7 @@ void Robot::TeleopPeriodic()
 			elevatorPID.SetSetpoint(16);
 		}
 	}
+	*/
 
 	//elevatorEncoder.SetDistancePerPulse(1); // come back to check value
 	// elevatorEncoder.GetDistance();
