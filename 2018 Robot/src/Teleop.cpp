@@ -46,7 +46,7 @@ void Robot::TeleopPeriodic()
 	//Negative is used to invert the speed (make forward <--> backward)
 	DriveTrain.ArcadeDrive(-speedVal, turnVal);
 
-	/*
+
 	// Operator Controls
 
 	//using left back trigger to lower elevator
@@ -68,6 +68,53 @@ void Robot::TeleopPeriodic()
 	{
 		ElevatorMotor.Set(0);
 	}
+
+	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
+	{
+		if(0 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 4) // TODO fix values
+		{
+			elevatorPID.SetSetpoint(0);
+		}
+		if(4 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 8) // TODO fix values
+		{
+			elevatorPID.SetSetpoint(4);
+		}
+		if(8 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 12) // TODO fix values
+				{
+					elevatorPID.SetSetpoint(8);
+				}
+		if(12 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 16) // TODO fix values
+				{
+					elevatorPID.SetSetpoint(0);
+				}
+		if(16 < elevatorEncoder.GetDistance()) // TODO fix values
+				{
+					elevatorPID.SetSetpoint(16);
+				}
+	}
+
+	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
+	{
+		if(0 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 4) // TODO fix values
+		{
+			elevatorPID.SetSetpoint(4);
+		}
+		if(4 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 8) // TODO fix values
+		{
+			elevatorPID.SetSetpoint(8);
+		}
+		if(8 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 12) // TODO fix values
+		{
+			elevatorPID.SetSetpoint(12);
+		}
+		if(12 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 16) // TODO fix values
+		{
+			elevatorPID.SetSetpoint(16);
+		}
+	}
+
+	//elevatorEncoder.SetDistancePerPulse(1); // come back to check value
+	// elevatorEncoder.GetDistance();
 
 	//using b button to intake
 	if(OperatorController.GetBButton())
@@ -99,5 +146,4 @@ void Robot::TeleopPeriodic()
 		ClimbMotor.Set(0);
 	}
 
-	*/
 }
