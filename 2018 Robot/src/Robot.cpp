@@ -8,7 +8,8 @@ Robot::Robot() :
 	LeftMotors(FrontLeftMotor, BackLeftMotor),
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveController(0),
-	DriveTrain(LeftMotors, RightMotors)
+	DriveTrain(LeftMotors, RightMotors),
+	Gyro(SPI::kOnboardCS0)
 {
 
 }

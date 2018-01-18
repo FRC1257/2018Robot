@@ -13,6 +13,7 @@ private:
 	// - 1 Xbox Controller for controlling the robot
 	// - 1 DifferentialDrive object to access ArcadeDrive
 	// - 2 SpeedControllerGroups to contain the left and right side motors
+	// - 1 ADXRS450_Gyro to sense the angle
 
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX BackLeftMotor;
@@ -22,6 +23,7 @@ private:
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
 	DifferentialDrive DriveTrain;
+	ADXRS450_Gyro Gyro;
 
 public:
 	// Here, we're declaring the following functions:
@@ -36,6 +38,8 @@ public:
 	void AutonomousPeriodic() override;
 	void TeleopInit() override;
 	void TeleopPeriodic() override;
+
+	void TurnAngle(double angle);
 };
 
 
