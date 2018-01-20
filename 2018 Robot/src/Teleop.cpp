@@ -53,27 +53,34 @@ void Robot::TeleopPeriodic()
 
 	// Operator Controls
 
+	int correctedRight = 0;
+	int correctedLeft = 0;
+
 	//using left back trigger to lower elevator
 	if(inDeadZone(OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand)))
 	{
-		ElevatorMotor.Set(-OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand));
+		correctedLeft = 0;
+		//ElevatorMotor.Set(0);
 	}
 	else
 	{
-		ElevatorMotor.Set(0);
+		correctedLeft = -OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
+		//ElevatorMotor.Set(-OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand));
 	}
 
 	//using right back trigger to raise elevator
 	if(inDeadZone(OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand)))
 	{
-		ElevatorMotor.Set(OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand));
+		correctedRight = 0;
+		//ElevatorMotor.Set(0);
 	}
 	else
 	{
-		ElevatorMotor.Set(0);
+		correctedRight = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand);
+		//ElevatorMotor.Set(OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand));
 	}
 
-
+	ElevatorMotor.Set(correctedRight-correctedLeft);
 
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
