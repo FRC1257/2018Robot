@@ -3,12 +3,7 @@
 
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
-#include <Encoder.h>
 using namespace frc;
-
-inline double dabs(double d) { return d > 0.0 ? d : -d; } // Absolute value of a double precision floating point number
-inline bool inDeadZone(double axisVal) { return dabs(axisVal) < 0.2; }
-//inline bool elevatorAtMax() {} // TODO
 
 class Robot: public TimedRobot
 {
@@ -23,15 +18,9 @@ private:
 	WPI_TalonSRX BackLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
 	WPI_TalonSRX BackRightMotor;
-	WPI_TalonSRX ElevatorMotor;
-	WPI_TalonSRX IntakeMotor;
-	WPI_TalonSRX ClimbMotor;
-	Encoder elevatorEncoder;
-	PIDController elevatorPID;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
-	XboxController OperatorController;
 	DifferentialDrive DriveTrain;
 
 public:
@@ -47,6 +36,8 @@ public:
 	void AutonomousPeriodic() override;
 	void TeleopInit() override;
 	void TeleopPeriodic() override;
+	static void VisionThread();
+
 };
 
 
