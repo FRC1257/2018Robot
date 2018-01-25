@@ -5,6 +5,18 @@
 #include <ctre/Phoenix.h>
 using namespace frc;
 
+#define PI 3.1416
+#define WHEEL_DIAMETER 6
+#define PULSES_PER_REV 4096
+
+int PulsesToInches(int SensorPosition){
+	int circumfrence = WHEEL_DIAMETER*PI;
+	int revolutions = SensorPosition/PULSES_PER_REV;
+	int distance = revolutions*circumfrence;
+
+	return distance;
+}
+
 class Robot: public TimedRobot
 {
 private:
