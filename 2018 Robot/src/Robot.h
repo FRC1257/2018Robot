@@ -3,9 +3,10 @@
 
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
+#include "auto/AnglePIDOutput.h"
 using namespace frc;
 
-class Robot: public TimedRobot
+class Robot : public TimedRobot
 {
 private:
 	// Here's a breakdown of what member objects we're declaring:
@@ -25,6 +26,9 @@ private:
 	DifferentialDrive DriveTrain;
 	ADXRS450_Gyro Gyro;
 
+	AnglePIDOutput anglePID;
+	PIDController angleController;
+
 public:
 	// Here, we're declaring the following functions:
 	// - Robot class constructor
@@ -38,6 +42,8 @@ public:
 	void AutonomousPeriodic() override;
 	void TeleopInit() override;
 	void TeleopPeriodic() override;
+	void TestInit() override;
+	void TestPeriodic() override;
 
 	void TurnAngle(double angle);
 };

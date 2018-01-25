@@ -15,10 +15,9 @@ void Robot::TurnAngle(double angle)
 {
 	Gyro.Reset();
 
-	AnglePIDOutput angleOutput = AnglePIDOutput(DriveTrain);
-	PIDController angleController(0.03, 0, 0, 0, Gyro, angleOutput);
+	angleController.Reset();
 	angleController.SetSetpoint(angle);
-	angleController.SetPercentTolerance(1);
+	angleController.SetPercentTolerance(5);
 
 	angleController.Enable();
 }
