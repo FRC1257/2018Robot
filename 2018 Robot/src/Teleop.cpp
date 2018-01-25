@@ -32,10 +32,10 @@ void Robot::TeleopPeriodic()
 	}
 
 	// Encoder testing
-	SmartDashboard::PutNumber("Front Left Encoder", FrontLeftMotor.GetSelectedSensorPosition(0));
-	SmartDashboard::PutNumber("Front Right Encoder", FrontRightMotor.GetSelectedSensorPosition(0));
-	SmartDashboard::PutNumber("Back Left Encoder", BackLeftMotor.GetSelectedSensorPosition(0));
-	SmartDashboard::PutNumber("Back Right Encoder", BackRightMotor.GetSelectedSensorPosition(0));
+	SmartDashboard::PutNumber("Front Left Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
+	SmartDashboard::PutNumber("Front Right Encoder", PulsesToInches(FrontRightMotor.GetSelectedSensorPosition(0)));
+	SmartDashboard::PutNumber("Back Left Encoder", PulsesToInches(BackLeftMotor.GetSelectedSensorPosition(0)));
+	SmartDashboard::PutNumber("Back Right Encoder", PulsesToInches(BackRightMotor.GetSelectedSensorPosition(0)));
 
 	//Negative is used to invert the speed (make forward <--> backward)
 	DriveTrain.ArcadeDrive(-speedVal, turnVal);
