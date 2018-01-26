@@ -58,6 +58,7 @@ public:
 	void TestInit() override;
 	void TestPeriodic() override;
 
+	void DriveFor(double distance, double speed);
 	void TurnAngle(double angle);
 };
 
