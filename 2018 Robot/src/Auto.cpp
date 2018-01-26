@@ -64,7 +64,7 @@ void Robot::DriveFor(double distance, double speed)
 
 void Robot::TurnAngle(double angle)
 {
-	Gyro.Reset();
+	NavX.Reset();
 
 	angleController.Reset();
 	angleController.SetSetpoint(angle);
