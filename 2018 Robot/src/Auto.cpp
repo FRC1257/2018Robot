@@ -13,7 +13,7 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TurnAngle(double angle)
 {
-	Gyro.Reset();
+	NavX.Reset();
 
 	angleController.Reset();
 	angleController.SetSetpoint(angle);

@@ -9,9 +9,10 @@ Robot::Robot() :
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveController(0),
 	DriveTrain(LeftMotors, RightMotors),
-	Gyro(SPI::kOnboardCS0),
+//	Gyro(SPI::kOnboardCS0),
+	NavX(SPI::Port::kMXP),
 	anglePID(DriveTrain),
-	angleController(0.01, 0, 0, 0, Gyro, anglePID) // P value = 0.609
+	angleController(0.01, 0, 0, 0, NavX, anglePID) // P value = 0.609
 {
 
 }
