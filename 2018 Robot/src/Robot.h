@@ -9,10 +9,10 @@ using namespace frc;
 #define WHEEL_DIAMETER 6
 #define PULSES_PER_REV 4096
 
-int PulsesToInches(int SensorPosition){
-	int circumfrence = WHEEL_DIAMETER*PI;
-	int revolutions = SensorPosition/PULSES_PER_REV;
-	int distance = revolutions*circumfrence;
+double PulsesToInches(double SensorPosition){
+	double circumfrence = WHEEL_DIAMETER*PI;
+	double revolutions = SensorPosition/PULSES_PER_REV;
+	double distance = revolutions*circumfrence;
 
 	return distance;
 }
