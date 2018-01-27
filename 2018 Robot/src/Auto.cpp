@@ -8,9 +8,9 @@ void Robot::AutonomousInit()
 	SmartDashboard::PutString("DB/String 2", "Robot At Right Position");
 
 	std::string gameData;
-	void DriverStation::WaitForData();
+	DriverStation::GetInstance().WaitForData();
 
-	gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
+	gameData = DriverStation::GetInstance().GetGameSpecificMessage();
 
 	if(gameData[0] == 'L') // if left side switch
 	{
