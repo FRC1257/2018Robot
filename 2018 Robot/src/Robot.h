@@ -31,6 +31,9 @@ private:
 	// - 2 SpeedControllerGroups to contain the left and right side motors
 	// - 1 AHRS for sensing the angle and motion of the robot
 
+	// - 1 AnglePIDOutput to send motor output to DifferentialDrive
+	// - 1 PIDController to manage turning to specific angles
+
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX BackLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
@@ -49,6 +52,7 @@ public:
 	// Here, we're declaring the following functions:
 	// - Robot class constructor
 	// - Virtual functions from TimedRobot
+	// - Driving and turning functions for autonomous
 
 	Robot();
 	void RobotInit() override;
