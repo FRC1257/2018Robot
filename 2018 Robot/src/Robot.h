@@ -5,6 +5,7 @@
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
 #include "auto/AnglePIDOutput.h"
+
 using namespace frc;
 
 #define PI 3.1416
@@ -28,7 +29,7 @@ private:
 	// - 1 Xbox Controller for controlling the robot
 	// - 1 DifferentialDrive object to access ArcadeDrive
 	// - 2 SpeedControllerGroups to contain the left and right side motors
-	// - 1 ADXRS450_Gyro to sense the angle
+	// - 1 AHRS for sensing the angle and motion of the robot
 
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX BackLeftMotor;
@@ -41,8 +42,8 @@ private:
 //	ADXRS450_Gyro Gyro;
 	AHRS NavX;
 
-	AnglePIDOutput anglePID;
-	PIDController angleController;
+	AnglePIDOutput AnglePID;
+	PIDController AngleController;
 
 public:
 	// Here, we're declaring the following functions:

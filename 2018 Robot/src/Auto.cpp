@@ -53,11 +53,11 @@ void Robot::AutonomousPeriodic()
 
 void Robot::DriveFor(double distance, double speed)
 {
-	double TargetDistance = distance + PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0));
-	while(PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)) < TargetDistance) //Not sure which motor to test the encoder for - Omay
-		{
-			DriveTrain.ArcadeDrive(speed, 0);
-		}
+	double targetDistance = distance + PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0));
+	while(PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)) < targetDistance) //Not sure which motor to test the encoder for - Omay
+	{
+		DriveTrain.ArcadeDrive(speed, 0);
+	}
 
 	DriveTrain.ArcadeDrive(0, 0);
 }
@@ -66,9 +66,9 @@ void Robot::TurnAngle(double angle)
 {
 	NavX.Reset();
 
-	angleController.Reset();
-	angleController.SetSetpoint(angle);
-	angleController.SetPercentTolerance(5);
+	AngleController.Reset();
+	AngleController.SetSetpoint(angle);
+	AngleController.SetPercentTolerance(5);
 
-	angleController.Enable();
+	AngleController.Enable();
 }

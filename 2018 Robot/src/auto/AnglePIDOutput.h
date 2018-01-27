@@ -1,5 +1,5 @@
-#ifndef SRC_AUTO_ANGLEPIDOUTPUT_H_
-#define SRC_AUTO_ANGLEPIDOUTPUT_H_
+#ifndef ANGLE_PID_OUTPUT
+#define ANGLE_PID_OUTPUT
 
 #include <WPILib.h>
 

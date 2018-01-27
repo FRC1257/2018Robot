@@ -11,8 +11,8 @@ Robot::Robot() :
 	DriveTrain(LeftMotors, RightMotors),
 //	Gyro(SPI::kOnboardCS0),
 	NavX(SPI::Port::kMXP),
-	anglePID(DriveTrain),
-	angleController(0.01, 0, 0, 0, NavX, anglePID) // P value = 0.609
+	AnglePID(DriveTrain),
+	AngleController(0.01, 0, 0, 0, NavX, AnglePID) // P value = 0.609
 {
 
 }
