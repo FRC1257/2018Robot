@@ -5,6 +5,7 @@
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
 #include "auto/AnglePIDOutput.h"
+#include "auto/DistancePIDHelper.h"
 
 using namespace frc;
 
@@ -31,8 +32,9 @@ private:
 	// - 2 SpeedControllerGroups to contain the left and right side motors
 	// - 1 AHRS for sensing the angle and motion of the robot
 
-	// - 1 AnglePIDOutput to send motor output to DifferentialDrive
-	// - 1 PIDController to manage turning to specific angles
+	// - 1 AnglePIDOutput to send turning motor output to DifferentialDrive during PID turning
+	// - 1 DistancePIDHelper to manage the source and motor output of DifferentialDrive during PID driving
+	// - 2 PIDControllers to manage turning to specific angles and driving specific distances
 
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX BackLeftMotor;
@@ -46,7 +48,9 @@ private:
 	AHRS NavX;
 
 	AnglePIDOutput AnglePID;
+	DistancePIDHelper DistancePID;
 	PIDController AngleController;
+	PIDController DistanceController;
 
 public:
 	// Here, we're declaring the following functions:
@@ -65,7 +69,8 @@ public:
 	void TestInit() override;
 	void TestPeriodic() override;
 
-	void DriveFor(double distance, double speed);
+//	void DriveFor(double distance, double speed);
+	void DriveFor(double distance);
 	void TurnAngle(double angle);
 };
 
