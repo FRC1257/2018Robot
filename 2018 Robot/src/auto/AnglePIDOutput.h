@@ -5,12 +5,14 @@
 
 using namespace frc;
 
+class DistancePIDHelper; //Forward declare the DistancePIDHelper class to avoid circular header dependencies
+
 class AnglePIDOutput : public PIDOutput
 {
 private:
 	DifferentialDrive& m_driveTrain;
 	double m_output;
-	bool m_active;
+	DistancePIDHelper* m_distancePID;
 
 public:
 	AnglePIDOutput(DifferentialDrive& DriveTrain);
@@ -19,7 +21,7 @@ public:
 	void PIDWrite(double output) override;
 
 	double GetOutput();
-	void SetActive(bool active);
+	void SetDistancePID(DistancePIDHelper* distancePID);
 };
 
 #endif
