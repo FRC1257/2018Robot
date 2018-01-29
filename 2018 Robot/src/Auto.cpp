@@ -63,9 +63,7 @@ void Robot::AutonomousPeriodic()
 
 void Robot::DriveFor(double distance)
 {
-	//FrontLeft is placeholder until we learn which motor has an encoder
-	double targetDistance = distance + PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0));
-
+	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10); //FrontLeft is placeholder until we learn which motor has an encoder
 	NavX.Reset();
 
 	AnglePID.SetActive(false); //Make sure only the distance controller is driving to avoid conflicts
@@ -74,7 +72,7 @@ void Robot::DriveFor(double distance)
 	AngleController.SetPercentTolerance(5);
 
 	DistanceController.Reset();
-	DistanceController.SetSetpoint(targetDistance);
+	DistanceController.SetSetpoint(distance);
 	DistanceController.SetPercentTolerance(5);
 
 	AngleController.Enable();
