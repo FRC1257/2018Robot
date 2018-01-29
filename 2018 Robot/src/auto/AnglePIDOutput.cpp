@@ -1,9 +1,10 @@
 #include "auto/AnglePIDOutput.h"
+#include "auto/DistancePIDHelper.h"
 
 AnglePIDOutput::AnglePIDOutput(DifferentialDrive& driveTrain) :
 	m_driveTrain(driveTrain),
 	m_output(0),
-	m_active(true)
+	m_distancePID(nullptr)
 {
 
 }
@@ -15,7 +16,8 @@ AnglePIDOutput::~AnglePIDOutput()
 
 void AnglePIDOutput::PIDWrite(double output)
 {
-	if(m_active) m_driveTrain.ArcadeDrive(0, output);
+	double drive = m_distancePID == nullptr ? 0 : m_distancePID->GetOutput();
+	m_driveTrain.ArcadeDrive(drive, output);
 	m_output = output;
 }
 
@@ -24,7 +26,7 @@ double AnglePIDOutput::GetOutput()
 	return m_output;
 }
 
-void AnglePIDOutput::SetActive(bool active)
+void AnglePIDOutput::SetDistancePID(DistancePIDHelper* distancePID)
 {
-	m_active = active;
+	m_distancePID = distancePID;
 }

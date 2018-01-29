@@ -3,23 +3,28 @@
 
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
-#include "AnglePIDOutput.h"
 
 using namespace frc;
+
+class AnglePIDOutput; //Forward declare the AnglePIDOutput class to avoid circular header dependencies
 
 class DistancePIDHelper : public PIDSource, public PIDOutput
 {
 private:
 	WPI_TalonSRX& m_motor;
 	DifferentialDrive& m_driveTrain;
-	AnglePIDOutput& m_anglePID;
+	double m_output;
+	AnglePIDOutput* m_anglePID;
 
 public:
-	DistancePIDHelper(WPI_TalonSRX& motor, DifferentialDrive& driveTrain, AnglePIDOutput& anglePID);
+	DistancePIDHelper(WPI_TalonSRX& motor, DifferentialDrive& driveTrain);
 	virtual ~DistancePIDHelper();
 
 	double PIDGet() override;
 	void PIDWrite(double output) override;
+
+	double GetOutput();
+	void SetAnglePID(AnglePIDOutput* anglePID);
 };
 
 #endif

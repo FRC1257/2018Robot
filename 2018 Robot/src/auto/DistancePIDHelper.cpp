@@ -1,10 +1,12 @@
 #include "auto/DistancePIDHelper.h"
+#include "auto/AnglePIDOutput.h"
 #include "Robot.h"
 
-DistancePIDHelper::DistancePIDHelper(WPI_TalonSRX& motor, DifferentialDrive& driveTrain, AnglePIDOutput& anglePID) :
+DistancePIDHelper::DistancePIDHelper(WPI_TalonSRX& motor, DifferentialDrive& driveTrain) :
 	m_motor(motor),
 	m_driveTrain(driveTrain),
-	m_anglePID(anglePID)
+	m_output(0),
+	m_anglePID(nullptr)
 {
 
 }
@@ -21,5 +23,17 @@ double DistancePIDHelper::PIDGet()
 
 void DistancePIDHelper::PIDWrite(double output)
 {
-	m_driveTrain.ArcadeDrive(output, m_anglePID.GetOutput());
+	double angle = m_anglePID == nullptr ? 0 : m_anglePID->GetOutput();
+	m_driveTrain.ArcadeDrive(output, angle);
+	m_output = output;
+}
+
+double DistancePIDHelper::GetOutput()
+{
+	return m_output;
+}
+
+void DistancePIDHelper::SetAnglePID(AnglePIDOutput* anglePID)
+{
+	m_anglePID = anglePID;
 }
