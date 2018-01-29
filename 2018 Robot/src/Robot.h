@@ -70,7 +70,7 @@ public:
 	void TestPeriodic() override;
 
 //	void DriveFor(double distance, double speed);
-	void DriveFor(double distance);
+	void DriveForward(double distance);
 	void TurnAngle(double angle);
 };
 

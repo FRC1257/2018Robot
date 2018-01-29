@@ -61,7 +61,7 @@ void Robot::AutonomousPeriodic()
 //	DriveTrain.ArcadeDrive(0, 0);
 //}
 
-void Robot::DriveFor(double distance)
+void Robot::DriveForward(double distance)
 {
 	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10); //FrontLeft is placeholder until we learn which motor has an encoder
 	NavX.Reset();
