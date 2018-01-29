@@ -64,18 +64,18 @@ void Robot::AutonomousPeriodic()
 void Robot::DriveForward(double distance)
 {
 	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10); //FrontLeft is placeholder until we learn which motor has an encoder
-	NavX.Reset();
+	Gyro.Reset();
 
 	DistancePID.SetAnglePID(&AnglePID);
 	AnglePID.SetDistancePID(&DistancePID);
 
 	AngleController.Reset();
 	AngleController.SetSetpoint(0);
-	AngleController.SetPercentTolerance(5);
+	AngleController.SetPercentTolerance(1);
 
 	DistanceController.Reset();
 	DistanceController.SetSetpoint(distance);
-	DistanceController.SetPercentTolerance(5);
+	DistanceController.SetPercentTolerance(1);
 
 	AngleController.Enable();
 	DistanceController.Enable();
@@ -87,14 +87,14 @@ void Robot::DriveForward(double distance)
 
 void Robot::TurnAngle(double angle)
 {
-	NavX.Reset();
+	Gyro.Reset();
 
 	DistancePID.SetAnglePID(nullptr);
 	AnglePID.SetDistancePID(nullptr);
 
 	AngleController.Reset();
 	AngleController.SetSetpoint(angle);
-	AngleController.SetPercentTolerance(5);
+	AngleController.SetPercentTolerance(1);
 
 	AngleController.Enable();
 

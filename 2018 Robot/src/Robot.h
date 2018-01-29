@@ -44,8 +44,7 @@ private:
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
 	DifferentialDrive DriveTrain;
-//	ADXRS450_Gyro Gyro;
-	AHRS NavX;
+	ADXRS450_Gyro Gyro;
 
 	AnglePIDOutput AnglePID;
 	DistancePIDHelper DistancePID;
