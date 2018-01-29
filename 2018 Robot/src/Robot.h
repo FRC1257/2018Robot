@@ -8,7 +8,34 @@ using namespace frc;
 
 inline double dabs(double d) { return d > 0.0 ? d : -d; } // Absolute value of a double precision floating point number
 inline bool inDeadZone(double axisVal) { return dabs(axisVal) < 0.2; }
-//inline bool elevatorAtMax() {} // TODO
+int getStepNumber(double elevatorHeight)
+{
+
+	if(0 <= elevatorHeight && elevatorHeight < 4) // TODO fix values
+	{
+		return 1;
+	}
+	else if(4 <= elevatorHeight && elevatorHeight < 8) // TODO fix values
+	{
+		return 2;
+	}
+	else if(8 <= elevatorHeight && elevatorHeight < 12) // TODO fix values
+	{
+		return 3;
+	}
+	else if(12 <= elevatorHeight && elevatorHeight < 16) // TODO fix values
+	{
+		return 4;
+	}
+	else if(16 <= elevatorHeight) // TODO fix values
+	{
+		return 4;
+	}
+	else
+	{
+		return 0;
+	}
+}
 
 class Robot: public TimedRobot
 {
@@ -24,10 +51,13 @@ private:
 	WPI_TalonSRX FrontRightMotor;
 	WPI_TalonSRX BackRightMotor;
 	WPI_TalonSRX ElevatorMotor;
-	WPI_TalonSRX IntakeMotor;
+	WPI_TalonSRX RightIntakeMotor;
+	WPI_TalonSRX LeftIntakeMotor;
+	WPI_TalonSRX LinkageMotor;
 	WPI_TalonSRX ClimbMotor;
 	Encoder elevatorEncoder;
 	PIDController elevatorPID;
+	PIDController linkagePID;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;

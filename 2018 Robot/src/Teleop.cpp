@@ -4,17 +4,16 @@ void Robot::TeleopInit()
 {
 	ClimbMotor.Set(0);
 	ElevatorMotor.Set(0);
-	IntakeMotor.Set(0);
-
+	RightIntakeMotor.Set(0);
+	LeftIntakeMotor.Set(0);
 }
 
 void Robot::TeleopPeriodic()
 {
 	double speedVal = 0;
 	double turnVal = 0;
-	int m_desiredStep = 0;
-	bool m_elevatorPIDEnabled = false;
-	double m_stepVals[5] = {0, 4, 8, 12, 16};
+	bool isLowering = false;
+	bool linkageDeployed = false; // deployed means outside of robot
 
 	//Driver Controls
 
@@ -78,35 +77,47 @@ void Robot::TeleopPeriodic()
 
 	ElevatorMotor.Set(correctedRight-correctedLeft);
 
+	//using right bumper to raise to presets and stop
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
-		m_desiredStep++;
-		elevatorPID.SetSetpoint(m_stepVals[m_desiredStep]);
+		if (isLowering)
+		{
+			ElevatorMotor.Set(0);
+			isLowering = false;
+		}
+		else
+		{
+		elevatorPID.SetSetpoint(getStepNumber(elevatorEncoder.GetDistance()));
+		}
 	}
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
-		m_desiredStep = 0;
-		elevatorPID.SetSetpoint(m_stepVals[m_desiredStep]);
+		isLowering = true;
+		elevatorPID.SetSetpoint(getStepNumber(elevatorEncoder.GetDistance()));
 	}
 
 	//using b button to intake
 	if(OperatorController.GetBButton())
 	{
-		IntakeMotor.Set(-1);
+		RightIntakeMotor.Set(-1);
+		LeftIntakeMotor.Set(1);
 	}
 	else
 	{
-		IntakeMotor.Set(0);
+		RightIntakeMotor.Set(0);
+		LeftIntakeMotor.Set(0);
 	}
 
 	// using a button to eject
 	if(OperatorController.GetAButton())
 	{
-		IntakeMotor.Set(1);
+		RightIntakeMotor.Set(1);
+		LeftIntakeMotor.Set(-1);
 	}
 	else
 	{
-		IntakeMotor.Set(0);
+		RightIntakeMotor.Set(0);
+		LeftIntakeMotor.Set(0);
 	}
 
 	// using y button to climb
@@ -117,6 +128,16 @@ void Robot::TeleopPeriodic()
 	else
 	{
 		ClimbMotor.Set(0);
+	}
+
+	//using left joystick to do the linkage thing
+	if(!inDeadZone(dabs(OperatorController.GetY(GenericHID::JoystickHand::kLeftHand))))
+	{
+		LinkageMotor.Set(OperatorController.GetY(GenericHID::JoystickHand::kLeftHand));
+	}
+	else
+	{
+		LinkageMotor.Set(0);
 	}
 
 }

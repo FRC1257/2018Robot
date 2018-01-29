@@ -6,9 +6,11 @@ Robot::Robot() :
 	BackLeftMotor(2),
 	FrontRightMotor(3),
 	BackRightMotor(4),
-	ElevatorMotor (6), //TODO Check port values
-	IntakeMotor (7),   //TODO Check port values
-	ClimbMotor (8),    //TODO Check port values
+	ElevatorMotor (5), //TODO Check port values
+	RightIntakeMotor (6), //TODO Check port values
+	LeftIntakeMotor (7),  //TODO Check port values
+	LinkageMotor (8),  //TODO Check port values
+	ClimbMotor (9),    //TODO Check port values
 	LeftMotors(FrontLeftMotor, BackLeftMotor),
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveController(0),
@@ -26,7 +28,8 @@ void Robot::RobotInit()
 	elevatorPID(1, 0, 0, FeedbackDevice::CTRE_MagEncoder_Relative, ElevatorMotor); // TODO: replace PID values
 	ClimbMotor.Set(0);
 	ElevatorMotor.Set(0);
-	IntakeMotor.Set(0);
+	RightIntakeMotor.Set(0);
+	LeftIntakeMotor.Set(0);
 }
 
 
