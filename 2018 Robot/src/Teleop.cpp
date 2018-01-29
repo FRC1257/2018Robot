@@ -60,24 +60,20 @@ void Robot::TeleopPeriodic()
 	if(inDeadZone(OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand)))
 	{
 		correctedLeft = 0;
-		//ElevatorMotor.Set(0);
 	}
 	else
 	{
 		correctedLeft = -OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
-		//ElevatorMotor.Set(-OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand));
 	}
 
 	//using right back trigger to raise elevator
 	if(inDeadZone(OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand)))
 	{
 		correctedRight = 0;
-		//ElevatorMotor.Set(0);
 	}
 	else
 	{
 		correctedRight = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand);
-		//ElevatorMotor.Set(OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand));
 	}
 
 	ElevatorMotor.Set(correctedRight-correctedLeft);
@@ -89,63 +85,14 @@ void Robot::TeleopPeriodic()
 	}
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
-		elevatorPID.SetSetpoint(0);
+		m_desiredStep = 0;
+		elevatorPID.SetSetpoint(m_stepVals[m_desiredStep]);
 	}
-
-
-	/* prototype preset code
-	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
-	{
-		if(0 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 4) // TODO fix values
-		{
-			elevatorPID.SetSetpoint(0);
-		}
-		if(4 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 8) // TODO fix values
-		{
-			elevatorPID.SetSetpoint(4);
-		}
-		if(8 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 12) // TODO fix values
-				{
-					elevatorPID.SetSetpoint(8);
-				}
-		if(12 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 16) // TODO fix values
-				{
-					elevatorPID.SetSetpoint(0);
-				}
-		if(16 < elevatorEncoder.GetDistance()) // TODO fix values
-				{
-					elevatorPID.SetSetpoint(16);
-				}
-	}
-
-	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
-	{
-		if(0 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 4) // TODO fix values
-		{
-			elevatorPID.SetSetpoint(4);
-		}
-		if(4 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 8) // TODO fix values
-		{
-			elevatorPID.SetSetpoint(8);
-		}
-		if(8 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 12) // TODO fix values
-		{
-			elevatorPID.SetSetpoint(12);
-		}
-		if(12 < elevatorEncoder.GetDistance() && elevatorEncoder.GetDistance() < 16) // TODO fix values
-		{
-			elevatorPID.SetSetpoint(16);
-		}
-	}
-	*/
-
-	//elevatorEncoder.SetDistancePerPulse(1); // come back to check value
-	// elevatorEncoder.GetDistance();
 
 	//using b button to intake
 	if(OperatorController.GetBButton())
 	{
-		IntakeMotor.Set(1);
+		IntakeMotor.Set(-1);
 	}
 	else
 	{
@@ -155,7 +102,7 @@ void Robot::TeleopPeriodic()
 	// using a button to eject
 	if(OperatorController.GetAButton())
 	{
-		IntakeMotor.Set(-1);
+		IntakeMotor.Set(1);
 	}
 	else
 	{
