@@ -66,29 +66,39 @@ void Robot::DriveForward(double distance)
 	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10); //FrontLeft is placeholder until we learn which motor has an encoder
 	Gyro.Reset();
 
+	//Make sure the PID objects know about each other to avoid conflicts
 	DistancePID.SetAnglePID(&AnglePID);
 	AnglePID.SetDistancePID(&DistancePID);
 
-	AngleController.Reset();
-	AngleController.SetSetpoint(0);
-	AngleController.SetPercentTolerance(1);
+	//Configure the controller to make sure the robot drives straight
+	MaintainAngleController.Reset();
+	MaintainAngleController.SetSetpoint(0);
+	MaintainAngleController.SetPercentTolerance(1);
 
 	DistanceController.Reset();
 	DistanceController.SetSetpoint(distance);
 	DistanceController.SetPercentTolerance(1);
 
-	AngleController.Enable();
+	MaintainAngleController.Enable();
 	DistanceController.Enable();
 
-//	while(!DistanceController.OnTarget()); //Wait until the robot reaches the target
-//	AngleController.Disable();
-//	DistanceController.Disable();
+	SmartDashboard::PutNumber("Target Distance", distance);
+
+	//Wait until the robot reaches the target
+	while(!DistanceController.OnTarget());
+	{
+		SmartDashboard::PutNumber("Current Distance", FrontLeftMotor.GetSelectedSensorPosition(0));
+	}
+
+	MaintainAngleController.Disable();
+	DistanceController.Disable();
 }
 
 void Robot::TurnAngle(double angle)
 {
 	Gyro.Reset();
 
+	//Remove the pointers since only one PID is being used
 	DistancePID.SetAnglePID(nullptr);
 	AnglePID.SetDistancePID(nullptr);
 
@@ -98,6 +108,12 @@ void Robot::TurnAngle(double angle)
 
 	AngleController.Enable();
 
-//	while(!AngleController.OnTarget()); //Wait until the robot reaches the target
-//	AngleController.Disable();
+	SmartDashboard::PutNumber("Target Angle", angle);
+
+	//Wait until the robot reaches the target
+	while(!AngleController.OnTarget())
+	{
+		SmartDashboard::PutNumber("Current Angle", Gyro.GetAngle());
+	}
+	AngleController.Disable();
 }

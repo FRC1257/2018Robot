@@ -3,7 +3,6 @@
 
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
-#include <AHRS.h>
 #include "auto/AnglePIDOutput.h"
 #include "auto/DistancePIDHelper.h"
 
@@ -34,7 +33,7 @@ private:
 
 	// - 1 AnglePIDOutput to send turning motor output to DifferentialDrive during PID turning
 	// - 1 DistancePIDHelper to manage the source and motor output of DifferentialDrive during PID driving
-	// - 2 PIDControllers to manage turning to specific angles and driving specific distances
+	// - 3 PIDControllers to manage turning to specific angles, driving specific distances, and maintaining a specific angle
 
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX BackLeftMotor;
@@ -49,6 +48,7 @@ private:
 	AnglePIDOutput AnglePID;
 	DistancePIDHelper DistancePID;
 	PIDController AngleController;
+	PIDController MaintainAngleController;
 	PIDController DistanceController;
 
 public:
