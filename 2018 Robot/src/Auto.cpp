@@ -2,9 +2,12 @@
 
 void Robot::AutonomousInit()
 {
-	SmartDashboard::PutString("DB/String 0", "Robot At Left Position");
-	SmartDashboard::PutString("DB/String 1", "Robot At Middle Position");
-	SmartDashboard::PutString("DB/String 2", "Robot At Right Position");
+	double delayTime;
+
+	SmartDashboard::PutBoolean("DB/String 0",  true);
+	SmartDashboard::PutBoolean("DB/String 1", true);
+	SmartDashboard::PutBoolean("DB/String 2", true);
+	SmartDashboard::PutNumber("Delay", delayTime);
 
 	std::string gameData;
 	DriverStation::GetInstance().WaitForData();
@@ -13,30 +16,30 @@ void Robot::AutonomousInit()
 
 	if(gameData[0] == 'L') // if left side switch
 	{
-		if(SmartDashboard::GetBoolean("DB/Button 0", false)) // if robot on left side
+		if(SmartDashboard::GetBoolean("DB/Button 0", true)) // if robot on left side
 		{
 
 		}
-		else if(SmartDashboard::GetBoolean("DB/Button 1", false)) // if robot on middle side
+		else if(SmartDashboard::GetBoolean("DB/Button 1", true)) // if robot on middle side
 		{
 
 		}
-		else if(SmartDashboard::GetBoolean("DB/Button 2", false)) // if robot on right side
+		else if(SmartDashboard::GetBoolean("DB/Button 2", true)) // if robot on right side
 		{
 
 		}
 	}
 	else if(gameData[0] == 'R')  // if right side switch
 	{
-		if(SmartDashboard::GetBoolean("DB/Button 0", false)) // if robot on left side
+		if(SmartDashboard::GetBoolean("DB/Button 0", true)) // if robot on left side
 		{
 
 		}
-		else if(SmartDashboard::GetBoolean("DB/Button 1", false)) // if robot on middle side
+		else if(SmartDashboard::GetBoolean("DB/Button 1", true)) // if robot on middle side
 		{
 
 		}
-		else if(SmartDashboard::GetBoolean("DB/Button 2", false)) // if robot on right side
+		else if(SmartDashboard::GetBoolean("DB/Button 2", true)) // if robot on right side
 		{
 
 		}
@@ -44,6 +47,7 @@ void Robot::AutonomousInit()
 
 	TurnAngle(90);
 }
+
 
 void Robot::AutonomousPeriodic()
 {
