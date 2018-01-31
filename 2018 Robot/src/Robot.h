@@ -15,8 +15,8 @@ private:
 	// - 2 SpeedControllerGroups to contain the left and right side motors
 
 	WPI_TalonSRX FrontLeftMotor;
-	WPI_TalonSRX BackLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
+	WPI_TalonSRX BackLeftMotor;
 	WPI_TalonSRX BackRightMotor;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
