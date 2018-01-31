@@ -11,6 +11,9 @@ Robot::Robot() :
 	LeftIntakeMotor (7),  //TODO Check port values
 	LinkageMotor (8),  //TODO Check port values
 	ClimbMotor (9),    //TODO Check port values
+	elevatorEncoder(0, 1, false, Encoder::EncodingType::k4X), // TODO: delete or replace aChannel and bChannel
+	elevatorPID(1, 0, 0, elevatorEncoder, ElevatorMotor),
+	linkagePID(1, 0, 0, elevatorEncoder, LinkageMotor),// TODO: replace PID values
 	LeftMotors(FrontLeftMotor, BackLeftMotor),
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveController(0),
@@ -24,12 +27,11 @@ Robot::Robot() :
 
 void Robot::RobotInit()
 {
-	elevatorEncoder(0, 1, false, FeedbackDevice::CTRE_MagEncoder_Relative); // TODO: delete or replace aChannel and bChannel
-	elevatorPID(1, 0, 0, FeedbackDevice::CTRE_MagEncoder_Relative, ElevatorMotor); // TODO: replace PID values
 	ClimbMotor.Set(0);
 	ElevatorMotor.Set(0);
 	RightIntakeMotor.Set(0);
 	LeftIntakeMotor.Set(0);
+	LinkageMotor.SetNeutralMode(Brake);
 }
 
 

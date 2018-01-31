@@ -1,5 +1,32 @@
 #include "Robot.h"
 
+double getStepNumber(double elevatorHeight)
+{
+	if(0 <= elevatorHeight && elevatorHeight < 4) // TODO fix values
+	{
+		return 1;
+	}
+	else if(4 <= elevatorHeight && elevatorHeight < 8) // TODO fix values
+	{
+		return 2;
+	}
+	else if(8 <= elevatorHeight && elevatorHeight < 12) // TODO fix values
+	{
+		return 3;
+	}
+	else if(12 <= elevatorHeight && elevatorHeight < 16) // TODO fix values
+	{
+		return 4;
+	}
+	else if(16 <= elevatorHeight) // TODO fix values
+	{
+		return 4;
+	}
+	else
+	{
+		return 0;
+	}
+}
 void Robot::TeleopInit()
 {
 	ClimbMotor.Set(0);
@@ -13,6 +40,9 @@ void Robot::TeleopPeriodic()
 	double speedVal = 0;
 	double turnVal = 0;
 	bool isLowering = false;
+	bool inAutomatic = false;
+	int targetStep = 0;
+	double stepVals[5] = {0, 4, 8, 12, 16};
 	bool linkageDeployed = false; // deployed means outside of robot
 
 	//Driver Controls
@@ -62,6 +92,7 @@ void Robot::TeleopPeriodic()
 	}
 	else
 	{
+		inAutomatic = false;
 		correctedLeft = -OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
 	}
 
@@ -72,6 +103,7 @@ void Robot::TeleopPeriodic()
 	}
 	else
 	{
+		inAutomatic = false;
 		correctedRight = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand);
 	}
 
@@ -80,6 +112,7 @@ void Robot::TeleopPeriodic()
 	//using right bumper to raise to presets and stop
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
+		//If elevator is lowering and right bumper is pressed, stop elevator where it is
 		if (isLowering)
 		{
 			ElevatorMotor.Set(0);
@@ -87,13 +120,26 @@ void Robot::TeleopPeriodic()
 		}
 		else
 		{
-		elevatorPID.SetSetpoint(getStepNumber(elevatorEncoder.GetDistance()));
+			//If right bumper is being pressed for the first time, changes targetStep to the next highest step
+			if (!inAutomatic)
+			{
+				inAutomatic = true;
+				targetStep = getStepNumber(elevatorEncoder.GetDistance());
+			}
+			//if right bumper has already been pressed, go to the next step.
+			else if (targetStep < 4)
+			{
+				targetStep++;
+			}
+			elevatorPID.SetSetpoint(stepVals[targetStep]);
 		}
 	}
+	//if left bumper is pressed move the elevator to the bottom.
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
+		inAutomatic = false;
 		isLowering = true;
-		elevatorPID.SetSetpoint(getStepNumber(elevatorEncoder.GetDistance()));
+		elevatorPID.SetSetpoint(0);
 	}
 
 	//using b button to intake

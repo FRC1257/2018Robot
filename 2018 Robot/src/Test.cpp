@@ -2,7 +2,7 @@
 
 void Robot::TestInit()
 {
-	TurnAngle(90);
+	//TurnAngle(90);
 }
 
 void Robot::TestPeriodic()
