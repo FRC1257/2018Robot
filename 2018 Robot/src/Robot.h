@@ -36,8 +36,8 @@ private:
 	// - 2 PIDControllers to manage turning to specific angles and driving specific distances
 
 	WPI_TalonSRX FrontLeftMotor;
-	WPI_TalonSRX BackLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
+	WPI_TalonSRX BackLeftMotor;
 	WPI_TalonSRX BackRightMotor;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;

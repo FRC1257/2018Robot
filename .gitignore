@@ -37,5 +37,5 @@ CMakeCache.txt
 !.gitignore
 
 # Eclipse
-Debug/
-Debug/*
+2018\ Robot/Debug/
+2018\ Robot/Debug/*
