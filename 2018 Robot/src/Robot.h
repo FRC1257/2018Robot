@@ -51,6 +51,7 @@ public:
 	void TeleopPeriodic() override;
 	void TestInit() override;
 	void TestPeriodic() override;
+	double getStepNumber(double elevatorHeight, double stepVals);
 };
 
 

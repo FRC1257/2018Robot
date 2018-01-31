@@ -1,31 +1,16 @@
 #include "Robot.h"
 
-double getStepNumber(double elevatorHeight)
+double Robot::getStepNumber(double elevatorHeight, double stepVals)
 {
-	if(0 <= elevatorHeight && elevatorHeight < 4) // TODO fix values
+	for(int i = 0; i < 5; i++)
 	{
-		return 1;
+		if(elevatorHeight < stepVals[i])
+		{
+			return i;
+		}
 	}
-	else if(4 <= elevatorHeight && elevatorHeight < 8) // TODO fix values
-	{
-		return 2;
-	}
-	else if(8 <= elevatorHeight && elevatorHeight < 12) // TODO fix values
-	{
-		return 3;
-	}
-	else if(12 <= elevatorHeight && elevatorHeight < 16) // TODO fix values
-	{
-		return 4;
-	}
-	else if(16 <= elevatorHeight) // TODO fix values
-	{
-		return 4;
-	}
-	else
-	{
-		return 0;
-	}
+
+	return 4;
 }
 void Robot::TeleopInit()
 {
@@ -124,7 +109,7 @@ void Robot::TeleopPeriodic()
 			if (!inAutomatic)
 			{
 				inAutomatic = true;
-				targetStep = getStepNumber(elevatorEncoder.GetDistance());
+				targetStep = getStepNumber(elevatorEncoder.GetDistance(), stepVals);
 			}
 			//if right bumper has already been pressed, go to the next step.
 			else if (targetStep < 4)
