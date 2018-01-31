@@ -48,7 +48,7 @@ void Robot::AutonomousInit()
 	SmartDashboard::PutNumber("Gyro", Gyro.GetAngle());
 	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 
-	DriveForward(12);
+	DriveForward(36);
 }
 
 
