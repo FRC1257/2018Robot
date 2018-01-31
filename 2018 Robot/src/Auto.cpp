@@ -2,49 +2,53 @@
 
 void Robot::AutonomousInit()
 {
-	SmartDashboard::PutString("DB/String 0", "Robot At Left Position");
-	SmartDashboard::PutString("DB/String 1", "Robot At Middle Position");
-	SmartDashboard::PutString("DB/String 2", "Robot At Right Position");
+	SmartDashboard::PutBoolean("Robot at Left Position",  false);
+	SmartDashboard::PutBoolean("Robot at Middle Position", false);
+	SmartDashboard::PutBoolean("Robot at Right Position", false);
+	SmartDashboard::PutNumber("Delay", 0);
 
 	std::string gameData;
 	DriverStation::GetInstance().WaitForData();
-
 	gameData = DriverStation::GetInstance().GetGameSpecificMessage();
+
+	double delayTime = SmartDashboard::GetNumber("Delay", 0);
+//	Wait(delayTime);
 
 	if(gameData[0] == 'L') // if left side switch
 	{
-		if(SmartDashboard::GetBoolean("DB/Button 0", false)) // if robot on left side
+		if(SmartDashboard::GetBoolean("Robot at Left Position", false)) // if robot on left side
+		{
+			TurnAngle(90);
+		}
+		else if(SmartDashboard::GetBoolean("Robot at Middle Position", false)) // if robot on middle side
 		{
 
 		}
-		else if(SmartDashboard::GetBoolean("DB/Button 1", false)) // if robot on middle side
-		{
-
-		}
-		else if(SmartDashboard::GetBoolean("DB/Button 2", false)) // if robot on right side
+		else if(SmartDashboard::GetBoolean("Robot at Right Position", false)) // if robot on right side
 		{
 
 		}
 	}
 	else if(gameData[0] == 'R')  // if right side switch
 	{
-		if(SmartDashboard::GetBoolean("DB/Button 0", false)) // if robot on left side
+		if(SmartDashboard::GetBoolean("Robot at Left Position", false)) // if robot on left side
 		{
 
 		}
-		else if(SmartDashboard::GetBoolean("DB/Button 1", false)) // if robot on middle side
+		else if(SmartDashboard::GetBoolean("Robot at Middle Position", false)) // if robot on middle side
 		{
 
 		}
-		else if(SmartDashboard::GetBoolean("DB/Button 2", false)) // if robot on right side
+		else if(SmartDashboard::GetBoolean("Robot at Right Position", false)) // if robot on right side
 		{
 
 		}
 	}
 
-	TurnAngle(90);
+
 	SmartDashboard::PutNumber("Gyro", Gyro.GetAngle());
 }
+
 
 void Robot::AutonomousPeriodic()
 {
@@ -67,29 +71,39 @@ void Robot::DriveForward(double distance)
 	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10); //FrontLeft is placeholder until we learn which motor has an encoder
 	Gyro.Reset();
 
+	//Make sure the PID objects know about each other to avoid conflicts
 	DistancePID.SetAnglePID(&AnglePID);
 	AnglePID.SetDistancePID(&DistancePID);
 
-	AngleController.Reset();
-	AngleController.SetSetpoint(0);
-	AngleController.SetPercentTolerance(5);
+	//Configure the controller to make sure the robot drives straight
+	MaintainAngleController.Reset();
+	MaintainAngleController.SetSetpoint(0);
+	MaintainAngleController.SetPercentTolerance(1);
 
 	DistanceController.Reset();
 	DistanceController.SetSetpoint(distance);
-	DistanceController.SetPercentTolerance(5);
+	DistanceController.SetPercentTolerance(1);
 
-	AngleController.Enable();
+	MaintainAngleController.Enable();
 	DistanceController.Enable();
 
-//	while(!DistanceController.OnTarget()); //Wait until the robot reaches the target
-//	AngleController.Disable();
-//	DistanceController.Disable();
+	SmartDashboard::PutNumber("Target Distance", distance);
+
+	//Wait until the robot reaches the target
+	while(!DistanceController.OnTarget());
+	{
+		SmartDashboard::PutNumber("Current Distance", FrontLeftMotor.GetSelectedSensorPosition(0));
+	}
+
+	MaintainAngleController.Disable();
+	DistanceController.Disable();
 }
 
 void Robot::TurnAngle(double angle)
 {
 	Gyro.Reset();
 
+	//Remove the pointers since only one PID is being used
 	DistancePID.SetAnglePID(nullptr);
 	AnglePID.SetDistancePID(nullptr);
 
@@ -99,6 +113,12 @@ void Robot::TurnAngle(double angle)
 
 	AngleController.Enable();
 
-//	while(!AngleController.OnTarget()); //Wait until the robot reaches the target
-//	AngleController.Disable();
+	SmartDashboard::PutNumber("Target Angle", angle);
+
+	//Wait until the robot reaches the target
+	while(!AngleController.OnTarget())
+	{
+		SmartDashboard::PutNumber("Current Angle", Gyro.GetAngle());
+	}
+	AngleController.Disable();
 }
