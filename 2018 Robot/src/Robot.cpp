@@ -3,8 +3,8 @@
 
 Robot::Robot() :
 	FrontLeftMotor(1),
-	BackLeftMotor(2),
-	FrontRightMotor(3),
+	FrontRightMotor(2),
+	BackLeftMotor(3),
 	BackRightMotor(4),
 	ElevatorMotor (5), //TODO Check port values
 	RightIntakeMotor (6), //TODO Check port values
