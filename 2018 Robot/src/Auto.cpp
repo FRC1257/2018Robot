@@ -18,7 +18,7 @@ void Robot::AutonomousInit()
 	{
 		if(SmartDashboard::GetBoolean("Robot at Left Position", false)) // if robot on left side
 		{
-			TurnAngle(90);
+
 		}
 		else if(SmartDashboard::GetBoolean("Robot at Middle Position", false)) // if robot on middle side
 		{
@@ -45,14 +45,17 @@ void Robot::AutonomousInit()
 		}
 	}
 
-
 	SmartDashboard::PutNumber("Gyro", Gyro.GetAngle());
+	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
+
+	DriveForward(12);
 }
 
 
 void Robot::AutonomousPeriodic()
 {
 	SmartDashboard::PutNumber("Gyro", Gyro.GetAngle());
+	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
 //void Robot::DriveFor(double distance, double speed)
@@ -88,15 +91,7 @@ void Robot::DriveForward(double distance)
 	DistanceController.Enable();
 
 	SmartDashboard::PutNumber("Target Distance", distance);
-
-	//Wait until the robot reaches the target
-	while(!DistanceController.OnTarget());
-	{
-		SmartDashboard::PutNumber("Current Distance", FrontLeftMotor.GetSelectedSensorPosition(0));
-	}
-
-	MaintainAngleController.Disable();
-	DistanceController.Disable();
+	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
 void Robot::TurnAngle(double angle)
@@ -114,11 +109,5 @@ void Robot::TurnAngle(double angle)
 	AngleController.Enable();
 
 	SmartDashboard::PutNumber("Target Angle", angle);
-
-	//Wait until the robot reaches the target
-	while(!AngleController.OnTarget())
-	{
-		SmartDashboard::PutNumber("Current Angle", Gyro.GetAngle());
-	}
-	AngleController.Disable();
+	SmartDashboard::PutNumber("Angle", Gyro.GetAngle());
 }

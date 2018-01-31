@@ -12,9 +12,9 @@ Robot::Robot() :
 	Gyro(SPI::kOnboardCS0),
 	AnglePID(DriveTrain),
 	DistancePID(FrontLeftMotor, DriveTrain), //FrontLeft is placeholder until we learn which motor has an encoder
-	AngleController(0.609, 0, 0, 0, Gyro, AnglePID), // P value = 0.609
+	AngleController(0.0111, 0, 0, 0, Gyro, AnglePID),
 	MaintainAngleController(0.01, 0, 0, Gyro, AnglePID),
-	DistanceController(0.01, 0, 0, DistancePID, DistancePID)
+	DistanceController(0.05, 0, 0, DistancePID, DistancePID)
 {
 
 }

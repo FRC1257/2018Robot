@@ -16,6 +16,7 @@ AnglePIDOutput::~AnglePIDOutput()
 
 void AnglePIDOutput::PIDWrite(double output)
 {
+	SmartDashboard::PutNumber("Angle Output", output);
 	double drive = m_distancePID == nullptr ? 0 : m_distancePID->GetOutput();
 	m_driveTrain.ArcadeDrive(drive, output);
 	m_output = output;
