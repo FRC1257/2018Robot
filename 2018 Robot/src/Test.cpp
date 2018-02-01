@@ -7,5 +7,5 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
-
+	SmartDashboard::PutNumber("Gyro", Gyro.GetAngle());
 }
