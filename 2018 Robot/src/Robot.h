@@ -4,6 +4,8 @@
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
 #include <Encoder.h>
+#include "Constants.h"
+using namespace consts;
 using namespace frc;
 
 inline double dabs(double d) { return d > 0.0 ? d : -d; } // Absolute value of a double precision floating point number
@@ -27,6 +29,7 @@ private:
 	WPI_TalonSRX LeftIntakeMotor;
 	WPI_TalonSRX LinkageMotor;
 	WPI_TalonSRX ClimbMotor;
+	Ultrasonic IntakeUltrasonic;
 	Encoder elevatorEncoder;
 	PIDController elevatorPID;
 	PIDController linkagePID;
@@ -51,7 +54,7 @@ public:
 	void TeleopPeriodic() override;
 	void TestInit() override;
 	void TestPeriodic() override;
-	double getStepNumber(double elevatorHeight, double stepVals);
+	double getStepNumber(double elevatorHeight);
 };
 
 

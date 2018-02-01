@@ -1,15 +1,15 @@
 #include "Robot.h"
 
-double Robot::getStepNumber(double elevatorHeight, double stepVals)
+double Robot::getStepNumber(double elevatorHeight)
 {
+	double stepNumberVals[5] = {0, 4, 8, 12, 16};
 	for(int i = 0; i < 5; i++)
 	{
-		if(elevatorHeight < stepVals[i])
+		if(elevatorHeight < stepNumberVals[i])
 		{
 			return i;
 		}
 	}
-
 	return 4;
 }
 void Robot::TeleopInit()
@@ -109,7 +109,7 @@ void Robot::TeleopPeriodic()
 			if (!inAutomatic)
 			{
 				inAutomatic = true;
-				targetStep = getStepNumber(elevatorEncoder.GetDistance(), stepVals);
+				targetStep = getStepNumber(elevatorEncoder.GetDistance());
 			}
 			//if right bumper has already been pressed, go to the next step.
 			else if (targetStep < 4)
@@ -128,7 +128,7 @@ void Robot::TeleopPeriodic()
 	}
 
 	//using b button to intake
-	if(OperatorController.GetBButton())
+	if(OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > 3) // TODO change value
 	{
 		RightIntakeMotor.Set(-1);
 		LeftIntakeMotor.Set(1);
@@ -170,5 +170,4 @@ void Robot::TeleopPeriodic()
 	{
 		LinkageMotor.Set(0);
 	}
-
 }
