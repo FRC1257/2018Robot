@@ -45,7 +45,7 @@ private:
 	DifferentialDrive DriveTrain;
 	ADXRS450_Gyro Gyro;
 
-	AnglePIDOutput AnglePID;
+	AnglePIDOutput AnglePIDOut;
 	DistancePIDHelper DistancePID;
 	PIDController AngleController;
 	PIDController MaintainAngleController;
@@ -68,7 +68,7 @@ public:
 	void TestInit() override;
 	void TestPeriodic() override;
 
-//	void DriveFor(double distance, double speed);
+	void DriveFor(double seconds, double speed);
 	void DriveForward(double distance);
 	void TurnAngle(double angle);
 };

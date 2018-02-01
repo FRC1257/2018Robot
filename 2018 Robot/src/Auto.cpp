@@ -58,31 +58,22 @@ void Robot::AutonomousPeriodic()
 	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
-//void Robot::DriveFor(double distance, double speed)
-//{
-//	double targetDistance = distance + PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0));
-//	while(PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)) < targetDistance) //Not sure which motor to test the encoder for - Omay
-//	{
-//		DriveTrain.ArcadeDrive(speed, 0);
-//	}
-//
-//	DriveTrain.ArcadeDrive(0, 0);
-//}
-
 void Robot::DriveForward(double distance)
 {
-	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10); //FrontLeft is placeholder until we learn which motor has an encoder
+	// Zeroing the gyros and encoders
+	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10);
 	Gyro.Reset();
 
 	//Make sure the PID objects know about each other to avoid conflicts
-	DistancePID.SetAnglePID(&AnglePID);
-	AnglePID.SetDistancePID(&DistancePID);
+	DistancePID.SetAnglePID(&AnglePIDOut);
+	AnglePIDOut.SetDistancePID(&DistancePID);
 
-	//Configure the controller to make sure the robot drives straight
+	//Configure the PID controller to make sure the robot drives straight with the Gyro
 	MaintainAngleController.Reset();
 	MaintainAngleController.SetSetpoint(0);
 	MaintainAngleController.SetPercentTolerance(1);
 
+	//Configure the robot to drive a given distance
 	DistanceController.Reset();
 	DistanceController.SetSetpoint(distance);
 	DistanceController.SetPercentTolerance(1);
@@ -100,7 +91,7 @@ void Robot::TurnAngle(double angle)
 
 	//Remove the pointers since only one PID is being used
 	DistancePID.SetAnglePID(nullptr);
-	AnglePID.SetDistancePID(nullptr);
+	AnglePIDOut.SetDistancePID(nullptr);
 
 	AngleController.Reset();
 	AngleController.SetSetpoint(angle);
@@ -111,3 +102,11 @@ void Robot::TurnAngle(double angle)
 	SmartDashboard::PutNumber("Target Angle", angle);
 	SmartDashboard::PutNumber("Angle", Gyro.GetAngle());
 }
+
+void Robot::DriveFor(double seconds, double speed = 0.5)
+{
+	DriveTrain.ArcadeDrive(speed, 0);
+	Wait(seconds);
+	DriveTrain.ArcadeDrive(0, 0);
+}
+
