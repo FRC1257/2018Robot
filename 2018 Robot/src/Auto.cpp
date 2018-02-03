@@ -2,6 +2,9 @@
 
 void Robot::AutonomousInit()
 {
+	NavX.ZeroYaw();
+	FrontLeftMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
+
 	std::string gameData;
 	DriverStation::GetInstance().WaitForData();
 	gameData = DriverStation::GetInstance().GetGameSpecificMessage();
@@ -44,17 +47,12 @@ void Robot::AutonomousInit()
 		default:
 			break;
 	}
-
-	SmartDashboard::PutNumber("NavX", NavX.GetAngle());
-	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
-
-//	DriveForward(36);
 }
 
 
 void Robot::AutonomousPeriodic()
 {
-	SmartDashboard::PutNumber("NavX Angle", NavX.GetAngle());
+	SmartDashboard::PutNumber("NavX Angle", NavX.GetYaw());
 	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
@@ -64,7 +62,7 @@ void Robot::DriveForward(double distance)
 	AngleController.Disable();
 
 	//Zeroing the NavX and encoders
-	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10);
+	FrontLeftMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
 	NavX.ZeroYaw();
 
 	//Make sure the PID objects know about each other to avoid conflicts

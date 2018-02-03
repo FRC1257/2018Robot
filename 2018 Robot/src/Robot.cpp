@@ -9,7 +9,7 @@ Robot::Robot() :
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveController(0),
 	DriveTrain(LeftMotors, RightMotors),
-	NavX(SPI::kOnboardCS0),
+	NavX(SPI::Port::kMXP),
 	AnglePIDOut(DriveTrain),
 	DistancePID(FrontLeftMotor, DriveTrain),
 	AngleController(0.0111, 0, 0, 0, NavX, AnglePIDOut),
@@ -23,19 +23,20 @@ Robot::Robot() :
 
 void Robot::RobotInit()
 {
-	int kPIDLoopIdx = 0;
-	int kTimeoutMs = 10;
-
-	FrontLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
+	FrontLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,
+			constants::kPIDLoopIdx, constants::kTimeoutMs);
 	FrontLeftMotor.SetSensorPhase(true);
 
-	FrontRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
+	FrontRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,
+			constants::kPIDLoopIdx, constants::kTimeoutMs);
 	FrontRightMotor.SetSensorPhase(true);
 
-	BackLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
+	BackLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,
+			constants::kPIDLoopIdx, constants::kTimeoutMs);
 	BackLeftMotor.SetSensorPhase(true);
 
-	BackRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
+	BackRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,
+			constants::kPIDLoopIdx, constants::kTimeoutMs);
 	BackRightMotor.SetSensorPhase(true);
 }
 
