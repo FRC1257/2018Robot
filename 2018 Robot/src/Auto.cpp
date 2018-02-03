@@ -45,16 +45,13 @@ void Robot::AutonomousInit()
 			break;
 	}
 
-	SmartDashboard::PutNumber("NavX", NavX.GetAngle());
-	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
-
 //	DriveForward(36);
 }
 
 
 void Robot::AutonomousPeriodic()
 {
-	SmartDashboard::PutNumber("NavX Angle", NavX.GetAngle());
+	SmartDashboard::PutNumber("Angle", AngleSensor.GetAngle());
 	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
@@ -63,9 +60,9 @@ void Robot::DriveForward(double distance)
 	//Disable other controllers
 	AngleController.Disable();
 
-	//Zeroing the NavX and encoders
+	//Zeroing the angle sensor and encoders
 	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10);
-	NavX.ZeroYaw();
+	AngleSensor.Reset();
 
 	//Make sure the PID objects know about each other to avoid conflicts
 	DistancePID.SetAnglePID(&AnglePIDOut);
@@ -97,7 +94,8 @@ void Robot::TurnAngle(double angle)
 	DistanceController.Disable();
 	MaintainAngleController.Disable();
 
-	NavX.ZeroYaw();
+	//Zeroing the angle sensor
+	AngleSensor.Reset();
 
 	//Remove the pointers since only one PID is being used
 	DistancePID.SetAnglePID(nullptr);
