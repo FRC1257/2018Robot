@@ -13,7 +13,7 @@ void Robot::DisabledInit()
 
 	SmartDashboard::PutData("Auto Position", AutoLocationChooser);
 	SmartDashboard::PutData("Auto Objective", AutoObjectiveChooser);
-	SmartDashboard::PutNumber("Auto Delay(s)", 0);
+	SmartDashboard::PutNumber("Auto Delay (s)", 0);
 }
 
 void Robot::DisabledPeriodic()

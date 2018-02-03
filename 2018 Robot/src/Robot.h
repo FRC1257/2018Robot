@@ -2,6 +2,7 @@
 #define ROBOT
 
 #include <WPILib.h>
+#include <LiveWindow/LiveWindow.h>
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
 
@@ -33,11 +34,15 @@ private:
 	// - 1 Xbox Controller for controlling the robot
 	// - 1 DifferentialDrive object to access ArcadeDrive
 	// - 2 SpeedControllerGroups to contain the left and right side motors
-	// - 1 AHRS for sensing the angle and motion of the robot
+	// - 1 AngleSensorGroup for sensing the angle and motion of the robot
+	// 		- Internally contains one NavX (AHRS) and one ADXRS450_Gyro
+
+	// - 2 SendableChoosers for selecting an autonomous mode
 
 	// - 1 AnglePIDOutput to send turning motor output to DifferentialDrive during PID turning
 	// - 1 DistancePIDHelper to manage the source and motor output of DifferentialDrive during PID driving
 	// - 3 PIDControllers to manage turning to specific angles, driving specific distances, and maintaining a specific angle
+	// - 1 LiveWindow for testing PIDControllers
 
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
@@ -57,6 +62,8 @@ private:
 
 	SendableChooser<constants::AutoPosition>* AutoLocationChooser;
 	SendableChooser<constants::AutoObjective>* AutoObjectiveChooser;
+
+	LiveWindow *lw;
 
 public:
 	// Here, we're declaring the following functions:

@@ -18,26 +18,24 @@ Robot::Robot() :
 {
 	AutoLocationChooser = new SendableChooser<constants::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<constants::AutoObjective>();
+	lw = LiveWindow::GetInstance();
 }
 
 
 void Robot::RobotInit()
 {
+	// Configuring the Talon Drive Encoders
 	FrontLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,
 			constants::kPIDLoopIdx, constants::kTimeoutMs);
 	FrontLeftMotor.SetSensorPhase(true);
-
 	FrontRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,
 			constants::kPIDLoopIdx, constants::kTimeoutMs);
 	FrontRightMotor.SetSensorPhase(true);
 
-	BackLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,
-			constants::kPIDLoopIdx, constants::kTimeoutMs);
-	BackLeftMotor.SetSensorPhase(true);
-
-	BackRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,
-			constants::kPIDLoopIdx, constants::kTimeoutMs);
-	BackRightMotor.SetSensorPhase(true);
+	// Adding PID Controllers to LiveWindow
+	lw->Add(&AngleController);
+	lw->Add(&MaintainAngleController);
+	lw->Add(&DistanceController);
 }
 
 
