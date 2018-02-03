@@ -2,7 +2,7 @@
 
 void Robot::AutonomousInit()
 {
-	AngleSensor.Reset();
+	AngleSensors.Reset();
 	FrontLeftMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
 
 	std::string gameData;
@@ -53,7 +53,7 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
-	SmartDashboard::PutNumber("Angle", AngleSensor.GetAngle());
+	SmartDashboard::PutNumber("Angle", AngleSensors.GetAngle());
 	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
@@ -64,11 +64,11 @@ void Robot::DriveForward(double distance)
 
 	//Zeroing the angle sensor and encoders
 	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10);
-	AngleSensor.Reset();
+	AngleSensors.Reset();
 
 	//Zeroing the NavX and encoders
 	FrontLeftMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
-	AngleSensor.Reset();
+	AngleSensors.Reset();
 
 	//Make sure the PID objects know about each other to avoid conflicts
 	DistancePID.SetAnglePID(&AnglePIDOut);
@@ -101,7 +101,7 @@ void Robot::TurnAngle(double angle)
 	MaintainAngleController.Disable();
 
 	//Zeroing the angle sensor
-	AngleSensor.Reset();
+	AngleSensors.Reset();
 
 	//Remove the pointers since only one PID is being used
 	DistancePID.SetAnglePID(nullptr);

@@ -1,7 +1,6 @@
 #ifndef ROBOT
 #define ROBOT
 
-#include <auto/AngleSensorGroup.h>
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
@@ -9,6 +8,7 @@
 #include "Constants.h"
 #include "auto/AnglePIDOutput.h"
 #include "auto/DistancePIDHelper.h"
+#include "auto/AngleSensorGroup.h"
 
 using namespace frc;
 
@@ -47,7 +47,7 @@ private:
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
 	DifferentialDrive DriveTrain;
-	AngleSensorGroup AngleSensor;
+	AngleSensorGroup AngleSensors;
 
 	AnglePIDOutput AnglePIDOut;
 	DistancePIDHelper DistancePID;

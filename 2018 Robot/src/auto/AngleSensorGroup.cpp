@@ -27,7 +27,7 @@ double AngleSensorGroup::GetAngle()
 {
 	if(m_NavX.IsConnected())
 	{
-		return m_NavX.GetAngle();
+		return m_NavX.GetYaw();
 	}
 	else
 	{
