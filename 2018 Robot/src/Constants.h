@@ -17,6 +17,9 @@ namespace constants
 		BASELINE,
 		STAY_STILL
 	};
+
+	const int kPIDLoopIdx = 0;
+	const int kTimeoutMs = 10;
 }
 
 #endif

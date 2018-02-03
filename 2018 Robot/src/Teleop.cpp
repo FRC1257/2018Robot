@@ -2,8 +2,8 @@
 
 void Robot::TeleopInit()
 {
-	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10);
-	FrontRightMotor.SetSelectedSensorPosition(0, 0, 10);
+	FrontLeftMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
+	FrontRightMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
 }
 
 void Robot::TeleopPeriodic()

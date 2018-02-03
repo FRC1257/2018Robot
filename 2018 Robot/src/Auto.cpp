@@ -2,6 +2,9 @@
 
 void Robot::AutonomousInit()
 {
+	AngleSensor.Reset();
+	FrontLeftMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
+
 	std::string gameData;
 	DriverStation::GetInstance().WaitForData();
 	gameData = DriverStation::GetInstance().GetGameSpecificMessage();
@@ -44,7 +47,6 @@ void Robot::AutonomousInit()
 		default:
 			break;
 	}
-
 //	DriveForward(36);
 }
 
@@ -62,6 +64,10 @@ void Robot::DriveForward(double distance)
 
 	//Zeroing the angle sensor and encoders
 	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10);
+	AngleSensor.Reset();
+
+	//Zeroing the NavX and encoders
+	FrontLeftMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
 	AngleSensor.Reset();
 
 	//Make sure the PID objects know about each other to avoid conflicts
