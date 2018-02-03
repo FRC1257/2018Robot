@@ -3,8 +3,10 @@
 
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
+#include <AHRS.h>
 #include "auto/AnglePIDOutput.h"
 #include "auto/DistancePIDHelper.h"
+#include "LiveWindow/LiveWindow.h"
 
 using namespace frc;
 
@@ -43,7 +45,7 @@ private:
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
 	DifferentialDrive DriveTrain;
-	ADXRS450_Gyro Gyro;
+	AHRS NavX;
 
 	AnglePIDOutput AnglePIDOut;
 	DistancePIDHelper DistancePID;

@@ -9,11 +9,11 @@ Robot::Robot() :
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveController(0),
 	DriveTrain(LeftMotors, RightMotors),
-	Gyro(SPI::kOnboardCS0),
+	NavX(SPI::kOnboardCS0),
 	AnglePIDOut(DriveTrain),
 	DistancePID(FrontLeftMotor, DriveTrain),
-	AngleController(0.0111, 0, 0, 0, Gyro, AnglePIDOut),
-	MaintainAngleController(0.01, 0, 0, Gyro, AnglePIDOut),
+	AngleController(0.0111, 0, 0, 0, NavX, AnglePIDOut),
+	MaintainAngleController(0.01, 0, 0, NavX, AnglePIDOut),
 	DistanceController(0.05, 0, 0, DistancePID, DistancePID)
 {
 

@@ -45,49 +45,59 @@ void Robot::AutonomousInit()
 		}
 	}
 
-	SmartDashboard::PutNumber("Gyro", Gyro.GetAngle());
+	SmartDashboard::PutNumber("NavX", NavX.GetAngle());
 	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 
-	DriveForward(36);
+//	DriveForward(36);
 }
 
 
 void Robot::AutonomousPeriodic()
 {
-	SmartDashboard::PutNumber("Gyro", Gyro.GetAngle());
+	SmartDashboard::PutNumber("NavX Angle", NavX.GetAngle());
 	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
 void Robot::DriveForward(double distance)
 {
-	// Zeroing the gyros and encoders
+	//Disable other controllers
+	AngleController.Disable();
+
+	//Zeroing the NavX and encoders
 	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10);
-	Gyro.Reset();
+	NavX.ZeroYaw();
 
 	//Make sure the PID objects know about each other to avoid conflicts
 	DistancePID.SetAnglePID(&AnglePIDOut);
 	AnglePIDOut.SetDistancePID(&DistancePID);
 
-	//Configure the PID controller to make sure the robot drives straight with the Gyro
+	//Configure the PID controller to make sure the robot drives straight with the NavX
 	MaintainAngleController.Reset();
 	MaintainAngleController.SetSetpoint(0);
-	MaintainAngleController.SetPercentTolerance(1);
+	MaintainAngleController.SetAbsoluteTolerance(1);
+	MaintainAngleController.SetInputRange(-180.0, 180.0);
+	MaintainAngleController.SetContinuous(true);
+	MaintainAngleController.SetOutputRange(-1.0, 1.0);
 
 	//Configure the robot to drive a given distance
 	DistanceController.Reset();
 	DistanceController.SetSetpoint(distance);
 	DistanceController.SetPercentTolerance(1);
+	DistanceController.SetOutputRange(-1.0, 1.0);
 
 	MaintainAngleController.Enable();
 	DistanceController.Enable();
 
 	SmartDashboard::PutNumber("Target Distance", distance);
-	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
 void Robot::TurnAngle(double angle)
 {
-	Gyro.Reset();
+	//Disable other controllers
+	DistanceController.Disable();
+	MaintainAngleController.Disable();
+
+	NavX.ZeroYaw();
 
 	//Remove the pointers since only one PID is being used
 	DistancePID.SetAnglePID(nullptr);
@@ -95,12 +105,14 @@ void Robot::TurnAngle(double angle)
 
 	AngleController.Reset();
 	AngleController.SetSetpoint(angle);
-	AngleController.SetPercentTolerance(1);
+	AngleController.SetAbsoluteTolerance(1);
+	AngleController.SetInputRange(-180.0, 180.0);
+	AngleController.SetContinuous(true);
+	AngleController.SetOutputRange(-1.0, 1.0);
 
 	AngleController.Enable();
 
 	SmartDashboard::PutNumber("Target Angle", angle);
-	SmartDashboard::PutNumber("Angle", Gyro.GetAngle());
 }
 
 void Robot::DriveFor(double seconds, double speed = 0.5)
