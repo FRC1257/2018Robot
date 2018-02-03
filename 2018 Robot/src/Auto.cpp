@@ -2,47 +2,47 @@
 
 void Robot::AutonomousInit()
 {
-	SmartDashboard::PutBoolean("Robot at Left Position",  false);
-	SmartDashboard::PutBoolean("Robot at Middle Position", false);
-	SmartDashboard::PutBoolean("Robot at Right Position", false);
-	SmartDashboard::PutNumber("Delay", 0);
-
 	std::string gameData;
 	DriverStation::GetInstance().WaitForData();
 	gameData = DriverStation::GetInstance().GetGameSpecificMessage();
 
 	double delayTime = SmartDashboard::GetNumber("Delay", 0);
-//	Wait(delayTime);
+	Wait(delayTime);
 
-	if(gameData[0] == 'L') // if left side switch
+	switch(AutoLocationChooser->GetSelected())
 	{
-		if(SmartDashboard::GetBoolean("Robot at Left Position", false)) // if robot on left side
-		{
+		case constants::AutoPosition::LEFT_START:
+			if(gameData[0] == 'L')
+			{
 
-		}
-		else if(SmartDashboard::GetBoolean("Robot at Middle Position", false)) // if robot on middle side
-		{
+			}
+			else if(gameData[0] == 'R')
+			{
 
-		}
-		else if(SmartDashboard::GetBoolean("Robot at Right Position", false)) // if robot on right side
-		{
+			}
+			break;
+		case constants::AutoPosition::MIDDLE_START:
+			if(gameData[0] == 'L')
+			{
 
-		}
-	}
-	else if(gameData[0] == 'R')  // if right side switch
-	{
-		if(SmartDashboard::GetBoolean("Robot at Left Position", false)) // if robot on left side
-		{
+			}
+			else if(gameData[0] == 'R')
+			{
 
-		}
-		else if(SmartDashboard::GetBoolean("Robot at Middle Position", false)) // if robot on middle side
-		{
+			}
+			break;
+		case constants::AutoPosition::RIGHT_START:
+			if(gameData[0] == 'L')
+			{
 
-		}
-		else if(SmartDashboard::GetBoolean("Robot at Right Position", false)) // if robot on right side
-		{
+			}
+			else if(gameData[0] == 'R')
+			{
 
-		}
+			}
+			break;
+		default:
+			break;
 	}
 
 	SmartDashboard::PutNumber("NavX", NavX.GetAngle());

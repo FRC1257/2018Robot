@@ -16,7 +16,8 @@ Robot::Robot() :
 	MaintainAngleController(0.01, 0, 0, NavX, AnglePIDOut),
 	DistanceController(0.05, 0, 0, DistancePID, DistancePID)
 {
-
+	AutoLocationChooser = new SendableChooser<constants::AutoPosition>();
+	AutoObjectiveChooser = new SendableChooser<constants::AutoObjective>();
 }
 
 

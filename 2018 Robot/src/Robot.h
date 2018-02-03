@@ -4,6 +4,8 @@
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
+
+#include "Constants.h"
 #include "auto/AnglePIDOutput.h"
 #include "auto/DistancePIDHelper.h"
 #include "LiveWindow/LiveWindow.h"
@@ -53,6 +55,9 @@ private:
 	PIDController MaintainAngleController;
 	PIDController DistanceController;
 
+	SendableChooser<constants::AutoPosition>* AutoLocationChooser;
+	SendableChooser<constants::AutoObjective>* AutoObjectiveChooser;
+
 public:
 	// Here, we're declaring the following functions:
 	// - Robot class constructor
@@ -73,6 +78,10 @@ public:
 	void DriveFor(double seconds, double speed);
 	void DriveForward(double distance);
 	void TurnAngle(double angle);
+
+	// PID Tuning Functions (JUST FOR TESTING)
+	void MaintainHeadingTest();
+	void DriveDistanceTest(double distance);
 };
 
 
