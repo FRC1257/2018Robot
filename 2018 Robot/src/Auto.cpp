@@ -2,14 +2,16 @@
 
 void Robot::AutonomousInit()
 {
+	//Zeroing the angle sensor and encoders
 	AngleSensors.Reset();
 	FrontLeftMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
+	FrontRightMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
 
 	std::string gameData;
 	DriverStation::GetInstance().WaitForData();
 	gameData = DriverStation::GetInstance().GetGameSpecificMessage();
 
-	double delayTime = SmartDashboard::GetNumber("Delay", 0);
+	double delayTime = SmartDashboard::GetNumber("Auto Delay", 0);
 	Wait(delayTime);
 
 	switch(AutoLocationChooser->GetSelected())
@@ -63,11 +65,8 @@ void Robot::DriveForward(double distance)
 	AngleController.Disable();
 
 	//Zeroing the angle sensor and encoders
-	FrontLeftMotor.SetSelectedSensorPosition(0, 0, 10);
-	AngleSensors.Reset();
-
-	//Zeroing the NavX and encoders
 	FrontLeftMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
+	FrontRightMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
 	AngleSensors.Reset();
 
 	//Make sure the PID objects know about each other to avoid conflicts

@@ -11,6 +11,11 @@ void Robot::TestPeriodic()
 	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
 }
 
+void Robot::MaintainHeadingTest()
+{
+
+}
+
 void Robot::DriveDistanceTest(double distance)
 {
 

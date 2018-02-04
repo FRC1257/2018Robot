@@ -18,7 +18,6 @@ Robot::Robot() :
 {
 	AutoLocationChooser = new SendableChooser<constants::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<constants::AutoObjective>();
-	lw = LiveWindow::GetInstance();
 }
 
 
@@ -33,9 +32,9 @@ void Robot::RobotInit()
 	FrontRightMotor.SetSensorPhase(true);
 
 	// Adding PID Controllers to LiveWindow
-	lw->Add(&AngleController);
-	lw->Add(&MaintainAngleController);
-	lw->Add(&DistanceController);
+	LiveWindow::GetInstance()->Add(&AngleController);
+	LiveWindow::GetInstance()->Add(&MaintainAngleController);
+	LiveWindow::GetInstance()->Add(&DistanceController);
 }
 
 

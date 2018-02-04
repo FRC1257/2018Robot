@@ -31,18 +31,17 @@ class Robot: public TimedRobot
 private:
 	// Here's a breakdown of what member objects we're declaring:
 	// - 4 Motor Controllers for each of the drive motors (WPI_TalonSRX)
+	// - 2 SpeedControllerGroups to contain the left and right side motors
 	// - 1 Xbox Controller for controlling the robot
 	// - 1 DifferentialDrive object to access ArcadeDrive
-	// - 2 SpeedControllerGroups to contain the left and right side motors
 	// - 1 AngleSensorGroup for sensing the angle and motion of the robot
 	// 		- Internally contains one NavX (AHRS) and one ADXRS450_Gyro
-
-	// - 2 SendableChoosers for selecting an autonomous mode
 
 	// - 1 AnglePIDOutput to send turning motor output to DifferentialDrive during PID turning
 	// - 1 DistancePIDHelper to manage the source and motor output of DifferentialDrive during PID driving
 	// - 3 PIDControllers to manage turning to specific angles, driving specific distances, and maintaining a specific angle
-	// - 1 LiveWindow for testing PIDControllers
+
+	// - 2 SendableChoosers for selecting an autonomous mode
 
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
@@ -60,16 +59,15 @@ private:
 	PIDController MaintainAngleController;
 	PIDController DistanceController;
 
-	SendableChooser<constants::AutoPosition>* AutoLocationChooser;
-	SendableChooser<constants::AutoObjective>* AutoObjectiveChooser;
-
-	LiveWindow *lw;
+	SendableChooser<constants::AutoPosition> *AutoLocationChooser;
+	SendableChooser<constants::AutoObjective> *AutoObjectiveChooser;
 
 public:
 	// Here, we're declaring the following functions:
 	// - Robot class constructor
 	// - Virtual functions from TimedRobot
 	// - Driving and turning functions for autonomous
+	// - Testing functions for PID tuning
 
 	Robot();
 	void RobotInit() override;
