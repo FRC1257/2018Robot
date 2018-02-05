@@ -1,36 +1,22 @@
 #include "Robot.h"
 
-double Robot::getStepNumber(double elevatorHeight)
+double Robot::GetStepNumber(double elevatorHeight)
 {
-	double stepNumberVals[5] = {0, 4, 8, 12, 16};
 	for(int i = 0; i < 5; i++)
 	{
-		if(elevatorHeight < stepNumberVals[i])
+		if(elevatorHeight < consts::STEPVALS[i])
 		{
 			return i;
 		}
 	}
 	return 4;
 }
-void Robot::TeleopInit()
-{
-	ClimbMotor.Set(0);
-	ElevatorMotor.Set(0);
-	RightIntakeMotor.Set(0);
-	LeftIntakeMotor.Set(0);
-}
 
-void Robot::TeleopPeriodic()
+//Driver Controls
+void Robot::Drive()
 {
 	double speedVal = 0;
 	double turnVal = 0;
-	bool isLowering = false;
-	bool inAutomatic = false;
-	int targetStep = 0;
-	double stepVals[5] = {0, 4, 8, 12, 16};
-	bool linkageDeployed = false; // deployed means outside of robot
-
-	//Driver Controls
 
 	// If they press A, use single stick arcade with the left joystick
 	if(DriveController.GetAButton())
@@ -63,10 +49,11 @@ void Robot::TeleopPeriodic()
 	}
 	//Negative is used to invert the speed (make forward <--> backward)
 	DriveTrain.ArcadeDrive(-speedVal, turnVal);
+}
 
-
-	// Operator Controls
-
+// Operator Controls
+void Robot::Elevator()
+{
 	int correctedRight = 0;
 	int correctedLeft = 0;
 
@@ -77,7 +64,7 @@ void Robot::TeleopPeriodic()
 	}
 	else
 	{
-		inAutomatic = false;
+		m_inAutomatic = false;
 		correctedLeft = -OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
 	}
 
@@ -88,45 +75,48 @@ void Robot::TeleopPeriodic()
 	}
 	else
 	{
-		inAutomatic = false;
+		m_inAutomatic = false;
 		correctedRight = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand);
 	}
 
-	ElevatorMotor.Set(correctedRight-correctedLeft);
+	ElevatorMotor.Set(correctedRight - correctedLeft);
 
 	//using right bumper to raise to presets and stop
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
 		//If elevator is lowering and right bumper is pressed, stop elevator where it is
-		if (isLowering)
+		if (m_isLowering)
 		{
 			ElevatorMotor.Set(0);
-			isLowering = false;
+			m_isLowering = false;
 		}
 		else
 		{
 			//If right bumper is being pressed for the first time, changes targetStep to the next highest step
-			if (!inAutomatic)
+			if (!m_inAutomatic)
 			{
-				inAutomatic = true;
-				targetStep = getStepNumber(elevatorEncoder.GetDistance());
+				m_inAutomatic = true;
+				m_targetStep = GetStepNumber(ElevatorEncoder.GetDistance());
 			}
 			//if right bumper has already been pressed, go to the next step.
-			else if (targetStep < 4)
+			else if (m_targetStep < 4)
 			{
-				targetStep++;
+				m_targetStep++;
 			}
-			elevatorPID.SetSetpoint(stepVals[targetStep]);
+			ElevatorPID.SetSetpoint(consts::STEPVALS[m_targetStep]);
 		}
 	}
 	//if left bumper is pressed move the elevator to the bottom.
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
-		inAutomatic = false;
-		isLowering = true;
-		elevatorPID.SetSetpoint(0);
+		m_inAutomatic = false;
+		m_isLowering = true;
+		ElevatorPID.SetSetpoint(0);
 	}
+}
 
+void Robot::Intake()
+{
 	//using b button to intake
 	if(OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > 3) // TODO change value
 	{
@@ -150,7 +140,10 @@ void Robot::TeleopPeriodic()
 		RightIntakeMotor.Set(0);
 		LeftIntakeMotor.Set(0);
 	}
+}
 
+void Robot::Climb()
+{
 	// using y button to climb
 	if(OperatorController.GetYButton())
 	{
@@ -160,7 +153,10 @@ void Robot::TeleopPeriodic()
 	{
 		ClimbMotor.Set(0);
 	}
+}
 
+void Robot::Linkage()
+{
 	//using left joystick to do the linkage thing
 	if(!inDeadZone(dabs(OperatorController.GetY(GenericHID::JoystickHand::kLeftHand))))
 	{
@@ -170,4 +166,21 @@ void Robot::TeleopPeriodic()
 	{
 		LinkageMotor.Set(0);
 	}
+}
+
+void Robot::TeleopInit()
+{
+	ClimbMotor.Set(0);
+	ElevatorMotor.Set(0);
+	RightIntakeMotor.Set(0);
+	LeftIntakeMotor.Set(0);
+}
+
+void Robot::TeleopPeriodic()
+{
+	Drive();
+	Elevator();
+	Intake();
+	Climb();
+	Linkage();
 }

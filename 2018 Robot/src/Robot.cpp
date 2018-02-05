@@ -12,15 +12,18 @@ Robot::Robot() :
 	LinkageMotor (8),  //TODO Check port values
 	ClimbMotor (9),    //TODO Check port values
 	IntakeUltrasonic(1, 0), // TODO check port #
-	elevatorEncoder(0, 1, false, Encoder::EncodingType::k4X), // TODO: delete or replace aChannel and bChannel
-	elevatorPID(1, 0, 0, elevatorEncoder, ElevatorMotor),
-	linkagePID(1, 0, 0, elevatorEncoder, LinkageMotor),// TODO: replace PID values
+	ElevatorEncoder(0, 1, false, Encoder::EncodingType::k4X), // TODO: delete or replace aChannel and bChannel
+	ElevatorPID(0.25, 0, 0, ElevatorEncoder, ElevatorMotor),
+	LinkagePID(0.25, 0, 0, ElevatorEncoder, LinkageMotor),// TODO: replace PID values
 	LeftMotors(FrontLeftMotor, BackLeftMotor),
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveController(0),
 	OperatorController(1),
 	DriveTrain(LeftMotors, RightMotors)
 {
+	m_isLowering = false;
+	m_inAutomatic = false;
+	m_targetStep = 0;
 
 }
 

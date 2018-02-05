@@ -30,14 +30,18 @@ private:
 	WPI_TalonSRX LinkageMotor;
 	WPI_TalonSRX ClimbMotor;
 	Ultrasonic IntakeUltrasonic;
-	Encoder elevatorEncoder;
-	PIDController elevatorPID;
-	PIDController linkagePID;
+	Encoder ElevatorEncoder;
+	PIDController ElevatorPID;
+	PIDController LinkagePID;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
 	XboxController OperatorController;
 	DifferentialDrive DriveTrain;
+
+	bool m_isLowering;
+	bool m_inAutomatic;
+	int m_targetStep;
 
 public:
 	// Here, we're declaring the following functions:
@@ -54,7 +58,16 @@ public:
 	void TeleopPeriodic() override;
 	void TestInit() override;
 	void TestPeriodic() override;
-	double getStepNumber(double elevatorHeight);
+	double GetStepNumber(double elevatorHeight);
+	void ElevatorTest();
+	void LinkageTest();
+	void IntakeTest();
+	void ClimbTest();
+	void Drive();
+	void Elevator();
+	void Climb();
+	void Intake();
+	void Linkage();
 };
 
 
