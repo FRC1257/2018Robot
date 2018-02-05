@@ -59,8 +59,8 @@ private:
 	PIDController MaintainAngleController;
 	PIDController DistanceController;
 
-	SendableChooser<constants::AutoPosition> *AutoLocationChooser;
-	SendableChooser<constants::AutoObjective> *AutoObjectiveChooser;
+	SendableChooser<consts::AutoPosition> *AutoLocationChooser;
+	SendableChooser<consts::AutoObjective> *AutoObjectiveChooser;
 
 public:
 	// Here, we're declaring the following functions:

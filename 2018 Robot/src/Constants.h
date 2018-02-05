@@ -1,7 +1,7 @@
 #ifndef CONSTANTS
 #define CONSTANTS
 
-namespace constants
+namespace consts
 {
 	enum class AutoPosition
 	{
@@ -18,8 +18,8 @@ namespace constants
 		STAY_STILL
 	};
 
-	const int kPIDLoopIdx = 0;
-	const int kTimeoutMs = 10;
+	const int PIDLoopIdx = 0;
+	const int timeoutMs = 10;
 }
 
 #endif

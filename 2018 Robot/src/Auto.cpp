@@ -4,8 +4,8 @@ void Robot::AutonomousInit()
 {
 	//Zeroing the angle sensor and encoders
 	AngleSensors.Reset();
-	FrontLeftMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
-	FrontRightMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
+	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
+	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
 
 	std::string gameData;
 	DriverStation::GetInstance().WaitForData();
@@ -16,7 +16,7 @@ void Robot::AutonomousInit()
 
 	switch(AutoLocationChooser->GetSelected())
 	{
-		case constants::AutoPosition::LEFT_START:
+		case consts::AutoPosition::LEFT_START:
 			if(gameData[0] == 'L')
 			{
 
@@ -26,7 +26,7 @@ void Robot::AutonomousInit()
 
 			}
 			break;
-		case constants::AutoPosition::MIDDLE_START:
+		case consts::AutoPosition::MIDDLE_START:
 			if(gameData[0] == 'L')
 			{
 
@@ -36,7 +36,7 @@ void Robot::AutonomousInit()
 
 			}
 			break;
-		case constants::AutoPosition::RIGHT_START:
+		case consts::AutoPosition::RIGHT_START:
 			if(gameData[0] == 'L')
 			{
 
@@ -65,8 +65,8 @@ void Robot::DriveForward(double distance)
 	AngleController.Disable();
 
 	//Zeroing the angle sensor and encoders
-	FrontLeftMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
-	FrontRightMotor.SetSelectedSensorPosition(0, constants::kPIDLoopIdx, constants::kTimeoutMs);
+	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
+	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
 	AngleSensors.Reset();
 
 	//Make sure the PID objects know about each other to avoid conflicts
