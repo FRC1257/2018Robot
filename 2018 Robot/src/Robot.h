@@ -4,6 +4,7 @@
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
 #include <Encoder.h>
+#include <IterativeRobot.h>
 #include "Constants.h"
 using namespace consts;
 using namespace frc;
@@ -42,6 +43,11 @@ private:
 	bool m_isLowering;
 	bool m_inAutomatic;
 	int m_targetStep;
+
+	WPI_TalonSRX * m_talon;
+	XboxController * m_joy;
+	std::string m_sb;
+	int m_loops;
 
 public:
 	// Here, we're declaring the following functions:
