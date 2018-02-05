@@ -11,7 +11,7 @@ class AnglePIDOutput : public PIDOutput
 {
 private:
 	DifferentialDrive& m_driveTrain;
-	double m_output;
+	double m_output;                  // Stores the motor output typically passed into the PIDWrite command
 	DistancePIDHelper* m_distancePID;
 
 public:

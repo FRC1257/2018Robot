@@ -9,33 +9,32 @@ Robot::Robot() :
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveController(0),
 	DriveTrain(LeftMotors, RightMotors),
-	Gyro(SPI::kOnboardCS0),
-	AnglePID(DriveTrain),
-	DistancePID(FrontLeftMotor, DriveTrain), //FrontLeft is placeholder until we learn which motor has an encoder
-	AngleController(0.0111, 0, 0, 0, Gyro, AnglePID),
-	MaintainAngleController(0.01, 0, 0, Gyro, AnglePID),
+	AngleSensors(SPI::Port::kMXP, SPI::kOnboardCS0),
+	AnglePIDOut(DriveTrain),
+	DistancePID(FrontLeftMotor, DriveTrain),
+	AngleController(0.0111, 0, 0, 0, AngleSensors, AnglePIDOut),
+	MaintainAngleController(0.01, 0, 0, AngleSensors, AnglePIDOut),
 	DistanceController(0.05, 0, 0, DistancePID, DistancePID)
 {
-
+	AutoLocationChooser = new SendableChooser<consts::AutoPosition>();
+	AutoObjectiveChooser = new SendableChooser<consts::AutoObjective>();
 }
 
 
 void Robot::RobotInit()
 {
-	int kPIDLoopIdx = 0;
-	int kTimeoutMs = 10;
-
-	FrontLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
+	// Configuring the Talon Drive Encoders
+	FrontLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,
+			consts::PIDLoopIdx, consts::timeoutMs);
 	FrontLeftMotor.SetSensorPhase(true);
-
-	FrontRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
+	FrontRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,
+			consts::PIDLoopIdx, consts::timeoutMs);
 	FrontRightMotor.SetSensorPhase(true);
 
-	BackLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
-	BackLeftMotor.SetSensorPhase(true);
-
-	BackRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
-	BackRightMotor.SetSensorPhase(true);
+	// Adding PID Controllers to LiveWindow
+	LiveWindow::GetInstance()->Add(&AngleController);
+	LiveWindow::GetInstance()->Add(&MaintainAngleController);
+	LiveWindow::GetInstance()->Add(&DistanceController);
 }
 
 

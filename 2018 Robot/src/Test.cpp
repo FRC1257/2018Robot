@@ -2,10 +2,21 @@
 
 void Robot::TestInit()
 {
-	TurnAngle(90);
+
 }
 
 void Robot::TestPeriodic()
 {
-	SmartDashboard::PutNumber("Gyro", Gyro.GetAngle());
+	SmartDashboard::PutNumber("Auto Pos Val", (int) AutoLocationChooser->GetSelected());
+	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
+}
+
+void Robot::MaintainHeadingTest()
+{
+
+}
+
+void Robot::DriveDistanceTest(double distance)
+{
+
 }
