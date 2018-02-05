@@ -17,13 +17,25 @@ void Robot::AutonomousInit()
 	switch(AutoLocationChooser->GetSelected())
 	{
 		case consts::AutoPosition::LEFT_START:
+			DriveForward(130);
 			if(gameData[0] == 'L')
 			{
-
+				TurnAngle(-90);
+				DriveForward(25);
 			}
-			else if(gameData[0] == 'R')
+			else if(gameData[1] == 'L')
 			{
-
+				DriveForward(70);
+				TurnAngle(90);
+				DriveForward(30);
+				TurnAngle(-90);
+				DriveForward(86);
+				TurnAngle(-90);
+				DriveForward(36);
+			}
+			else
+			{
+				DriveForward(70);
 			}
 			break;
 		case consts::AutoPosition::MIDDLE_START:
@@ -37,16 +49,29 @@ void Robot::AutonomousInit()
 			}
 			break;
 		case consts::AutoPosition::RIGHT_START:
-			if(gameData[0] == 'L')
+			DriveForward(130);
+			if(gameData[0] == 'R')
 			{
-
+				TurnAngle(90);
+				DriveForward(25);
 			}
-			else if(gameData[0] == 'R')
+			else if(gameData[1] == 'R')
 			{
-
+				DriveForward(70);
+				TurnAngle(-90);
+				DriveForward(30);
+				TurnAngle(90);
+				DriveForward(86);
+				TurnAngle(90);
+				DriveForward(36);
+			}
+			else
+			{
+				DriveForward(70);
 			}
 			break;
 		default:
+
 			break;
 	}
 //	DriveForward(36);

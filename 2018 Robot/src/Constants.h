@@ -14,8 +14,7 @@ namespace consts
 	{
 		SWITCH,
 		SCALE,
-		BASELINE,
-		STAY_STILL
+		BASELINE
 	};
 
 	const int PIDLoopIdx = 0;
