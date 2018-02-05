@@ -2,8 +2,10 @@
 
 void Robot::TeleopInit()
 {
-	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
-	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
+	ResetEncoders();
+	AngleController.Disable();
+	MaintainAngleController.Disable();
+	DistanceController.Disable();
 }
 
 void Robot::TeleopPeriodic()

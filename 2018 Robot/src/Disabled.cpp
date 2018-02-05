@@ -9,7 +9,6 @@ void Robot::DisabledInit()
 	AutoObjectiveChooser->AddDefault("Switch", consts::AutoObjective::SWITCH);
 	AutoObjectiveChooser->AddObject("Scale", consts::AutoObjective::SCALE);
 	AutoObjectiveChooser->AddObject("Baseline", consts::AutoObjective::BASELINE);
-	AutoObjectiveChooser->AddObject("Stay Still", consts::AutoObjective::STAY_STILL);
 
 	SmartDashboard::PutData("Auto Position", AutoLocationChooser);
 	SmartDashboard::PutData("Auto Objective", AutoObjectiveChooser);
