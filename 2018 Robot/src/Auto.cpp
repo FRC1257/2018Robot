@@ -4,7 +4,8 @@ void Robot::AutonomousInit()
 {
 	//Zeroing the angle sensor and encoders
 	AngleSensors.Reset();
-	ResetEncoders();
+	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
+	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
 
 	std::string gameData;
 	DriverStation::GetInstance().WaitForData();
@@ -37,16 +38,7 @@ void Robot::AutonomousInit()
 				DriveForward(70);
 			}
 			break;
-		case consts::AutoPosition::MIDDLE_START:
-			if(gameData[0] == 'L')
-			{
 
-			}
-			else if(gameData[0] == 'R')
-			{
-
-			}
-			break;
 		case consts::AutoPosition::RIGHT_START:
 			DriveForward(130);
 			if(gameData[0] == 'R')
@@ -69,8 +61,18 @@ void Robot::AutonomousInit()
 				DriveForward(70);
 			}
 			break;
-		default:
 
+		case consts::AutoPosition::MIDDLE_START:
+			if(gameData[0] == 'L')
+			{
+
+			}
+			else if(gameData[0] == 'R')
+			{
+
+			}
+			break;
+		default:
 			break;
 	}
 //	DriveForward(36);
@@ -89,7 +91,8 @@ void Robot::DriveForward(double distance)
 	AngleController.Disable();
 
 	//Zeroing the angle sensor and encoders
-	ResetEncoders();
+	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
+	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
 	AngleSensors.Reset();
 
 	//Make sure the PID objects know about each other to avoid conflicts
