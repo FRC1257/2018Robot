@@ -37,6 +37,11 @@ void Robot::RobotInit()
 	LiveWindow::GetInstance()->Add(&DistanceController);
 }
 
+void Robot::ResetEncoders()
+{
+	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
+	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
+}
 
 
 START_ROBOT_CLASS(Robot)
