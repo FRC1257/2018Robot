@@ -80,6 +80,9 @@ public:
 	void DriveForward(double distance);
 	void TurnAngle(double angle);
 
+	void ToSwitch(char position);
+	void ToScale(char position);
+
 	// PID Tuning Functions (JUST FOR TESTING)
 	void MaintainHeadingTest();
 	void DriveDistanceTest(double distance);

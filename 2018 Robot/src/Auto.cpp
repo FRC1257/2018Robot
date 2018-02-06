@@ -103,6 +103,12 @@ void Robot::DriveForward(double distance)
 	DistanceController.Enable();
 
 	SmartDashboard::PutNumber("Target Distance", distance);
+
+	while(!DistanceController.OnTarget())
+	{
+		Wait(0.01);
+	}
+	DistanceController.Disable();
 }
 
 void Robot::TurnAngle(double angle)
@@ -127,6 +133,12 @@ void Robot::TurnAngle(double angle)
 	AngleController.Enable();
 
 	SmartDashboard::PutNumber("Target Angle", angle);
+
+	while(!AngleController.OnTarget())
+	{
+		Wait(0.01);
+	}
+	AngleController.Disable();
 }
 
 void Robot::DriveFor(double seconds, double speed = 0.5)
@@ -138,39 +150,29 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 
 void Robot::ToSwitch(char position)
 {
-	double initialTurningAng;
-
-	if (position == 'L')
+	double initialTurningAngle = 90;
+	if(position == 'R')
 	{
-		initialTurningAng = 90;
-	}
-	else if (position == 'R')
-	{
-		initialTurningAng = -90;
+		initialTurningAngle *= -1;
 	}
 
-	TurnAngle(-1 * initialTurningAng);
+	TurnAngle(-1 * initialTurningAngle);
 	DriveForward(25);
 }
 
 void Robot::ToScale(char position)
 {
-	double initialTurningAng;
-
-	if (position == 'L')
+	double initialTurningAngle = 90;
+	if(position == 'R')
 	{
-		initialTurningAng = 90;
-	}
-	else if (position == 'R')
-	{
-		initialTurningAng = -90;
+		initialTurningAngle *= -1;
 	}
 
 	DriveForward(70);
-	TurnAngle(initialTurningAng);
+	TurnAngle(initialTurningAngle);
 	DriveForward(30);
-	TurnAngle(-1 * initialTurningAng);
+	TurnAngle(-1 * initialTurningAngle);
 	DriveForward(86);
-	TurnAngle(-1 * initialTurningAng);
+	TurnAngle(-1 * initialTurningAngle);
 	DriveForward(36);
 }
