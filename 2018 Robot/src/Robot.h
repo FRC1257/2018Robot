@@ -41,8 +41,8 @@ private:
 
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
-	WPI_TalonSRX BackLeftMotor;
-	WPI_TalonSRX BackRightMotor;
+	Spark BackLeftMotor;
+	Spark BackRightMotor;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
