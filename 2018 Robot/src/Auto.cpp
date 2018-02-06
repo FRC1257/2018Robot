@@ -20,18 +20,11 @@ void Robot::AutonomousInit()
 			DriveForward(130);
 			if(gameData[0] == 'L')
 			{
-				TurnAngle(-90);
-				DriveForward(25);
+				ToSwitch('L');
 			}
 			else if(gameData[1] == 'L')
 			{
-				DriveForward(70);
-				TurnAngle(90);
-				DriveForward(30);
-				TurnAngle(-90);
-				DriveForward(86);
-				TurnAngle(-90);
-				DriveForward(36);
+				ToScale('L');
 			}
 			else
 			{
@@ -43,18 +36,11 @@ void Robot::AutonomousInit()
 			DriveForward(130);
 			if(gameData[0] == 'R')
 			{
-				TurnAngle(90);
-				DriveForward(25);
+				ToSwitch('R');
 			}
 			else if(gameData[1] == 'R')
 			{
-				DriveForward(70);
-				TurnAngle(-90);
-				DriveForward(30);
-				TurnAngle(90);
-				DriveForward(86);
-				TurnAngle(90);
-				DriveForward(36);
+				ToScale('R');
 			}
 			else
 			{
@@ -138,7 +124,6 @@ void Robot::TurnAngle(double angle)
 	AngleController.SetInputRange(-180.0, 180.0);
 	AngleController.SetContinuous(true);
 	AngleController.SetOutputRange(-1.0, 1.0);
-
 	AngleController.Enable();
 
 	SmartDashboard::PutNumber("Target Angle", angle);
@@ -151,3 +136,41 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 	DriveTrain.ArcadeDrive(0, 0);
 }
 
+void Robot::ToSwitch(char position)
+{
+	double initialTurningAng;
+
+	if (position == 'L')
+	{
+		initialTurningAng = 90;
+	}
+	else if (position == 'R')
+	{
+		initialTurningAng = -90;
+	}
+
+	TurnAngle(-1 * initialTurningAng);
+	DriveForward(25);
+}
+
+void Robot::ToScale(char position)
+{
+	double initialTurningAng;
+
+	if (position == 'L')
+	{
+		initialTurningAng = 90;
+	}
+	else if (position == 'R')
+	{
+		initialTurningAng = -90;
+	}
+
+	DriveForward(70);
+	TurnAngle(initialTurningAng);
+	DriveForward(30);
+	TurnAngle(-1 * initialTurningAng);
+	DriveForward(86);
+	TurnAngle(-1 * initialTurningAng);
+	DriveForward(36);
+}
