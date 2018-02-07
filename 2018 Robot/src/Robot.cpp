@@ -5,6 +5,9 @@ Robot::Robot() :
 	FrontRightMotor(2),
 	BackLeftMotor(3),
 	BackRightMotor(4),
+	ElevatorMotor(5),
+	RightIntakeMotor(6),
+	LeftIntakeMotor(7),
 	LeftMotors(FrontLeftMotor, BackLeftMotor),
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveController(0),
@@ -14,7 +17,9 @@ Robot::Robot() :
 	DistancePID(FrontLeftMotor, DriveTrain),
 	AngleController(0.0111, 0, 0, 0, AngleSensors, AnglePIDOut),
 	MaintainAngleController(0.01, 0, 0, AngleSensors, AnglePIDOut),
-	DistanceController(0.05, 0, 0, DistancePID, DistancePID)
+	DistanceController(0.05, 0, 0, DistancePID, DistancePID),
+	ElevatorEncoder(0, 1, false, Encoder::EncodingType::k4X), // TODO: delete or replace aChannel and bChannel
+	ElevatorPID(0.25, 0, 0, ElevatorEncoder, ElevatorMotor)
 {
 	AutoLocationChooser = new SendableChooser<consts::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<consts::AutoObjective>();

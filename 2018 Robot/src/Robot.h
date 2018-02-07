@@ -43,6 +43,9 @@ private:
 	WPI_TalonSRX FrontRightMotor;
 	Spark BackLeftMotor;
 	Spark BackRightMotor;
+	WPI_TalonSRX ElevatorMotor;
+	WPI_TalonSRX RightIntakeMotor;
+	WPI_TalonSRX LeftIntakeMotor;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
@@ -54,6 +57,9 @@ private:
 	PIDController AngleController;
 	PIDController MaintainAngleController;
 	PIDController DistanceController;
+
+	Encoder ElevatorEncoder;
+	PIDController ElevatorPID;
 
 	SendableChooser<consts::AutoPosition> *AutoLocationChooser;
 	SendableChooser<consts::AutoObjective> *AutoObjectiveChooser;
@@ -75,14 +81,19 @@ public:
 	void TeleopPeriodic() override;
 	void TestInit() override;
 	void TestPeriodic() override;
-
+	void DriveToScale(consts::AutoPosition startPosition);
+	void DriveToSwitch(consts::AutoPosition startPosition);
+	void MiddleToSwitch(char switchPosition);
 	void DriveFor(double seconds, double speed);
 	void DriveForward(double distance);
 	void TurnAngle(double angle);
+	void DriveToSwitch(char position);
+	void DriveToScale(char position);
 
 	// PID Tuning Functions (JUST FOR TESTING)
 	void MaintainHeadingTest();
 	void DriveDistanceTest(double distance);
+	void TurnAngleTest(double angle);
 
 	void ResetEncoders();
 };

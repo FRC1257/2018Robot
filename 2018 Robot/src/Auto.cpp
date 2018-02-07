@@ -17,21 +17,15 @@ void Robot::AutonomousInit()
 	switch(AutoLocationChooser->GetSelected())
 	{
 		case consts::AutoPosition::LEFT_START:
-			DriveForward(130);
 			if(gameData[0] == 'L')
 			{
-				TurnAngle(-90);
-				DriveForward(25);
+				DriveToSwitch(consts::AutoPosition::LEFT_START);
+				//drop powercube
 			}
 			else if(gameData[1] == 'L')
 			{
-				DriveForward(70);
-				TurnAngle(90);
-				DriveForward(30);
-				TurnAngle(-90);
-				DriveForward(86);
-				TurnAngle(-90);
-				DriveForward(36);
+				DriveToScale(consts::AutoPosition::LEFT_START);
+				//drop powercube
 			}
 			else
 			{
@@ -40,21 +34,15 @@ void Robot::AutonomousInit()
 			break;
 
 		case consts::AutoPosition::RIGHT_START:
-			DriveForward(130);
 			if(gameData[0] == 'R')
 			{
-				TurnAngle(90);
-				DriveForward(25);
+				DriveToSwitch(consts::AutoPosition::RIGHT_START);
+				//drop powercube
 			}
 			else if(gameData[1] == 'R')
 			{
-				DriveForward(70);
-				TurnAngle(-90);
-				DriveForward(30);
-				TurnAngle(90);
-				DriveForward(86);
-				TurnAngle(90);
-				DriveForward(36);
+				DriveToScale(consts::AutoPosition::RIGHT_START);
+				//drop powercube
 			}
 			else
 			{
@@ -65,11 +53,11 @@ void Robot::AutonomousInit()
 		case consts::AutoPosition::MIDDLE_START:
 			if(gameData[0] == 'L')
 			{
-
+				MiddleToSwitch(gameData[0]);
 			}
 			else if(gameData[0] == 'R')
 			{
-
+				MiddleToSwitch(gameData[0]);
 			}
 			break;
 		default:
@@ -95,6 +83,9 @@ void Robot::DriveForward(double distance)
 	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
 	AngleSensors.Reset();
 
+	//Disable test dist output for angle
+	AnglePIDOut.SetTestDistOutput(0);
+
 	//Make sure the PID objects know about each other to avoid conflicts
 	DistancePID.SetAnglePID(&AnglePIDOut);
 	AnglePIDOut.SetDistancePID(&DistancePID);
@@ -117,6 +108,12 @@ void Robot::DriveForward(double distance)
 	DistanceController.Enable();
 
 	SmartDashboard::PutNumber("Target Distance", distance);
+
+	while(!DistanceController.OnTarget())
+	{
+		Wait(0.01);
+	}
+	DistanceController.Disable();
 }
 
 void Robot::TurnAngle(double angle)
@@ -128,6 +125,9 @@ void Robot::TurnAngle(double angle)
 	//Zeroing the angle sensor
 	AngleSensors.Reset();
 
+	//Disable test dist output for angle
+	AnglePIDOut.SetTestDistOutput(0);
+
 	//Remove the pointers since only one PID is being used
 	DistancePID.SetAnglePID(nullptr);
 	AnglePIDOut.SetDistancePID(nullptr);
@@ -138,10 +138,15 @@ void Robot::TurnAngle(double angle)
 	AngleController.SetInputRange(-180.0, 180.0);
 	AngleController.SetContinuous(true);
 	AngleController.SetOutputRange(-1.0, 1.0);
-
 	AngleController.Enable();
 
 	SmartDashboard::PutNumber("Target Angle", angle);
+
+	while(!AngleController.OnTarget())
+	{
+		Wait(0.01);
+	}
+	AngleController.Disable();
 }
 
 void Robot::DriveFor(double seconds, double speed = 0.5)
@@ -151,3 +156,50 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 	DriveTrain.ArcadeDrive(0, 0);
 }
 
+void Robot::DriveToSwitch(consts::AutoPosition startPosition) // excludes middle position because it is not related
+{
+	double initialTurnAng = 90; // Returns the function before it runs left or right switch code if Middle case
+		if (startPosition == consts::AutoPosition::RIGHT_START)
+		{
+			initialTurnAng *= -1;// all of the angles need to be reversed for the right side so initialTurningAngle is multiplied by -1
+		}
+		DriveForward(130);
+		TurnAngle(-initialTurnAng);
+		DriveForward(25);
+	}
+
+
+void Robot::MiddleToSwitch(char switchPosition)
+{
+	DriveForward(25);
+	double initialTurnAng = 90;
+	if (switchPosition == 'L')
+	{
+		// Mirror the turns for the left side by multiplying by -1
+		initialTurnAng = -90;
+	}
+	TurnAngle(initialTurnAng);
+	DriveForward(80);
+	TurnAngle(-initialTurnAng);
+	DriveForward(78);
+	//drop powercube
+	DriveForward(-78);
+}
+
+void Robot::DriveToScale(consts::AutoPosition startPosition) // excludes middle position because it is not related
+{
+	double initialTurnAng = 90;
+	if(startPosition == consts::AutoPosition::RIGHT_START)
+	{
+		// Mirror the turns for the left side by multiplying by -1 all of the angles need to be reversed for the right side so initialTurnAng is multiplied by -1
+		initialTurnAng = -90;
+	}
+	DriveForward(130);
+	DriveForward(70);
+	TurnAngle(initialTurnAng);
+	DriveForward(30);
+	TurnAngle(-initialTurnAng);
+	DriveForward(86);
+	TurnAngle(-initialTurnAng);
+	DriveForward(36);
+}
