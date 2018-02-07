@@ -43,6 +43,9 @@ private:
 	WPI_TalonSRX FrontRightMotor;
 	WPI_TalonSRX BackLeftMotor;
 	WPI_TalonSRX BackRightMotor;
+	WPI_TalonSRX ElevatorMotor;
+	WPI_TalonSRX RightIntakeMotor;
+	WPI_TalonSRX LeftIntakeMotor;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
@@ -54,6 +57,9 @@ private:
 	PIDController AngleController;
 	PIDController MaintainAngleController;
 	PIDController DistanceController;
+
+	Encoder ElevatorEncoder;
+	PIDController ElevatorPID;
 
 	SendableChooser<consts::AutoPosition> *AutoLocationChooser;
 	SendableChooser<consts::AutoObjective> *AutoObjectiveChooser;
