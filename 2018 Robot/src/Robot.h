@@ -81,7 +81,8 @@ public:
 	void TeleopPeriodic() override;
 	void TestInit() override;
 	void TestPeriodic() override;
-
+	void Robot::ToScale(char position);
+	void Robot::ToSwitch(char position);
 	void DriveFor(double seconds, double speed);
 	void DriveForward(double distance);
 	void TurnAngle(double angle);
