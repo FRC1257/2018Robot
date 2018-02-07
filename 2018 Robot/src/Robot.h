@@ -93,6 +93,7 @@ public:
 	// PID Tuning Functions (JUST FOR TESTING)
 	void MaintainHeadingTest();
 	void DriveDistanceTest(double distance);
+	void TurnAngleTest(double angle);
 
 	void ResetEncoders();
 };

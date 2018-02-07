@@ -83,6 +83,9 @@ void Robot::DriveForward(double distance)
 	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
 	AngleSensors.Reset();
 
+	//Disable test dist output for angle
+	AnglePIDOut.SetTestDistOutput(0);
+
 	//Make sure the PID objects know about each other to avoid conflicts
 	DistancePID.SetAnglePID(&AnglePIDOut);
 	AnglePIDOut.SetDistancePID(&DistancePID);
@@ -121,6 +124,9 @@ void Robot::TurnAngle(double angle)
 
 	//Zeroing the angle sensor
 	AngleSensors.Reset();
+
+	//Disable test dist output for angle
+	AnglePIDOut.SetTestDistOutput(0);
 
 	//Remove the pointers since only one PID is being used
 	DistancePID.SetAnglePID(nullptr);
