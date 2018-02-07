@@ -81,14 +81,14 @@ public:
 	void TeleopPeriodic() override;
 	void TestInit() override;
 	void TestPeriodic() override;
-	void Robot::ToScale(char position);
-	void Robot::ToSwitch(char position);
+	void DriveToScale(consts::AutoPosition startPosition);
+	void DriveToSwitch(consts::AutoPosition startPosition);
+	void MiddleToSwitch(char switchPosition);
 	void DriveFor(double seconds, double speed);
 	void DriveForward(double distance);
 	void TurnAngle(double angle);
-
-	void ToSwitch(char position);
-	void ToScale(char position);
+	void DriveToSwitch(char position);
+	void DriveToScale(char position);
 
 	// PID Tuning Functions (JUST FOR TESTING)
 	void MaintainHeadingTest();

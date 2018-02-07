@@ -17,14 +17,15 @@ void Robot::AutonomousInit()
 	switch(AutoLocationChooser->GetSelected())
 	{
 		case consts::AutoPosition::LEFT_START:
-			DriveForward(130);
 			if(gameData[0] == 'L')
 			{
-				ToSwitch('L');
+				DriveToSwitch(consts::AutoPosition::LEFT_START);
+				//drop powercube
 			}
 			else if(gameData[1] == 'L')
 			{
-				ToScale('L');
+				DriveToScale(consts::AutoPosition::LEFT_START);
+				//drop powercube
 			}
 			else
 			{
@@ -33,14 +34,15 @@ void Robot::AutonomousInit()
 			break;
 
 		case consts::AutoPosition::RIGHT_START:
-			DriveForward(130);
 			if(gameData[0] == 'R')
 			{
-				ToSwitch('R');
+				DriveToSwitch(consts::AutoPosition::RIGHT_START);
+				//drop powercube
 			}
 			else if(gameData[1] == 'R')
 			{
-				ToScale('R');
+				DriveToScale(consts::AutoPosition::RIGHT_START);
+				//drop powercube
 			}
 			else
 			{
@@ -51,11 +53,11 @@ void Robot::AutonomousInit()
 		case consts::AutoPosition::MIDDLE_START:
 			if(gameData[0] == 'L')
 			{
-
+				MiddleToSwitch(gameData[0]);
 			}
 			else if(gameData[0] == 'R')
 			{
-
+				MiddleToSwitch(gameData[0]);
 			}
 			break;
 		default:
@@ -148,31 +150,50 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 	DriveTrain.ArcadeDrive(0, 0);
 }
 
-void Robot::ToSwitch(char position)
+void Robot::DriveToSwitch(consts::AutoPosition startPosition) // excludes middle position because it is not related
 {
-	double initialTurningAngle = 90;
-	if(position == 'R')
-	{
-		initialTurningAngle *= -1;
+	double initialTurnAng = 90; // Returns the function before it runs left or right switch code if Middle case
+		if (startPosition == consts::AutoPosition::RIGHT_START)
+		{
+			initialTurnAng *= -1;// all of the angles need to be reversed for the right side so initialTurningAngle is multiplied by -1
+		}
+		DriveForward(130);
+		TurnAngle(-initialTurnAng);
+		DriveForward(25);
 	}
 
-	TurnAngle(-1 * initialTurningAngle);
+
+void Robot::MiddleToSwitch(char switchPosition)
+{
 	DriveForward(25);
+	double initialTurnAng = 90;
+	if (switchPosition == 'L')
+	{
+		// Mirror the turns for the left side by multiplying by -1
+		initialTurnAng = -90;
+	}
+	TurnAngle(initialTurnAng);
+	DriveForward(80);
+	TurnAngle(-initialTurnAng);
+	DriveForward(78);
+	//drop powercube
+	DriveForward(-78);
 }
 
-void Robot::ToScale(char position)
+void Robot::DriveToScale(consts::AutoPosition startPosition) // excludes middle position because it is not related
 {
-	double initialTurningAngle = 90;
-	if(position == 'R')
+	double initialTurnAng = 90;
+	if(startPosition == consts::AutoPosition::RIGHT_START)
 	{
-		initialTurningAngle *= -1;
+		// Mirror the turns for the left side by multiplying by -1 all of the angles need to be reversed for the right side so initialTurnAng is multiplied by -1
+		initialTurnAng = -90;
 	}
-
+	DriveForward(130);
 	DriveForward(70);
-	TurnAngle(initialTurningAngle);
+	TurnAngle(initialTurnAng);
 	DriveForward(30);
-	TurnAngle(-1 * initialTurningAngle);
+	TurnAngle(-initialTurnAng);
 	DriveForward(86);
-	TurnAngle(-1 * initialTurningAngle);
+	TurnAngle(-initialTurnAng);
 	DriveForward(36);
 }
