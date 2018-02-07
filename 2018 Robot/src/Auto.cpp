@@ -4,7 +4,8 @@ void Robot::AutonomousInit()
 {
 	//Zeroing the angle sensor and encoders
 	AngleSensors.Reset();
-	ResetEncoders();
+	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
+	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
 
 	std::string gameData;
 	DriverStation::GetInstance().WaitForData();
@@ -19,24 +20,34 @@ void Robot::AutonomousInit()
 			DriveForward(130);
 			if(gameData[0] == 'L')
 			{
-				TurnAngle(-90);
-				DriveForward(25);
+				ToSwitch('L');
 			}
 			else if(gameData[1] == 'L')
 			{
-				DriveForward(70);
-				TurnAngle(90);
-				DriveForward(30);
-				TurnAngle(-90);
-				DriveForward(86);
-				TurnAngle(-90);
-				DriveForward(36);
+				ToScale('L');
 			}
 			else
 			{
 				DriveForward(70);
 			}
 			break;
+
+		case consts::AutoPosition::RIGHT_START:
+			DriveForward(130);
+			if(gameData[0] == 'R')
+			{
+				ToSwitch('R');
+			}
+			else if(gameData[1] == 'R')
+			{
+				ToScale('R');
+			}
+			else
+			{
+				DriveForward(70);
+			}
+			break;
+
 		case consts::AutoPosition::MIDDLE_START:
 			if(gameData[0] == 'L')
 			{
@@ -47,30 +58,7 @@ void Robot::AutonomousInit()
 
 			}
 			break;
-		case consts::AutoPosition::RIGHT_START:
-			DriveForward(130);
-			if(gameData[0] == 'R')
-			{
-				TurnAngle(90);
-				DriveForward(25);
-			}
-			else if(gameData[1] == 'R')
-			{
-				DriveForward(70);
-				TurnAngle(-90);
-				DriveForward(30);
-				TurnAngle(90);
-				DriveForward(86);
-				TurnAngle(90);
-				DriveForward(36);
-			}
-			else
-			{
-				DriveForward(70);
-			}
-			break;
 		default:
-
 			break;
 	}
 //	DriveForward(36);
@@ -89,7 +77,8 @@ void Robot::DriveForward(double distance)
 	AngleController.Disable();
 
 	//Zeroing the angle sensor and encoders
-	ResetEncoders();
+	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
+	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
 	AngleSensors.Reset();
 
 	//Make sure the PID objects know about each other to avoid conflicts
@@ -114,6 +103,12 @@ void Robot::DriveForward(double distance)
 	DistanceController.Enable();
 
 	SmartDashboard::PutNumber("Target Distance", distance);
+
+	while(!DistanceController.OnTarget())
+	{
+		Wait(0.01);
+	}
+	DistanceController.Disable();
 }
 
 void Robot::TurnAngle(double angle)
@@ -135,10 +130,15 @@ void Robot::TurnAngle(double angle)
 	AngleController.SetInputRange(-180.0, 180.0);
 	AngleController.SetContinuous(true);
 	AngleController.SetOutputRange(-1.0, 1.0);
-
 	AngleController.Enable();
 
 	SmartDashboard::PutNumber("Target Angle", angle);
+
+	while(!AngleController.OnTarget())
+	{
+		Wait(0.01);
+	}
+	AngleController.Disable();
 }
 
 void Robot::DriveFor(double seconds, double speed = 0.5)
@@ -148,3 +148,31 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 	DriveTrain.ArcadeDrive(0, 0);
 }
 
+void Robot::ToSwitch(char position)
+{
+	double initialTurningAngle = 90;
+	if(position == 'R')
+	{
+		initialTurningAngle *= -1;
+	}
+
+	TurnAngle(-1 * initialTurningAngle);
+	DriveForward(25);
+}
+
+void Robot::ToScale(char position)
+{
+	double initialTurningAngle = 90;
+	if(position == 'R')
+	{
+		initialTurningAngle *= -1;
+	}
+
+	DriveForward(70);
+	TurnAngle(initialTurningAngle);
+	DriveForward(30);
+	TurnAngle(-1 * initialTurningAngle);
+	DriveForward(86);
+	TurnAngle(-1 * initialTurningAngle);
+	DriveForward(36);
+}
