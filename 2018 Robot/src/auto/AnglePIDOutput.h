@@ -13,6 +13,7 @@ private:
 	DifferentialDrive& m_driveTrain;
 	double m_output;                  // Stores the motor output typically passed into the PIDWrite command
 	DistancePIDHelper* m_distancePID;
+	double m_testDistOutput;
 
 public:
 	AnglePIDOutput(DifferentialDrive& DriveTrain);
@@ -22,6 +23,7 @@ public:
 
 	double GetOutput();
 	void SetDistancePID(DistancePIDHelper* distancePID);
+	void SetTestDistOutput(double testDistOutput);
 };
 
 #endif
