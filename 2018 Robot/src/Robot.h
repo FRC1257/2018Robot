@@ -75,7 +75,7 @@ public:
 	void Climb();
 	void Intake();
 	void Linkage();
-	void ClosedLoopArcadeDrive();
+	void ClosedLoopArcadeDrive(double moveValue, double rotateValue);
 };
 
 
