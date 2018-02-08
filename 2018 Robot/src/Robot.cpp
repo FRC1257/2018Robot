@@ -3,8 +3,8 @@
 Robot::Robot() :
 	FrontLeftMotor(1),
 	FrontRightMotor(2),
-	BackLeftMotor(3),
-	BackRightMotor(4),
+	BackLeftMotor(0), //0
+	BackRightMotor(1), //1
 	ElevatorMotor(5),
 	RightIntakeMotor(6),
 	LeftIntakeMotor(7),

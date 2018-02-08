@@ -2,13 +2,15 @@
 
 void Robot::TestInit()
 {
-
+	SmartDashboard::PutBoolean("Reset Angle", 0);
 }
 
 void Robot::TestPeriodic()
 {
 	SmartDashboard::PutNumber("Auto Pos Val", (int) AutoLocationChooser->GetSelected());
 	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
+	if(SmartDashboard::GetBoolean("Reset Angle", 0)) AngleSensors.Reset();
+	SmartDashboard::PutNumber("Angle Sensor", AngleSensors.GetAngle());
 }
 
 void Robot::MaintainHeadingTest()
@@ -94,9 +96,7 @@ void Robot::TurnAngleTest(double angle)
 
 	AngleController.Reset();
 	AngleController.SetSetpoint(angle);
-	AngleController.SetAbsoluteTolerance(1);
-	AngleController.SetInputRange(-180.0, 180.0);
-	AngleController.SetContinuous(true);
+	AngleController.SetAbsoluteTolerance(0.5);
 	AngleController.SetOutputRange(-1.0, 1.0);
 	AngleController.Enable();
 
