@@ -11,6 +11,7 @@ using namespace frc;
 
 inline double dabs(double d) { return d > 0.0 ? d : -d; } // Absolute value of a double precision floating point number
 inline bool inDeadZone(double axisVal) { return dabs(axisVal) < 0.2; }
+inline double limit(double value) { return (dabs(value) > 1.0 ? 1.0 : value); }
 
 class Robot: public TimedRobot
 {
@@ -74,6 +75,7 @@ public:
 	void Climb();
 	void Intake();
 	void Linkage();
+	void ClosedLoopArcadeDrive();
 };
 
 
