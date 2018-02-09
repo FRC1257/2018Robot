@@ -7,6 +7,7 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
+	SmartDashboard::PutNumber("R Trigger Val", DriveController.GetTriggerAxis(GenericHID::kRightHand));
 	SmartDashboard::PutNumber("Auto Pos Val", (int) AutoLocationChooser->GetSelected());
 	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
 	if(SmartDashboard::GetBoolean("Reset Angle", 0)) AngleSensors.Reset();

@@ -15,7 +15,7 @@ Robot::Robot() :
 	AngleSensors(SPI::Port::kMXP, SPI::kOnboardCS0),
 	AnglePIDOut(DriveTrain),
 	DistancePID(FrontLeftMotor, DriveTrain),
-	AngleController(0.0111, 0, 0, 0, AngleSensors, AnglePIDOut),
+	AngleController(0.042, 0.01, 0.1, 0, AngleSensors, AnglePIDOut),
 	MaintainAngleController(0.01, 0, 0, AngleSensors, AnglePIDOut),
 	DistanceController(0.05, 0, 0, DistancePID, DistancePID),
 	ElevatorEncoder(0, 1, false, Encoder::EncodingType::k4X), // TODO: delete or replace aChannel and bChannel
