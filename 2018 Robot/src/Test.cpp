@@ -6,8 +6,8 @@ void Robot::ElevatorTest()
 	bool isLowering = false;
 	int targetStep = 0;
 
-	int correctedRight = 0;
-	int correctedLeft = 0;
+	double correctedRight = 0;
+	double correctedLeft = 0;
 
 	//using left back trigger to lower elevator
 	if(inDeadZone(OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand)))
@@ -17,7 +17,7 @@ void Robot::ElevatorTest()
 	else
 	{
 		inAutomatic = false;
-		correctedLeft = -OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
+		correctedLeft = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
 	}
 
 	//using right back trigger to raise elevator
@@ -31,6 +31,8 @@ void Robot::ElevatorTest()
 		correctedRight = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand);
 	}
 
+	SmartDashboard::PutNumber("Corrected R", correctedRight);
+	SmartDashboard::PutNumber("Corrected L", correctedLeft);
 	ElevatorMotor.Set(0.25*(correctedRight-correctedLeft));
 
 	//using right bumper to raise to presets and stop
