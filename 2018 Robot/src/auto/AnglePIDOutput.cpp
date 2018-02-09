@@ -21,7 +21,6 @@ void AnglePIDOutput::PIDWrite(double output)
 
 	double drive = m_distancePID == nullptr ? 0 : m_distancePID->GetOutput();
 	if(m_testDistOutput != 0) drive = m_testDistOutput;
-
 	m_driveTrain.ArcadeDrive(drive, output);
 	m_output = output;
 }

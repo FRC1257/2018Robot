@@ -20,12 +20,12 @@ void Robot::AutonomousInit()
 			if(gameData[0] == 'L')
 			{
 				DriveToSwitch(consts::AutoPosition::LEFT_START);
-				//drop powercube
+				//Drop powercube
 			}
 			else if(gameData[1] == 'L')
 			{
 				DriveToScale(consts::AutoPosition::LEFT_START);
-				//drop powercube
+				//Drop powercube at scale height
 			}
 			else
 			{
@@ -37,12 +37,12 @@ void Robot::AutonomousInit()
 			if(gameData[0] == 'R')
 			{
 				DriveToSwitch(consts::AutoPosition::RIGHT_START);
-				//drop powercube
+				//Drop powercube
 			}
 			else if(gameData[1] == 'R')
 			{
 				DriveToScale(consts::AutoPosition::RIGHT_START);
-				//drop powercube
+				//Drop powercube at scale height
 			}
 			else
 			{
@@ -51,14 +51,7 @@ void Robot::AutonomousInit()
 			break;
 
 		case consts::AutoPosition::MIDDLE_START:
-			if(gameData[0] == 'L')
-			{
-				MiddleToSwitch(gameData[0]);
-			}
-			else if(gameData[0] == 'R')
-			{
-				MiddleToSwitch(gameData[0]);
-			}
+			MiddleToSwitch(gameData[0]);
 			break;
 		default:
 			break;
@@ -93,15 +86,13 @@ void Robot::DriveForward(double distance)
 	//Configure the PID controller to make sure the robot drives straight with the NavX
 	MaintainAngleController.Reset();
 	MaintainAngleController.SetSetpoint(0);
-	MaintainAngleController.SetAbsoluteTolerance(1);
-	MaintainAngleController.SetInputRange(-180.0, 180.0);
-	MaintainAngleController.SetContinuous(true);
+	MaintainAngleController.SetAbsoluteTolerance(0.5);
 	MaintainAngleController.SetOutputRange(-1.0, 1.0);
 
 	//Configure the robot to drive a given distance
 	DistanceController.Reset();
 	DistanceController.SetSetpoint(distance);
-	DistanceController.SetPercentTolerance(1);
+	DistanceController.SetAbsoluteTolerance(1);
 	DistanceController.SetOutputRange(-1.0, 1.0);
 
 	MaintainAngleController.Enable();
@@ -134,9 +125,7 @@ void Robot::TurnAngle(double angle)
 
 	AngleController.Reset();
 	AngleController.SetSetpoint(angle);
-	AngleController.SetAbsoluteTolerance(1);
-	AngleController.SetInputRange(-180.0, 180.0);
-	AngleController.SetContinuous(true);
+	AngleController.SetAbsoluteTolerance(0.5);
 	AngleController.SetOutputRange(-1.0, 1.0);
 	AngleController.Enable();
 
@@ -156,17 +145,18 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 	DriveTrain.ArcadeDrive(0, 0);
 }
 
-void Robot::DriveToSwitch(consts::AutoPosition startPosition) // excludes middle position because it is not related
+void Robot::DriveToSwitch(consts::AutoPosition startPosition)
 {
-	double initialTurnAng = 90; // Returns the function before it runs left or right switch code if Middle case
-		if (startPosition == consts::AutoPosition::RIGHT_START)
-		{
-			initialTurnAng *= -1;// all of the angles need to be reversed for the right side so initialTurningAngle is multiplied by -1
-		}
-		DriveForward(130);
-		TurnAngle(-initialTurnAng);
-		DriveForward(25);
+	double initialTurnAng = 90;
+	if (startPosition == consts::AutoPosition::RIGHT_START)
+	{
+		// Mirror the turns for the left side by multiplying by -1
+		initialTurnAng *= -1;
 	}
+	DriveForward(130);
+	TurnAngle(-initialTurnAng);
+	DriveForward(25);
+}
 
 
 void Robot::MiddleToSwitch(char switchPosition)
@@ -175,23 +165,23 @@ void Robot::MiddleToSwitch(char switchPosition)
 	double initialTurnAng = 90;
 	if (switchPosition == 'L')
 	{
-		// Mirror the turns for the left side by multiplying by -1
+		//Mirror the turns for the left side by multiplying by -1
 		initialTurnAng = -90;
 	}
 	TurnAngle(initialTurnAng);
 	DriveForward(80);
 	TurnAngle(-initialTurnAng);
 	DriveForward(78);
-	//drop powercube
+	//Drop powercube
 	DriveForward(-78);
 }
 
-void Robot::DriveToScale(consts::AutoPosition startPosition) // excludes middle position because it is not related
+void Robot::DriveToScale(consts::AutoPosition startPosition)
 {
 	double initialTurnAng = 90;
 	if(startPosition == consts::AutoPosition::RIGHT_START)
 	{
-		// Mirror the turns for the left side by multiplying by -1 all of the angles need to be reversed for the right side so initialTurnAng is multiplied by -1
+		//Mirror the turns for the left side by multiplying by -1
 		initialTurnAng = -90;
 	}
 	DriveForward(130);
