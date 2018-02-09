@@ -15,6 +15,43 @@ double Robot::GetStepNumber(double elevatorHeight)
 //Driver Controls
 void Robot::Drive()
 {
+	double xSpeed = Limit(xSpeed);  //WHATS LIMIT?!
+
+	double zRotation = Limit(zRotation);
+
+	double m_maxOutput;
+
+	double leftMotorOutput;
+	double rightMotorOutput;
+
+	double maxInput =
+	  std::copysign(std::max(std::abs(xSpeed), std::abs(zRotation)), xSpeed);
+
+	if (xSpeed >= 0.0) {
+	// First quadrant, else second quadrant
+	if (zRotation >= 0.0) {
+	  leftMotorOutput = maxInput;
+	  rightMotorOutput = xSpeed - zRotation;
+	} else {
+	  leftMotorOutput = xSpeed + zRotation;
+	  rightMotorOutput = maxInput;
+	}
+	} else {
+	// Third quadrant, else fourth quadrant
+	if (zRotation >= 0.0) {
+	  leftMotorOutput = xSpeed + zRotation;
+	  rightMotorOutput = maxInput;
+	} else {
+	  leftMotorOutput = maxInput;
+	  rightMotorOutput = xSpeed - zRotation;
+	}
+	}
+
+	  FrontRightMotor.Set(Limit(leftMotorOutput) * m_maxOutput); //WHATS LIMIT?!
+	  FrontLeftMotor.Set(-Limit(rightMotorOutput) * m_maxOutput);
+
+	  //real drive stuff starts here
+
 	double speedVal = 0;
 	double turnVal = 0;
 

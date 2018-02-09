@@ -71,5 +71,4 @@ public:
 };
 
 
-
 #endif /* ROBOT */
