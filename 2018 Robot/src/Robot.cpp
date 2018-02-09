@@ -27,12 +27,6 @@ Robot::Robot() :
 	m_isLowering = false;
 	m_inAutomatic = false;
 	m_targetStep = 0;
-
-	m_talon = new WPI_TalonSRX(0);
-	_joy = new XboxController(0);
-	std::string _sb;
-	_loops = 0;
-
 }
 
 
@@ -74,16 +68,6 @@ void Robot::RobotInit()
 	LeftIntakeMotor.ConfigPeakCurrentLimit(PEAKAMPS, TIMEOUTMS);
 	LeftIntakeMotor.ConfigPeakCurrentDuration(DURATIONSMS, TIMEOUTMS);
 	LeftIntakeMotor.EnableCurrentLimit(true);
-
-	m_talon->ConfigNominalOutputForward(0, CCL_TIMEOUT_MS);
-	m_talon->ConfigNominalOutputReverse(0, CCL_TIMEOUT_MS);
-	m_talon->ConfigPeakOutputForward(1, CCL_TIMEOUT_MS);
-	m_talon->ConfigPeakOutputReverse(-1, CCL_TIMEOUT_MS);
-
-	m_talon->Config_kF(CCL_PID_LOOP_IDX, 0.0, CCL_TIMEOUT_MS);
-	m_talon->Config_kP(CCL_PID_LOOP_IDX, 0.0, CCL_TIMEOUT_MS);
-	m_talon->Config_kI(CCL_PID_LOOP_IDX, 0.0, CCL_TIMEOUT_MS);
-	m_talon->Config_kD(CCL_PID_LOOP_IDX, 0.0, CCL_TIMEOUT_MS);
 }
 
 START_ROBOT_CLASS(Robot)

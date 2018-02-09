@@ -49,52 +49,13 @@ void Robot::Drive()
 	}
 	//Negative is used to invert the speed (make forward <--> backward)
 	DriveTrain.ArcadeDrive(-speedVal, turnVal);
-
-
-	/* get gamepad axis */
-	double leftYstick = m_joy->GetY(GenericHID::JoystickHand::kLeftHand);
-	double motorOutput = m_talon->GetMotorOutputPercent();
-	bool button1 = m_joy->GetRawButton(1);
-
-	/* prepare line to print */
-	m_sb.append("\tout:");
-	m_sb.append(std::to_string(motorOutput));
-	m_sb.append("\tcur:");
-	m_sb.append(std::to_string(m_talon->GetOutputCurrent()));
-
-	/* on button1 press enter closed-loop mode on target position */
-	if (button1)
-	{
-		/* Position mode - button just pressed */
-		m_talon->Set(ControlMode::Current, leftYstick * 40); /* 40 Amps in either direction */
-	}
-	else
-	{
-		m_talon->Set(ControlMode::PercentOutput, leftYstick);
-	}
-	/* if Talon is in position closed-loop, print some more info */
-	if (m_talon->GetControlMode() == ControlMode::Current)
-	{
-		/* append more signals to print when in speed mode. */
-		m_sb.append("\terrNative:");
-		m_sb.append(std::to_string(m_talon->GetClosedLoopError(CCL_PID_LOOP_IDX)));
-		m_sb.append("\ttrg:");
-		m_sb.append(std::to_string(leftYstick * 40));
-	}
-	/* print every ten loops, printing too much too fast is generally bad for performance */
-	if (++m_loops >= 10)
-	{
-		m_loops = 0;
-		printf("%s\n", m_sb.c_str());
-	}
-	m_sb.clear();
 }
 
 // Operator Controls
 void Robot::Elevator()
 {
-	int correctedRight = 0;
-	int correctedLeft = 0;
+	double correctedRight = 0;
+	double correctedLeft = 0;
 
 	//using left back trigger to lower elevator
 	if(inDeadZone(OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand)))
@@ -104,7 +65,7 @@ void Robot::Elevator()
 	else
 	{
 		m_inAutomatic = false;
-		correctedLeft = -OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
+		correctedLeft = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
 	}
 
 	//using right back trigger to raise elevator

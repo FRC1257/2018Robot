@@ -45,11 +45,6 @@ private:
 	bool m_inAutomatic;
 	int m_targetStep;
 
-	WPI_TalonSRX * m_talon;
-	XboxController * m_joy;
-	std::string m_sb;
-	int m_loops;
-
 public:
 	// Here, we're declaring the following functions:
 	// - Robot class constructor
