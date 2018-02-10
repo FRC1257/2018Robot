@@ -1,94 +1,97 @@
 #include "Robot.h"
 
+void Robot::DriveTest()
+{
+	double forwardSpeed = 0;
+	double turnSpeed = 0;
+
+	// If they press A, use single stick arcade with the left joystick
+	if(DriveController.GetAButton())
+	{
+		forwardSpeed = DriveController.GetY(GenericHID::JoystickHand::kLeftHand);
+		turnSpeed = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
+	}
+	// If they press the left bumper, use the left joystick for forward and
+	// backward motion and the right joystick for turning
+	else if(DriveController.GetBumper(GenericHID::JoystickHand::kLeftHand))
+	{
+		forwardSpeed = DriveController.GetY(GenericHID::JoystickHand::kLeftHand);
+		turnSpeed = DriveController.GetX(GenericHID::JoystickHand::kRightHand);
+	}
+	// If they press the right bumper, use the right joystick for forward and
+	// backward motion and the left joystick for turning
+	else if(DriveController.GetBumper(GenericHID::JoystickHand::kRightHand))
+	{
+		forwardSpeed = DriveController.GetY(GenericHID::JoystickHand::kRightHand);
+		turnSpeed = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
+	}
+
+	// Negative is used to make forward positive and backwards negative
+	// because the y-axes of the XboxController are natively inverted
+	DriveTrain.ArcadeDrive(-forwardSpeed, turnSpeed);
+}
+
 void Robot::ElevatorTest()
 {
-	bool inAutomatic = false;
-	bool isLowering = false;
-	int targetStep = 0;
+	// Use the right trigger to manually raise the elevator and
+		// the left trigger to lower the elevator
+		double raiseElevatorOutput = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand);
+		double lowerElevatorOutput = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
 
-	double correctedRight = 0;
-	double correctedLeft = 0;
-
-	//using left back trigger to lower elevator
-	if(inDeadZone(OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand)))
-	{
-		correctedLeft = 0;
-	}
-	else
-	{
-		inAutomatic = false;
-		correctedLeft = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
-	}
-
-	//using right back trigger to raise elevator
-	if(inDeadZone(OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand)))
-	{
-		correctedRight = 0;
-	}
-	else
-	{
-		inAutomatic = false;
-		correctedRight = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand);
-	}
-
-	SmartDashboard::PutNumber("Corrected R", correctedRight);
-	SmartDashboard::PutNumber("Corrected L", correctedLeft);
-	ElevatorMotor.Set(0.25*(correctedRight-correctedLeft));
-
-	//using right bumper to raise to presets and stop
-	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
-	{
-		//If elevator is lowering and right bumper is pressed, stop elevator where it is
-		if (isLowering)
+		// If either triggers are being pressed, disable the PID and
+		// set the motor to the given speed
+		if(raiseElevatorOutput || lowerElevatorOutput)
 		{
-			ElevatorMotor.Set(0);
-			isLowering = false;
+			ElevatorPID.Disable();
+			ElevatorMotor.Set(raiseElevatorOutput - lowerElevatorOutput);
+			return;
 		}
-		else
+
+		// Automatic Mode is controlled by both bumpers
+		if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 		{
-			//If right bumper is being pressed for the first time, changes targetStep to the next highest step
-			if (!inAutomatic)
+			// If elevator is lowering and the right bumper is pressed, stop elevator where it is
+			if (m_isLowering)
 			{
-				inAutomatic = true;
-				targetStep = GetStepNumber(ElevatorEncoder.GetDistance());
+				ElevatorMotor.Set(0);
+				m_isLowering = false;
 			}
-			//if right bumper has already been pressed, go to the next step.
-			else if (targetStep < 4)
+			else
 			{
-				targetStep++;
+				// If right bumper is being pressed for the first time, increase the desired preset by 1
+				if (!ElevatorPID.IsEnabled())
+				{
+					m_targetStep = GetClosestStepNumber();
+				}
+				// If right bumper has already been pressed, go to the next step.
+				else if (m_targetStep < 4)
+				{
+					m_targetStep++;
+				}
+				ElevatorPID.SetSetpoint(consts::EVELVATOR_SETPOINTS[m_targetStep]);
 			}
-			ElevatorPID.SetSetpoint(consts::STEPVALS[targetStep]);
 		}
-	}
-	//if left bumper is pressed move the elevator to the bottom.
-	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
-	{
-		inAutomatic = false;
-		isLowering = true;
-		ElevatorPID.SetSetpoint(0);
-	}
+		// The left bumper will lower the elevator to the bottom
+		if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
+		{
+			m_isLowering = true;
+			ElevatorPID.SetSetpoint(0);
+		}
 }
 
 void Robot::LinkageTest()
 {
-	//using left joystick to do the linkage thing
-	if(!inDeadZone(dabs(OperatorController.GetY(GenericHID::JoystickHand::kLeftHand))))
-	{
-		LinkageMotor.Set(0.25*OperatorController.GetY(GenericHID::JoystickHand::kLeftHand));
-	}
-	else
-	{
-		LinkageMotor.Set(0);
-	}
+	// Use the left y-axis to do the linkage
+	LinkageMotor.Set(OperatorController.GetY(GenericHID::JoystickHand::kLeftHand));
 }
 
 void Robot::IntakeTest()
 {
-	//using b button to intake
+	// Use the B button to intake
 	if(OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > 3) // TODO change value
 	{
-		RightIntakeMotor.Set(0.25*(-1));
-		LeftIntakeMotor.Set(0.25*1);
+		RightIntakeMotor.Set(-1);
+		LeftIntakeMotor.Set(1);
 	}
 	else
 	{
@@ -96,11 +99,11 @@ void Robot::IntakeTest()
 		LeftIntakeMotor.Set(0);
 	}
 
-	// using a button to eject
+	// Use the A button to eject
 	if(OperatorController.GetAButton())
 	{
-		RightIntakeMotor.Set(0.25*1);
-		LeftIntakeMotor.Set(0.25*(-1));
+		RightIntakeMotor.Set(1);
+		LeftIntakeMotor.Set(-1);
 	}
 	else
 	{
@@ -112,16 +115,15 @@ void Robot::IntakeTest()
 
 void Robot::ClimbTest()
 {
-	// using y button to climb
+	// Use the y button to climb
 	if(OperatorController.GetYButton())
 	{
-		ClimbMotor.Set(0.25*(-1));
+		ClimbMotor.Set(-1);
 	}
 	else
 	{
 		ClimbMotor.Set(0);
 	}
-
 }
 
 void Robot::TestInit()
