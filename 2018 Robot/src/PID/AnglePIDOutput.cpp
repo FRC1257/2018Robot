@@ -1,5 +1,5 @@
-#include "auto/AnglePIDOutput.h"
-#include "auto/DistancePIDHelper.h"
+#include "AnglePIDOutput.h"
+#include "DistancePIDHelper.h"
 
 AnglePIDOutput::AnglePIDOutput(DifferentialDrive& driveTrain) :
 	m_driveTrain(driveTrain),

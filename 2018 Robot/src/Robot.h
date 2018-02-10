@@ -7,9 +7,9 @@
 #include <AHRS.h>
 
 #include "Constants.h"
-#include "auto/AnglePIDOutput.h"
-#include "auto/DistancePIDHelper.h"
-#include "auto/AngleSensorGroup.h"
+#include "PID/AnglePIDOutput.h"
+#include "PID/DistancePIDHelper.h"
+#include "Sensors/AngleSensorGroup.h"
 
 using namespace frc;
 
