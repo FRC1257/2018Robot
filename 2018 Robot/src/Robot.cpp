@@ -11,9 +11,10 @@ Robot::Robot() :
 	ElevatorMotor(8),
 	LeftIntakeMotor(9),
 	IntakeUltrasonic(1, 0),
-	ElevatorEncoder(0, 1, false, Encoder::EncodingType::k4X), // TODO: delete or replace aChannel and bChannel
-	ElevatorPID(0.25, 0, 0, ElevatorEncoder, ElevatorMotor),
-	LinkagePID(0.25, 0, 0, ElevatorEncoder, LinkageMotor),// TODO: replace PID values
+	ElevatorEncoderSource(&ElevatorMotor),
+	LinkageEncoderSource(&LinkageMotor),
+	ElevatorPIDController(0.25, 0., 0., ElevatorEncoderSource, ElevatorEncoderSource),
+	LinkagePIDController(0.25, 0., 0., ElevatorEncoderSource, LinkageEncoderSource),
 	LeftMotors(FrontLeftMotor, BackLeftMotor),
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveController(0),
@@ -53,6 +54,12 @@ void Robot::RobotInit()
 
 	LeftIntakeMotor.ConfigContinuousCurrentLimit(consts::THIRTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
 	LeftIntakeMotor.EnableCurrentLimit(true);
+
+	// Encoder Setup
+	LinkageMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_X, consts::TIMEOUT_MS);
+	LinkageMotor.SetSensorPhase(true);
+	ElevatorMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_X, consts::TIMEOUT_MS);
+	ElevatorMotor.SetSensorPhase(true);
 }
 
 START_ROBOT_CLASS(Robot)

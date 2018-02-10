@@ -57,7 +57,7 @@ void Robot::Elevator()
 	// set the motor to the given speed
 	if(raiseElevatorOutput || lowerElevatorOutput)
 	{
-		ElevatorPID.Disable();
+		ElevatorPIDController.Disable();
 		ElevatorMotor.Set(raiseElevatorOutput - lowerElevatorOutput);
 		return;
 	}
@@ -74,7 +74,7 @@ void Robot::Elevator()
 		else
 		{
 			// If right bumper is being pressed for the first time, increase the desired preset by 1
-			if (!ElevatorPID.IsEnabled())
+			if (!ElevatorPIDController.IsEnabled())
 			{
 				m_targetStep = GetClosestStepNumber();
 			}
@@ -83,14 +83,14 @@ void Robot::Elevator()
 			{
 				m_targetStep++;
 			}
-			ElevatorPID.SetSetpoint(consts::EVELVATOR_SETPOINTS[m_targetStep]);
+			ElevatorPIDController.SetSetpoint(consts::EVELVATOR_SETPOINTS[m_targetStep]);
 		}
 	}
 	// The left bumper will lower the elevator to the bottom
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
 		m_isLowering = true;
-		ElevatorPID.SetSetpoint(0);
+		ElevatorPIDController.SetSetpoint(0);
 	}
 }
 

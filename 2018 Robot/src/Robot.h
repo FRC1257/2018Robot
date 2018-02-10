@@ -5,9 +5,19 @@
 #include <ctre/Phoenix.h>
 #include <Encoder.h>
 #include <IterativeRobot.h>
+#include <PID/TalonPIDHelper.h>
 #include "Constants.h"
 
 using namespace frc;
+
+inline double PulsesToInches(double sensorPosition)
+{
+	double circumference = consts::WHEEL_DIAMETER * consts::PI;
+	double revolutions = sensorPosition / consts::PULSES_PER_REV;
+	double distance = revolutions * circumference;
+
+	return distance;
+}
 
 class Robot: public TimedRobot
 {
@@ -22,9 +32,10 @@ private:
 	WPI_TalonSRX ElevatorMotor;
 	WPI_TalonSRX LeftIntakeMotor;
 	Ultrasonic IntakeUltrasonic;
-	Encoder ElevatorEncoder;
-	PIDController ElevatorPID;
-	PIDController LinkagePID;
+	TalonPIDHelper ElevatorEncoderSource;
+	TalonPIDHelper LinkageEncoderSource;
+	PIDController ElevatorPIDController;
+	PIDController LinkagePIDController;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
