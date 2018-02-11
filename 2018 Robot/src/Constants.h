@@ -17,6 +17,12 @@ namespace consts
 		BASELINE
 	};
 
+	enum class MiddleApproach
+	{
+		FRONT,
+		SIDE
+	};
+
 	constexpr int PIDLoopIdx = 0;
 	constexpr int timeoutMs = 10;
 

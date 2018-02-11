@@ -17,7 +17,7 @@ AnglePIDOutput::~AnglePIDOutput()
 
 void AnglePIDOutput::PIDWrite(double output)
 {
-	SmartDashboard::PutNumber("Angle Output", output);
+	SmartDashboard::PutNumber("Angle PID Output", output);
 
 	double drive = m_distancePID == nullptr ? 0 : m_distancePID->GetOutput();
 	if(m_testDistOutput != 0) drive = m_testDistOutput;

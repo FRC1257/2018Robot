@@ -13,7 +13,7 @@ class DistancePIDHelper : public PIDSource, public PIDOutput
 private:
 	WPI_TalonSRX& m_motor;
 	DifferentialDrive& m_DriveTrain;
-	double m_output;
+	double m_output;                 // Stores the motor output so that other classes can access it
 	AnglePIDOutput* m_AnglePID;
 
 public:

@@ -22,7 +22,7 @@ double DistancePIDHelper::PIDGet()
 
 void DistancePIDHelper::PIDWrite(double output)
 {
-	SmartDashboard::PutNumber("Distance Output", output);
+	SmartDashboard::PutNumber("Distance PID Output", output);
 	double angle = m_AnglePID == nullptr ? 0 : m_AnglePID->GetOutput();
 	m_DriveTrain.ArcadeDrive(output, angle);
 	m_output = output;

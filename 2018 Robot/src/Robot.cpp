@@ -23,8 +23,14 @@ Robot::Robot() :
 {
 	AutoLocationChooser = new SendableChooser<consts::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<consts::AutoObjective>();
+	MiddleApproachChooser = new SendableChooser<consts::MiddleApproach>();
 }
 
+Robot::~Robot()
+{
+	delete AutoLocationChooser;
+	delete AutoObjectiveChooser;
+}
 
 void Robot::RobotInit()
 {
@@ -40,15 +46,11 @@ void Robot::RobotInit()
 	LiveWindow::GetInstance()->Add(&DistanceController);
 
 	// Configuring Angle PID Controller
-	AngleController.SetAbsoluteTolerance(1);
-	AngleController.SetInputRange(-180.0, 180.0);
-	AngleController.SetContinuous(true);
+	AngleController.SetAbsoluteTolerance(0.5);
 	AngleController.SetOutputRange(-1.0, 1.0);
 
 	// Configuring Maintain Angle PID Controller
-	MaintainAngleController.SetAbsoluteTolerance(1);
-	MaintainAngleController.SetInputRange(-180.0, 180.0);
-	MaintainAngleController.SetContinuous(true);
+	MaintainAngleController.SetAbsoluteTolerance(0.5);
 	MaintainAngleController.SetOutputRange(-1.0, 1.0);
 
 	// Configuring Distance PID Controller

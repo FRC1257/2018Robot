@@ -37,7 +37,7 @@ private:
 	// - 1 DistancePIDHelper to manage the source and motor output of DifferentialDrive during PID driving
 	// - 3 PIDControllers to manage turning to specific angles, driving specific distances, and maintaining a specific angle
 
-	// - 2 SendableChoosers for selecting an autonomous mode
+	// - 3 SendableChoosers for selecting an autonomous mode
 
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
@@ -63,6 +63,7 @@ private:
 
 	SendableChooser<consts::AutoPosition> *AutoLocationChooser;
 	SendableChooser<consts::AutoObjective> *AutoObjectiveChooser;
+	SendableChooser<consts::MiddleApproach> *MiddleApproachChooser;
 
 public:
 	// Here, we're declaring the following functions:
@@ -72,6 +73,7 @@ public:
 	// - Testing functions for PID tuning
 
 	Robot();
+	~Robot();
 	void RobotInit() override;
 	void DisabledInit() override;
 	void DisabledPeriodic() override;
@@ -80,15 +82,13 @@ public:
 	void TeleopInit() override;
 	void TeleopPeriodic() override;
 	void TestInit() override;
-	void TestPeriodic() override;
-	void DriveToScale(consts::AutoPosition startPosition);
-	void DriveToSwitch(consts::AutoPosition startPosition);
-	void MiddleToSwitch(char switchPosition);
+	void TestPeriodic() override;\
+
 	void DriveFor(double seconds, double speed);
 	void DriveForward(double distance);
 	void TurnAngle(double angle);
-	void DriveToSwitch(char position);
-	void DriveToScale(char position);
+	void SidePath(consts::AutoPosition start, char switchPosition, char scalePosition);
+	void MiddlePath(char switchPosition);
 
 	// PID Tuning Functions (JUST FOR TESTING)
 	void MaintainHeadingTest();
