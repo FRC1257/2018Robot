@@ -30,6 +30,7 @@ Robot::~Robot()
 {
 	delete AutoLocationChooser;
 	delete AutoObjectiveChooser;
+	delete MiddleApproachChooser;
 }
 
 void Robot::RobotInit()
