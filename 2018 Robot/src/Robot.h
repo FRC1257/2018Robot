@@ -71,6 +71,7 @@ public:
 	void LinkageTest();
 	void IntakeTest();
 	void ClimbTest();
+	void CurrentTest();
 };
 
 #endif /* ROBOT */

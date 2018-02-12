@@ -126,6 +126,16 @@ void Robot::ClimbTest()
 	}
 }
 
+void Robot::CurrentTest()
+{
+	SmartDashboard::PutNumber("FL Current",      FrontLeftMotor.GetOutputCurrent());
+	SmartDashboard::PutNumber("FR Current",      FrontRightMotor.GetOutputCurrent());
+	SmartDashboard::PutNumber("BL Current",      BackLeftMotor.GetOutputCurrent());
+	SmartDashboard::PutNumber("BR Current",      BackRightMotor.GetOutputCurrent());
+	SmartDashboard::PutNumber("RIntake Current", RightIntakeMotor.GetOutputCurrent());
+	SmartDashboard::PutNumber("LIntake Current", LeftIntakeMotor.GetOutputCurrent());
+}
+
 void Robot::TestInit()
 {
 
@@ -133,8 +143,5 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
-	ElevatorTest();
-	LinkageTest();
-	IntakeTest();
-	ClimbTest();
+
 }
