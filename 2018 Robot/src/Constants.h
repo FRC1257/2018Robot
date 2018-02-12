@@ -11,6 +11,7 @@ namespace consts
 	const int CCL_SLOT_IDX = 0;
 	const int CCL_PID_LOOP_IDX = 0;
 	const int CCL_TIMEOUT_MS = 10;
+	const double MAX_VELOCITY = 10; //TODO set value
 }
 
 #endif /* SRC_CONSTANTS_H_ */

@@ -12,80 +12,90 @@ double Robot::GetStepNumber(double elevatorHeight)
 	return 4;
 }
 
-//Driver Controls
-void Robot::Drive()
+void Robot::VelocityArcadeDrive(double forwardSpeed, double turnSpeed, bool squaredInputs)
 {
-	double xSpeed = Limit(xSpeed);  //WHATS LIMIT?!
-
-	double zRotation = Limit(zRotation);
-
-	double m_maxOutput;
-
 	double leftMotorOutput;
 	double rightMotorOutput;
 
+	forwardSpeed = Limit(forwardSpeed);
+	turnSpeed = Limit(turnSpeed);
+
+	if (squaredInputs)
+	{
+		forwardSpeed = std::copysign(forwardSpeed * forwardSpeed, forwardSpeed);
+		turnSpeed = std::copysign(turnSpeed * turnSpeed, turnSpeed);
+	}
+
 	double maxInput =
-	  std::copysign(std::max(std::abs(xSpeed), std::abs(zRotation)), xSpeed);
+	  std::copysign(std::max(std::abs(forwardSpeed), std::abs(turnSpeed)), forwardSpeed);
 
-	if (xSpeed >= 0.0) {
+	if (forwardSpeed >= 0.0)
+	{
 	// First quadrant, else second quadrant
-	if (zRotation >= 0.0) {
-	  leftMotorOutput = maxInput;
-	  rightMotorOutput = xSpeed - zRotation;
-	} else {
-	  leftMotorOutput = xSpeed + zRotation;
-	  rightMotorOutput = maxInput;
+	if (turnSpeed >= 0.0)
+		{
+		  leftMotorOutput = maxInput;
+		  rightMotorOutput = forwardSpeed - turnSpeed;
+		}
+	else
+		{
+		  leftMotorOutput = forwardSpeed + turnSpeed;
+		  rightMotorOutput = maxInput;
+		}
 	}
-	} else {
-	// Third quadrant, else fourth quadrant
-	if (zRotation >= 0.0) {
-	  leftMotorOutput = xSpeed + zRotation;
-	  rightMotorOutput = maxInput;
-	} else {
-	  leftMotorOutput = maxInput;
-	  rightMotorOutput = xSpeed - zRotation;
-	}
+	else
+	{
+		// Third quadrant, else fourth quadrant
+		if (turnSpeed >= 0.0)
+		{
+		  leftMotorOutput = forwardSpeed + turnSpeed;
+		  rightMotorOutput = maxInput;
+		}
+		else
+		{
+		  leftMotorOutput = maxInput;
+		  rightMotorOutput = forwardSpeed - turnSpeed;
+		}
 	}
 
-	  FrontRightMotor.Set(Limit(leftMotorOutput) * m_maxOutput); //WHATS LIMIT?!
-	  FrontLeftMotor.Set(-Limit(rightMotorOutput) * m_maxOutput);
+	double leftVelocity = Limit(leftMotorOutput) * consts::MAX_VELOCITY;
+	double rightVelocity = Limit(rightMotorOutput) * consts::MAX_VELOCITY;
 
-	  //real drive stuff starts here
+	FrontRightMotor.Set(rightVelocity);
+	BackRightMotor.Set(rightVelocity);
+	FrontLeftMotor.Set(leftVelocity);
+	BackLeftMotor.Set(leftVelocity);
+}
 
-	double speedVal = 0;
-	double turnVal = 0;
+//Driver Controls
+void Robot::Drive()
+{
+	double forwardSpeed = 0;
+	double turnSpeed = 0;
+
 
 	// If they press A, use single stick arcade with the left joystick
 	if(DriveController.GetAButton())
 	{
-		speedVal = DriveController.GetY(GenericHID::JoystickHand::kLeftHand);
-		turnVal = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
+		forwardSpeed = DriveController.GetY(GenericHID::JoystickHand::kLeftHand);
+		turnSpeed = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
 	}
 	// If they press the left bumper, use the left joystick for forward and
 	// backward motion and the right joystick for turning
 	else if(DriveController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
-		speedVal = DriveController.GetY(GenericHID::JoystickHand::kLeftHand);
-		turnVal = DriveController.GetX(GenericHID::JoystickHand::kRightHand);
+		forwardSpeed = DriveController.GetY(GenericHID::JoystickHand::kLeftHand);
+		turnSpeed = DriveController.GetX(GenericHID::JoystickHand::kRightHand);
 	}
 	// If they press the right bumper, use the right joystick for forward and
 	// backward motion and the left joystick for turning
 	else if(DriveController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
-		speedVal = DriveController.GetY(GenericHID::JoystickHand::kRightHand);
-		turnVal = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
+		forwardSpeed = DriveController.GetY(GenericHID::JoystickHand::kRightHand);
+		turnSpeed = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
 	}
 
-	if(inDeadZone(speedVal))
-	{
-		speedVal = 0;
-	}
-	if(inDeadZone(turnVal))
-	{
-		turnVal = 0;
-	}
-	//Negative is used to invert the speed (make forward <--> backward)
-	DriveTrain.ArcadeDrive(-speedVal, turnVal);
+	VelocityArcadeDrive(-forwardSpeed, turnSpeed, true);
 }
 
 // Operator Controls
