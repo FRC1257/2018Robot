@@ -31,7 +31,7 @@ void Robot::AutonomousInit()
 			break;
 
 		default:
-			//If the robot recieves no input, cross the baseline
+			//If the robot receives no input, cross the baseline
 			DriveForward(85);
 			break;
 	}
