@@ -11,7 +11,7 @@ void Robot::DisabledInit()
 	AutoObjectiveChooser->AddObject("Baseline", consts::AutoObjective::BASELINE);
 
 	MiddleApproachChooser->AddDefault("Front", consts::MiddleApproach::FRONT);
-	MiddleApproachChooser->AddDefault("Side", consts::MiddleApproach::SIDE);
+	MiddleApproachChooser->AddObject("Side", consts::MiddleApproach::SIDE);
 
 	SmartDashboard::PutData("Auto Position", AutoLocationChooser);
 	SmartDashboard::PutData("Auto Objective", AutoObjectiveChooser);
