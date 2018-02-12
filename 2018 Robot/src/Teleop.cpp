@@ -155,4 +155,5 @@ void Robot::TeleopPeriodic()
 	Intake();
 	Climb();
 	Linkage();
+	CurrentTest();
 }

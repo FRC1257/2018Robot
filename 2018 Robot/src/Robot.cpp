@@ -26,7 +26,6 @@ Robot::Robot() :
 
 }
 
-
 void Robot::RobotInit()
 {
 	ClimbMotor.Set(0);
@@ -37,19 +36,19 @@ void Robot::RobotInit()
 	IntakeUltrasonic.SetAutomaticMode(true);
 
 	// Current limiting
-	FrontLeftMotor.ConfigContinuousCurrentLimit(consts::FOURTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
+	FrontLeftMotor.ConfigContinuousCurrentLimit(consts::FORTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
 	FrontLeftMotor.EnableCurrentLimit(true);
 
-	FrontRightMotor.ConfigContinuousCurrentLimit(consts::FOURTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
+	FrontRightMotor.ConfigContinuousCurrentLimit(consts::FORTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
 	FrontRightMotor.EnableCurrentLimit(true);
 
-	BackLeftMotor.ConfigContinuousCurrentLimit(consts::FOURTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
+	BackLeftMotor.ConfigContinuousCurrentLimit(consts::FORTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
 	BackLeftMotor.EnableCurrentLimit(true);
 
-	BackRightMotor.ConfigContinuousCurrentLimit(consts::FOURTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
+	BackRightMotor.ConfigContinuousCurrentLimit(consts::FORTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
 	BackRightMotor.EnableCurrentLimit(true);
 
-	RightIntakeMotor.ConfigContinuousCurrentLimit(consts::FOURTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
+	RightIntakeMotor.ConfigContinuousCurrentLimit(consts::FORTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
 	RightIntakeMotor.EnableCurrentLimit(true);
 
 	LeftIntakeMotor.ConfigContinuousCurrentLimit(consts::THIRTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
