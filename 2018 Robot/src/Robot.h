@@ -3,10 +3,12 @@
 
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
-#include <Encoder.h>
+
 #include "Constants.h"
+#include <cmath>
 using namespace consts;
 using namespace frc;
+using namespace std;
 
 inline double dabs(double d) { return d > 0.0 ? d : -d; } // Absolute value of a double precision floating point number
 inline bool inDeadZone(double axisVal) { return dabs(axisVal) < 0.2; }

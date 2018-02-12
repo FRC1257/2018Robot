@@ -37,6 +37,20 @@ void Robot::RobotInit()
 	LinkageMotor.SetNeutralMode(Brake);
 	IntakeUltrasonic.SetAutomaticMode(true);
 
+	talon->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 10);
+	_talon->SetSensorPhase(true);
+
+	/* set the peak and nominal outputs */
+	FrontLeftMotor->ConfigNominalOutputForward(0, consts::CONFIGTIMEOUTMS);
+	_talon->ConfigNominalOutputReverse(0, consts::CONFIGTIMEOUTMS);
+	_talon->ConfigPeakOutputForward(1, consts::CONFIGTIMEOUTMS);
+	_talon->ConfigPeakOutputReverse(-1, consts::CONFIGTIMEOUTMS);
+	/* set closed loop gains in slot0 */
+	_talon->Config_kF(kPIDLoopIdx, 0.1097, consts::CONFIGTIMEOUTMS);
+	_talon->Config_kP(kPIDLoopIdx, 0.22, consts::CONFIGTIMEOUTMS);
+	_talon->Config_kI(kPIDLoopIdx, 0.0, consts::CONFIGTIMEOUTMS);
+	_talon->Config_kD(kPIDLoopIdx, 0.0, consts::CONFIGTIMEOUTMS);
+
 	FrontLeftMotor.ConfigContinuousCurrentLimit(CONTINUOUSAMPS, TIMEOUTMS);
 	FrontLeftMotor.ConfigPeakCurrentLimit(PEAKAMPS, TIMEOUTMS);
 	FrontLeftMotor.ConfigPeakCurrentDuration(DURATIONSMS, TIMEOUTMS);

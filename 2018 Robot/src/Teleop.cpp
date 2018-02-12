@@ -22,12 +22,11 @@ void Robot::VelocityArcadeDrive(double forwardSpeed, double turnSpeed, bool squa
 
 	if (squaredInputs)
 	{
-		forwardSpeed = std::copysign(forwardSpeed * forwardSpeed, forwardSpeed);
-		turnSpeed = std::copysign(turnSpeed * turnSpeed, turnSpeed);
+		forwardSpeed = copysign(forwardSpeed * forwardSpeed, forwardSpeed);
+		turnSpeed = copysign(turnSpeed * turnSpeed, turnSpeed);
 	}
 
-	double maxInput =
-	  std::copysign(std::max(std::abs(forwardSpeed), std::abs(turnSpeed)), forwardSpeed);
+	double maxInput = copysign(max(abs(forwardSpeed), abs(turnSpeed)), forwardSpeed);
 
 	if (forwardSpeed >= 0.0)
 	{
