@@ -3,13 +3,15 @@
 void Robot::AutonomousInit()
 {
 	//Zeroing the angle sensor and encoders
+	ResetEncoders();
 	AngleSensors.Reset();
-	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
-	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
 
 	std::string gameData;
 	DriverStation::GetInstance().WaitForData();
+//	while (gameData == NULL) Not sure if this works
+//	{
 	gameData = DriverStation::GetInstance().GetGameSpecificMessage();
+//	}
 
 	double delayTime = SmartDashboard::GetNumber("Auto Delay", 0);
 	Wait(delayTime);
@@ -17,53 +19,26 @@ void Robot::AutonomousInit()
 	switch(AutoLocationChooser->GetSelected())
 	{
 		case consts::AutoPosition::LEFT_START:
-			if(gameData[0] == 'L')
-			{
-				DriveToSwitch(consts::AutoPosition::LEFT_START);
-				//Drop powercube
-			}
-			else if(gameData[1] == 'L')
-			{
-				DriveToScale(consts::AutoPosition::LEFT_START);
-				//Drop powercube at scale height
-			}
-			else
-			{
-				DriveForward(70);
-			}
+			SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 			break;
-
 		case consts::AutoPosition::RIGHT_START:
-			if(gameData[0] == 'R')
-			{
-				DriveToSwitch(consts::AutoPosition::RIGHT_START);
-				//Drop powercube
-			}
-			else if(gameData[1] == 'R')
-			{
-				DriveToScale(consts::AutoPosition::RIGHT_START);
-				//Drop powercube at scale height
-			}
-			else
-			{
-				DriveForward(70);
-			}
+			SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
 			break;
-
 		case consts::AutoPosition::MIDDLE_START:
 			MiddleToSwitch(gameData[0]);
 			break;
+
 		default:
+			//If the robot receives no input, cross the baseline
+			DriveForward(85);
 			break;
 	}
-//	DriveForward(36);
 }
-
 
 void Robot::AutonomousPeriodic()
 {
 	SmartDashboard::PutNumber("Angle", AngleSensors.GetAngle());
-	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
+	SmartDashboard::PutNumber("Distance", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
 void Robot::DriveForward(double distance)
@@ -72,13 +47,11 @@ void Robot::DriveForward(double distance)
 	AngleController.Disable();
 
 	//Zeroing the angle sensor and encoders
-	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
-	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
+	ResetEncoders();
 	AngleSensors.Reset();
 
 	//Disable test dist output for angle
 	AnglePIDOut.SetTestDistOutput(0);
-
 	//Make sure the PID objects know about each other to avoid conflicts
 	DistancePID.SetAnglePID(&AnglePIDOut);
 	AnglePIDOut.SetDistancePID(&DistancePID);
@@ -100,10 +73,17 @@ void Robot::DriveForward(double distance)
 
 	SmartDashboard::PutNumber("Target Distance", distance);
 
-	while(!DistanceController.OnTarget())
+	//Wait until the PID controller has reached the target and the robot is steady
+	double traveled, distDiff, velocity;
+	do
 	{
+		//Calculate Velocity of Robot
+		traveled = PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0));
 		Wait(0.01);
+		distDiff = PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)) - traveled;
+		velocity = distDiff / 0.01;
 	}
+	while(!DistanceController.OnTarget() || velocity > 0.1);
 	DistanceController.Disable();
 }
 
@@ -131,10 +111,17 @@ void Robot::TurnAngle(double angle)
 
 	SmartDashboard::PutNumber("Target Angle", angle);
 
-	while(!AngleController.OnTarget())
+	//Wait until the PID controller has reached the target and the robot is steady
+	double turned, angleDiff, angleVelocity;
+	do
 	{
+		//Calculate Angular Velocity of Robot
+		turned = AngleSensors.GetAngle();
 		Wait(0.01);
+		angleDiff = AngleSensors.GetAngle() - turned;
+		angleVelocity = angleDiff / 0.01;
 	}
+	while(!AngleController.OnTarget() || angleVelocity > 0.1);
 	AngleController.Disable();
 }
 
@@ -145,51 +132,77 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 	DriveTrain.ArcadeDrive(0, 0);
 }
 
-void Robot::DriveToSwitch(consts::AutoPosition startPosition)
+void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scalePosition)
 {
-	double initialTurnAng = 90;
-	if (startPosition == consts::AutoPosition::RIGHT_START)
+	//90 for left, -90 for right
+	int multiplier = start == consts::AutoPosition::LEFT_START ? 1 : -1;
+	double angle = 90 * multiplier;
+
+	//L for left, R for right
+	char startPosition = start == consts::AutoPosition::LEFT_START ? 'L' : 'R';
+
+	DriveForward(148);
+
+	if(switchPosition == startPosition)
 	{
-		// Mirror the turns for the left side by multiplying by -1
-		initialTurnAng *= -1;
+		TurnAngle(angle);
+		DriveForward(5);
+
+		//Dump Cube
+		DriveForward(-5);
+
+		return; //End auto just in case the cube misses
 	}
+
 	DriveForward(130);
-	TurnAngle(-initialTurnAng);
+	TurnAngle(-angle);
 	DriveForward(25);
 }
 
-
-void Robot::MiddleToSwitch(char switchPosition)
+void Robot::MiddlePath(char switchPosition)
 {
-	DriveForward(25);
-	double initialTurnAng = 90;
-	if (switchPosition == 'L')
+	double angle = 90;
+
+	DriveForward(42.5);
+
+	if(MiddleApproachChooser->GetSelected() == consts::MiddleApproach::FRONT)
 	{
 		//Mirror the turns for the left side by multiplying by -1
 		initialTurnAng = -90;
-	}
-	TurnAngle(initialTurnAng);
-	DriveForward(80);
-	TurnAngle(-initialTurnAng);
-	DriveForward(78);
-	//Drop powercube
-	DriveForward(-78);
-}
+		if(switchPosition == 'L')
+		{
+			TurnAngle(-angle);
+			DriveForward(80);
 
-void Robot::DriveToScale(consts::AutoPosition startPosition)
-{
-	double initialTurnAng = 90;
-	if(startPosition == consts::AutoPosition::RIGHT_START)
-	{
-		//Mirror the turns for the left side by multiplying by -1
-		initialTurnAng = -90;
+			TurnAngle(angle);
+			DriveForward(78);
+
+			//Drop Cube
+
+			DriveForward(-78);
+		}
+		else if(switchPosition == 'R')
+		{
+			TurnAngle(angle);
+			DriveForward(29);
+
+			TurnAngle(-angle);
+			DriveForward(78);
+
+			//Drop Cube
+
+			DriveForward(-78);
+		}
 	}
-	DriveForward(130);
-	DriveForward(70);
-	TurnAngle(initialTurnAng);
-	DriveForward(30);
-	TurnAngle(-initialTurnAng);
-	DriveForward(86);
-	TurnAngle(-initialTurnAng);
-	DriveForward(36);
+	else
+	{
+		if(switchPosition == 'L')
+		{
+			//Measurements Later
+		}
+		else if(switchPosition == 'R')
+		{
+			//Measurements Later
+		}
+	}
 }

@@ -1,4 +1,4 @@
-#include "auto/AngleSensorGroup.h"
+#include "AngleSensorGroup.h"
 
 AngleSensorGroup::AngleSensorGroup(SPI::Port navXPort, SPI::Port gyroPort) :
 	m_NavX(navXPort),

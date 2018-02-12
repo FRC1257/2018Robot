@@ -17,12 +17,18 @@ namespace consts
 		BASELINE
 	};
 
-	const int PIDLoopIdx = 0;
-	const int timeoutMs = 10;
+	enum class MiddleApproach
+	{
+		FRONT,
+		SIDE
+	};
 
-	const double PI = 3.1416;
-	const double WHEEL_DIAMETER = 6;
-	const double PULSES_PER_REV = 4096;
+	constexpr int PIDLoopIdx = 0;
+	constexpr int timeoutMs = 10;
+
+	constexpr double PI = 3.1416;
+	constexpr double WHEEL_DIAMETER = 6;
+	constexpr double PULSES_PER_REV = 4096;
 }
 
 #endif

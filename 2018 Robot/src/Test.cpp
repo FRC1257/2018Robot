@@ -23,7 +23,7 @@ void Robot::MaintainHeadingTest()
 	//Zeroing the angle sensor
 	AngleSensors.Reset();
 
-	//Enable a testing dist output
+	//Enable test dist output
 	AnglePIDOut.SetTestDistOutput(0.35);
 
 	//Remove the pointers since only one PID is being used
@@ -33,9 +33,7 @@ void Robot::MaintainHeadingTest()
 	//Configure the PID controller to make sure the robot drives straight with the NavX
 	MaintainAngleController.Reset();
 	MaintainAngleController.SetSetpoint(0);
-	MaintainAngleController.SetAbsoluteTolerance(1);
-	MaintainAngleController.SetInputRange(-180.0, 180.0);
-	MaintainAngleController.SetContinuous(true);
+	MaintainAngleController.SetAbsoluteTolerance(0.5);
 	MaintainAngleController.SetOutputRange(-1.0, 1.0);
 
 	MaintainAngleController.Enable();
@@ -47,8 +45,7 @@ void Robot::DriveDistanceTest(double distance)
 	AngleController.Disable();
 
 	//Zeroing the angle sensor and encoders
-	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
-	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
+	ResetEncoders();
 	AngleSensors.Reset();
 
 	//Disable test dist output for angle
