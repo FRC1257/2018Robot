@@ -3,6 +3,12 @@
 void Robot::TestInit()
 {
 	SmartDashboard::PutBoolean("Reset Angle", 0);
+	SmartDashboard::PutNumber("Test Maintain Output", 0);
+	SmartDashboard::PutBoolean("Enable Test Output", 0);
+	SmartDashboard::PutBoolean("Enable Maintain Controller", 0);
+	SmartDashboard::PutBoolean("Toggle Test", 0);
+
+	MaintainHeadingTest();
 }
 
 void Robot::TestPeriodic()
@@ -10,8 +16,40 @@ void Robot::TestPeriodic()
 	SmartDashboard::PutNumber("R Trigger Val", DriveController.GetTriggerAxis(GenericHID::kRightHand));
 	SmartDashboard::PutNumber("Auto Pos Val", (int) AutoLocationChooser->GetSelected());
 	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
-	if(SmartDashboard::GetBoolean("Reset Angle", 0)) AngleSensors.Reset();
+
 	SmartDashboard::PutNumber("Angle Sensor", AngleSensors.GetAngle());
+	if(SmartDashboard::GetBoolean("Reset Angle", 0))
+	{
+		AngleSensors.Reset();
+		SmartDashboard::PutBoolean("Rest Angle", 0);
+	}
+
+	if(SmartDashboard::GetBoolean("Toggle Test", 0))
+	{
+		SmartDashboard::PutBoolean("Enable Test Output",
+				SmartDashboard::GetBoolean("Enable Test Output", 0) ^ 1);
+		SmartDashboard::PutBoolean("Enable Maintain Controller",
+				SmartDashboard::GetBoolean("Enable Maintain Controller", 0) ^ 1);
+
+		SmartDashboard::PutBoolean("Toggle Test", 0);
+	}
+	if(SmartDashboard::GetBoolean("Enable Test Output", 0))
+	{
+		AnglePIDOut.SetTestDistOutput(SmartDashboard::GetNumber(
+				"Test Maintain Output", 0));
+	}
+	else
+	{
+		AnglePIDOut.SetTestDistOutput(0);
+	}
+	if(SmartDashboard::GetBoolean("Enable Maintain Controller", 0))
+	{
+		MaintainAngleController.Enable();
+	}
+	else
+	{
+		MaintainAngleController.Disable();
+	}
 }
 
 void Robot::MaintainHeadingTest()
@@ -22,9 +60,6 @@ void Robot::MaintainHeadingTest()
 
 	//Zeroing the angle sensor
 	AngleSensors.Reset();
-
-	//Enable test dist output
-	AnglePIDOut.SetTestDistOutput(0.35);
 
 	//Remove the pointers since only one PID is being used
 	DistancePID.SetAnglePID(nullptr);
