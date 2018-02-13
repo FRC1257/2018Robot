@@ -135,21 +135,21 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 	//L for left, R for right
 	char startPosition = start == consts::AutoPosition::LEFT_START ? 'L' : 'R';
 
+	//Cross the baseline
 	DriveForward(148);
 
+	//Check if the switch is nearby, and if it is, place a cube in it
 	if(switchPosition == startPosition)
 	{
-		TurnAngle(angle);
-		DriveForward(5);
-
-		//Dump Cube
-		DriveForward(-5);
+		DropCube(switchPosition, 5, false);
 
 		return; //End auto just in case the cube misses
 	}
 
+	//Otherwise, go forward to a better position
 	DriveForward(100);
 
+	//Check if the scale is nearby, and if it is, place a cube in it
 	if(scalePosition == startPosition)
 	{
 		TurnAngle(-angle);
@@ -158,11 +158,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 		TurnAngle(angle);
 		DriveForward(56);
 
-		TurnAngle(angle);
-		DriveForward(5);
-
-		//Dump Cube
-		DriveForward(-5);
+		DropCube(scalePosition, 5, true);
 
 		return; //End auto just in case the cube misses
 	}
@@ -172,44 +168,62 @@ void Robot::MiddlePath(char switchPosition)
 {
 	double angle = 90;
 
+	//Go forward
 	DriveForward(42.5);
 
+	//Check which way the cube should be placed
 	if(MiddleApproachChooser->GetSelected() == consts::MiddleApproach::FRONT)
 	{
+		//If the cube is being placed from the front
 		if(switchPosition == 'L')
 		{
 			TurnAngle(-angle);
 			DriveForward(80);
 
-			TurnAngle(angle);
-			DriveForward(78);
-
-			//Drop Cube
-
-			DriveForward(-78);
+			DropCube(switchPosition, 78, false);
 		}
 		else if(switchPosition == 'R')
 		{
 			TurnAngle(angle);
 			DriveForward(29);
 
-			TurnAngle(-angle);
-			DriveForward(78);
-
-			//Drop Cube
-
-			DriveForward(-78);
+			DropCube(switchPosition, 78, false);
 		}
 	}
 	else
 	{
+		//If the cube is being placed from the side
 		if(switchPosition == 'L')
 		{
-			//Measurements Later
+			TurnAngle(-angle);
+			DriveForward(126);
+
+			TurnAngle(angle);
+			DriveForward(106);
+
+			DropCube(switchPosition, 5, false);
 		}
 		else if(switchPosition == 'R')
 		{
-			//Measurements Later
+			TurnAngle(angle);
+			DriveForward(74);
+
+			TurnAngle(-angle);
+			DriveForward(106);
+
+			DropCube(switchPosition, 5, false);
 		}
 	}
+}
+
+void Robot::DropCube(char position, double driveDistance, bool elevate)
+{
+	double angle = position == 'L' ? 90 : -90; //90 for L, -90 for R
+
+	TurnAngle(angle);
+	DriveForward(driveDistance);
+
+	//Drop Cube w/ elevate if needed
+
+	DriveForward(-driveDistance);
 }

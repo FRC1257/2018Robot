@@ -87,8 +87,10 @@ public:
 	void DriveFor(double seconds, double speed);
 	void DriveForward(double distance);
 	void TurnAngle(double angle);
+
 	void SidePath(consts::AutoPosition start, char switchPosition, char scalePosition);
 	void MiddlePath(char switchPosition);
+	void DropCube(char switchPosition, double driveDistance, bool elevate);
 
 	// PID Tuning Functions (JUST FOR TESTING)
 	void MaintainHeadingTest();
