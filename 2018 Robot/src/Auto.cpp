@@ -25,7 +25,7 @@ void Robot::AutonomousInit()
 			SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
 			break;
 		case consts::AutoPosition::MIDDLE_START:
-			MiddleToSwitch(gameData[0]);
+			MiddlePath(gameData[0]);
 			break;
 
 		default:
@@ -168,7 +168,6 @@ void Robot::MiddlePath(char switchPosition)
 	if(MiddleApproachChooser->GetSelected() == consts::MiddleApproach::FRONT)
 	{
 		//Mirror the turns for the left side by multiplying by -1
-		initialTurnAng = -90;
 		if(switchPosition == 'L')
 		{
 			TurnAngle(-angle);
