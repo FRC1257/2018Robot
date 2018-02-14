@@ -5,6 +5,9 @@
 #include <LiveWindow/LiveWindow.h>
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
+#include <fstream>
+#include <iostream>
+#include <cstdlib>
 
 #include "Constants.h"
 #include "PID/AnglePIDOutput.h"
@@ -65,6 +68,9 @@ private:
 	SendableChooser<consts::AutoObjective> *AutoObjectiveChooser;
 	SendableChooser<consts::MiddleApproach> *MiddleApproachChooser;
 
+
+	std::ofstream outf;
+
 public:
 	// Here, we're declaring the following functions:
 	// - Robot class constructor
@@ -94,6 +100,8 @@ public:
 	void MaintainHeadingTest();
 	void DriveDistanceTest(double distance);
 	void TurnAngleTest(double angle);
+
+	void LogMotorOutput();
 
 	void ResetEncoders();
 };

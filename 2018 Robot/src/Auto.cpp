@@ -33,12 +33,51 @@ void Robot::AutonomousInit()
 		default:
 			break;
 	}
+
 }
 
 void Robot::AutonomousPeriodic()
 {
 	SmartDashboard::PutNumber("Angle", AngleSensors.GetAngle());
 	SmartDashboard::PutNumber("Distance", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
+}
+
+void Robot::LogMotorOutput()
+{
+	/*Every time period, record motor output, and store it in txt file
+	Get all of the motor outputs
+	Create a string with these outputs
+	Write that string to a text file */
+
+	std::string MotorVoltage = "";
+
+	if (!outf)
+	{
+		std::cerr << "MotorOutputLog could not be opened" << std::endl;
+		return;
+	}
+
+	double leftMotorOutput = LeftMotors.Get();
+	MotorVoltage += std::to_string(leftMotorOutput);
+	MotorVoltage += " ";
+
+	double rightMotorOutput = RightMotors.Get();
+	MotorVoltage += std::to_string(rightMotorOutput);
+	MotorVoltage += " ";
+
+	double leftIntakeOutput = LeftIntakeMotor.Get();
+	MotorVoltage += std::to_string(leftIntakeOutput);
+	MotorVoltage += " ";
+
+	double rightIntakeOutput = RightIntakeMotor.Get();
+	MotorVoltage += std::to_string(rightIntakeOutput);
+	MotorVoltage += " ";
+
+	double elevatorOutput = ElevatorMotor.Get();
+	MotorVoltage += std::to_string(elevatorOutput);
+
+	outf << MotorVoltage << std::endl;
+
 }
 
 void Robot::DriveForward(double distance)

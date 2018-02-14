@@ -95,4 +95,3 @@ void Robot::TurnAngleTest(double angle)
 
 	SmartDashboard::PutNumber("Target Angle", angle);
 }
-

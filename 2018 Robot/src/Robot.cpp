@@ -19,7 +19,8 @@ Robot::Robot() :
 	MaintainAngleController(0.01, 0, 0, AngleSensors, AnglePIDOut),
 	DistanceController(0.05, 0, 0, DistancePID, DistancePID),
 	ElevatorEncoder(0, 1, false, Encoder::EncodingType::k4X), // TODO: delete or replace aChannel and bChannel
-	ElevatorPID(0.25, 0, 0, ElevatorEncoder, ElevatorMotor)
+	ElevatorPID(0.25, 0, 0, ElevatorEncoder, ElevatorMotor),
+	outf("MotorOutputLog")
 {
 	AutoLocationChooser = new SendableChooser<consts::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<consts::AutoObjective>();
