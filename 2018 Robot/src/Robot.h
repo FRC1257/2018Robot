@@ -59,7 +59,7 @@ private:
 	PIDController DistanceController;
 
 	Encoder ElevatorEncoder;
-	PIDController ElevatorPID;
+	PIDController ElevatorPIDController;
 
 	SendableChooser<consts::AutoPosition> *AutoLocationChooser;
 	SendableChooser<consts::AutoObjective> *AutoObjectiveChooser;
@@ -91,6 +91,8 @@ public:
 	void SidePath(consts::AutoPosition start, char switchPosition, char scalePosition);
 	void MiddlePath(char switchPosition);
 	void DropCube(char switchPosition, double driveDistance, bool elevate);
+	void EjectCube();
+	void RaiseElevator(double distance);
 
 	// PID Tuning Functions (JUST FOR TESTING)
 	void MaintainHeadingTest();

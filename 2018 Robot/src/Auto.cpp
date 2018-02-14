@@ -128,6 +128,35 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 	DriveTrain.ArcadeDrive(0, 0);
 }
 
+void Robot::EjectCube()
+{
+	RightIntakeMotor.Set(1);
+	LeftIntakeMotor.Set(-1);
+	Wait(0.4);
+	RightIntakeMotor.Set(0);
+	LeftIntakeMotor.Set(0);
+}
+
+void Robot::RaiseElevator(double distance)
+{
+	ElevatorMotor.Set(0);
+	ElevatorPIDController.SetSetpoint(distance);
+	ElevatorPIDController.Enable();
+
+	//Wait until the PID controller has reached the target and the robot is steady
+	double elevatorDist, elevatorDistDiff, elevatorVelocity;
+	do
+	{
+		//Calculate Elevator Velocity
+		elevatorDist = ElevatorEncoder.Get();
+		Wait(0.01);
+		elevatorDistDiff = ElevatorEncoder.Get() - elevatorDist;
+		elevatorVelocity = elevatorDistDiff / 0.01;
+	}
+	while(!ElevatorPIDController.OnTarget() || elevatorVelocity > 0.1);
+	ElevatorPIDController.Disable();
+}
+
 void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scalePosition)
 {
 	//90 for left, -90 for right
@@ -218,9 +247,9 @@ void Robot::MiddlePath(char switchPosition)
 	}
 }
 
-void Robot::DropCube(char position, double driveDistance, bool elevate)
+void Robot::DropCube(char switchPosition, double driveDistance, bool elevate)
 {
-	double angle = position == 'L' ? 90 : -90; //90 for L, -90 for R
+	double angle = switchPosition == 'L' ? 90 : -90; //90 for L, -90 for R
 
 	TurnAngle(angle);
 	DriveForward(driveDistance);
