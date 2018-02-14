@@ -2,6 +2,7 @@
 
 void Robot::TeleopInit()
 {
+	outf.close();
 	ResetEncoders();
 	AngleController.Disable();
 	MaintainAngleController.Disable();
