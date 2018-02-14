@@ -218,9 +218,9 @@ void Robot::MiddlePath(char switchPosition)
 	}
 }
 
-void Robot::DropCube(char position, double driveDistance, bool elevate)
+void Robot::DropCube(char switchPosition, double driveDistance, bool elevate)
 {
-	double angle = position == 'L' ? 90 : -90; //90 for L, -90 for R
+	double angle = switchPosition == 'L' ? 90 : -90; //90 for L, -90 for R
 
 	TurnAngle(angle);
 	DriveForward(driveDistance);
