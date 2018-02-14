@@ -16,7 +16,7 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
-	BackRightMotor.Set(DriveController.GetY(GenericHID::kLeftHand));
+	BackRightMotor.Set(-DriveController.GetY(GenericHID::kLeftHand));
 //	SmartDashboard::PutNumber("R Trigger Val", DriveController.GetTriggerAxis(GenericHID::kRightHand));
 //	SmartDashboard::PutNumber("Auto Pos Val", (int) AutoLocationChooser->GetSelected());
 //	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
