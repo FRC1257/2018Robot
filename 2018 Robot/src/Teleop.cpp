@@ -57,13 +57,12 @@ void Robot::VelocityArcadeDrive(double forwardSpeed, double turnSpeed, bool squa
 		}
 	}
 
-	double leftVelocity = Limit(leftMotorOutput) * consts::MAX_VELOCITY;
-	double rightVelocity = Limit(rightMotorOutput) * consts::MAX_VELOCITY;
-
-	FrontRightMotor.Set(rightVelocity);
-	BackRightMotor.Set(rightVelocity);
-	FrontLeftMotor.Set(leftVelocity);
-	BackLeftMotor.Set(leftVelocity);
+	// Set the target velocity for the talons with encoders
+	FrontRightMotor.Set(ControlMode::Velocity, Limit(rightMotorOutput) * consts::MAX_VELOCITY);
+	FrontLeftMotor.Set(ControlMode::Velocity, Limit(leftMotorOutput) * consts::MAX_VELOCITY);
+	// Set the other two motor controllers to follower the talons with encoders
+	BackRightMotor.Set(ControlMode::Follower, 4);
+	BackLeftMotor.Set(ControlMode::Follower, 1);
 }
 
 //Driver Controls

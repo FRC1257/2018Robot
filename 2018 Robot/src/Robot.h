@@ -6,7 +6,6 @@
 
 #include "Constants.h"
 #include <cmath>
-using namespace consts;
 using namespace frc;
 using namespace std;
 

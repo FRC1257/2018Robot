@@ -1,6 +1,5 @@
 #include "Robot.h"
 
-
 Robot::Robot() :
 	FrontLeftMotor(3),
 	FrontRightMotor(2),
@@ -37,49 +36,25 @@ void Robot::RobotInit()
 	LinkageMotor.SetNeutralMode(Brake);
 	IntakeUltrasonic.SetAutomaticMode(true);
 
-	talon->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 10);
-	_talon->SetSensorPhase(true);
+	// Talon Configuration for Velocity Closed Loop Drive
+	FrontLeftMotor.ConfigNominalOutputForward(0, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontLeftMotor.ConfigNominalOutputReverse(0, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontLeftMotor.ConfigPeakOutputForward(1, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontLeftMotor.ConfigPeakOutputReverse(-1, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontLeftMotor.Config_kF(0, 0.1097, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontLeftMotor.Config_kP(0, 0.22, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontLeftMotor.Config_kI(0, 0.0, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontLeftMotor.Config_kD(0, 0.0, consts::TALON_FUNCTION_TIMEOUT_MS);
 
-	/* set the peak and nominal outputs */
-	FrontLeftMotor->ConfigNominalOutputForward(0, consts::CONFIGTIMEOUTMS);
-	_talon->ConfigNominalOutputReverse(0, consts::CONFIGTIMEOUTMS);
-	_talon->ConfigPeakOutputForward(1, consts::CONFIGTIMEOUTMS);
-	_talon->ConfigPeakOutputReverse(-1, consts::CONFIGTIMEOUTMS);
-	/* set closed loop gains in slot0 */
-	_talon->Config_kF(kPIDLoopIdx, 0.1097, consts::CONFIGTIMEOUTMS);
-	_talon->Config_kP(kPIDLoopIdx, 0.22, consts::CONFIGTIMEOUTMS);
-	_talon->Config_kI(kPIDLoopIdx, 0.0, consts::CONFIGTIMEOUTMS);
-	_talon->Config_kD(kPIDLoopIdx, 0.0, consts::CONFIGTIMEOUTMS);
+	FrontRightMotor.ConfigNominalOutputForward(0, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontRightMotor.ConfigNominalOutputReverse(0, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontRightMotor.ConfigPeakOutputForward(1, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontRightMotor.ConfigPeakOutputReverse(-1, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontRightMotor.Config_kF(0, 0.1097, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontRightMotor.Config_kP(0, 0.22, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontRightMotor.Config_kI(0, 0.0, consts::TALON_FUNCTION_TIMEOUT_MS);
+	FrontRightMotor.Config_kD(0, 0.0, consts::TALON_FUNCTION_TIMEOUT_MS);
 
-	FrontLeftMotor.ConfigContinuousCurrentLimit(CONTINUOUSAMPS, TIMEOUTMS);
-	FrontLeftMotor.ConfigPeakCurrentLimit(PEAKAMPS, TIMEOUTMS);
-	FrontLeftMotor.ConfigPeakCurrentDuration(DURATIONSMS, TIMEOUTMS);
-	FrontLeftMotor.EnableCurrentLimit(true);
-
-	FrontRightMotor.ConfigContinuousCurrentLimit(CONTINUOUSAMPS, TIMEOUTMS);
-	FrontRightMotor.ConfigPeakCurrentLimit(PEAKAMPS, TIMEOUTMS);
-	FrontRightMotor.ConfigPeakCurrentDuration(DURATIONSMS, TIMEOUTMS);
-	FrontRightMotor.EnableCurrentLimit(true);
-
-	BackLeftMotor.ConfigContinuousCurrentLimit(CONTINUOUSAMPS, TIMEOUTMS);
-	BackLeftMotor.ConfigPeakCurrentLimit(PEAKAMPS, TIMEOUTMS);
-	BackLeftMotor.ConfigPeakCurrentDuration(DURATIONSMS, TIMEOUTMS);
-	BackLeftMotor.EnableCurrentLimit(true);
-
-	BackRightMotor.ConfigContinuousCurrentLimit(CONTINUOUSAMPS, TIMEOUTMS);
-	BackRightMotor.ConfigPeakCurrentLimit(PEAKAMPS, TIMEOUTMS);
-	BackRightMotor.ConfigPeakCurrentDuration(DURATIONSMS, TIMEOUTMS);
-	BackRightMotor.EnableCurrentLimit(true);
-
-	RightIntakeMotor.ConfigContinuousCurrentLimit(CONTINUOUSAMPS, TIMEOUTMS);
-	RightIntakeMotor.ConfigPeakCurrentLimit(PEAKAMPS, TIMEOUTMS);
-	RightIntakeMotor.ConfigPeakCurrentDuration(DURATIONSMS, TIMEOUTMS);
-	RightIntakeMotor.EnableCurrentLimit(true);
-
-	LeftIntakeMotor.ConfigContinuousCurrentLimit(CONTINUOUSAMPS, TIMEOUTMS);
-	LeftIntakeMotor.ConfigPeakCurrentLimit(PEAKAMPS, TIMEOUTMS);
-	LeftIntakeMotor.ConfigPeakCurrentDuration(DURATIONSMS, TIMEOUTMS);
-	LeftIntakeMotor.EnableCurrentLimit(true);
 }
 
 START_ROBOT_CLASS(Robot)
