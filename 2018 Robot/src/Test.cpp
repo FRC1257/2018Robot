@@ -3,10 +3,13 @@
 void Robot::TestInit()
 {
 	SmartDashboard::PutBoolean("Reset Angle", 0);
+	SmartDashboard::PutBoolean("Reset Encoders", 0);
+
+	//Maintain Angle Test
 	SmartDashboard::PutNumber("Test Maintain Output", 0);
-	SmartDashboard::PutBoolean("Enable Test Output", 0);
+	SmartDashboard::PutBoolean("Enable Test Distance Output", 0);
 	SmartDashboard::PutBoolean("Enable Maintain Controller", 0);
-	SmartDashboard::PutBoolean("Toggle Test", 0);
+	SmartDashboard::PutBoolean("Toggle Maintain Test", 0);
 
 	MaintainHeadingTest();
 }
@@ -17,23 +20,35 @@ void Robot::TestPeriodic()
 	SmartDashboard::PutNumber("Auto Pos Val", (int) AutoLocationChooser->GetSelected());
 	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
 
+	//Display Data
 	SmartDashboard::PutNumber("Angle Sensor", AngleSensors.GetAngle());
+	SmartDashboard::PutNumber("Encoder", FrontLeftMotor.GetSelectedSensorPosition(0));
+
+	//Reset Angle Button
 	if(SmartDashboard::GetBoolean("Reset Angle", 0))
 	{
 		AngleSensors.Reset();
 		SmartDashboard::PutBoolean("Rest Angle", 0);
 	}
-
-	if(SmartDashboard::GetBoolean("Toggle Test", 0))
+	//Reset Encoder Button
+	if(SmartDashboard::GetBoolean("Reset Encoders", 0))
 	{
-		SmartDashboard::PutBoolean("Enable Test Output",
-				SmartDashboard::GetBoolean("Enable Test Output", 0) ^ 1);
+		ResetEncoders();
+		SmartDashboard::PutBoolean("Reset Encoders", 0);
+	}
+
+	//Maintain Angle Test Buttons
+	if(SmartDashboard::GetBoolean("Toggle Maintain Test", 0))
+	{
+		//Toggle the two buttons
+		SmartDashboard::PutBoolean("Enable Test Distance Output",
+				SmartDashboard::GetBoolean("Enable Test Distance Output", 0) ^ 1);
 		SmartDashboard::PutBoolean("Enable Maintain Controller",
 				SmartDashboard::GetBoolean("Enable Maintain Controller", 0) ^ 1);
 
 		SmartDashboard::PutBoolean("Toggle Test", 0);
 	}
-	if(SmartDashboard::GetBoolean("Enable Test Output", 0))
+	if(SmartDashboard::GetBoolean("Enable Test Distance Output", 0))
 	{
 		AnglePIDOut.SetTestDistOutput(SmartDashboard::GetNumber(
 				"Test Maintain Output", 0));
