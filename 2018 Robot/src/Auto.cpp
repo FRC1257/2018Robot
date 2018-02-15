@@ -148,9 +148,9 @@ void Robot::RaiseElevator(double distance)
 	do
 	{
 		//Calculate Elevator Velocity
-		elevatorDist = ElevatorEncoder.Get();
+		elevatorDist = ElevatorPID.PIDGet();
 		Wait(0.01);
-		elevatorDistDiff = ElevatorEncoder.Get() - elevatorDist;
+		elevatorDistDiff = ElevatorPID.PIDGet() - elevatorDist;
 		elevatorVelocity = elevatorDistDiff / 0.01;
 	}
 	while(!ElevatorPIDController.OnTarget() || elevatorVelocity > 0.1);

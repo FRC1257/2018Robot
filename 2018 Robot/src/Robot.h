@@ -9,6 +9,7 @@
 #include "Constants.h"
 #include "PID/AnglePIDOutput.h"
 #include "PID/DistancePIDHelper.h"
+#include "PID/TalonPIDHelper.h"
 #include "Sensors/AngleSensorGroup.h"
 
 using namespace frc;
@@ -37,6 +38,8 @@ private:
 	// - 1 DistancePIDHelper to manage the source and motor output of DifferentialDrive during PID driving
 	// - 3 PIDControllers to manage turning to specific angles, driving specific distances, and maintaining a specific angle
 
+	// - 1 TalonPIDHelper to manage the source
+
 	// - 3 SendableChoosers for selecting an autonomous mode
 
 	WPI_TalonSRX FrontLeftMotor;
@@ -58,7 +61,7 @@ private:
 	PIDController MaintainAngleController;
 	PIDController DistanceController;
 
-	Encoder ElevatorEncoder;
+	TalonPIDHelper ElevatorPID;
 	PIDController ElevatorPIDController;
 
 	SendableChooser<consts::AutoPosition> *AutoLocationChooser;
