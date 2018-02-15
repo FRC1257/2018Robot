@@ -43,6 +43,22 @@ void Robot::AutonomousPeriodic()
 	SmartDashboard::PutNumber("Distance", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
+//Wait until the PID controller has reached the target and the robot is steady
+void StopPID(PIDController& pidController, PIDSource& pidSource)
+{
+	double distance, diff, velocity;
+	do
+	{
+		//Calculate velocity of the PID
+		distance = pidSource.PIDGet();
+		Wait(0.01);
+		diff = pidSource.PIDGet() - distance;
+		velocity = diff / 0.01;
+	}
+	while(!pidController.OnTarget() || abs(velocity) > 0.1);
+	pidController.Disable();
+}
+
 void Robot::DriveForward(double distance)
 {
 	//Disable other controllers
@@ -71,18 +87,7 @@ void Robot::DriveForward(double distance)
 
 	SmartDashboard::PutNumber("Target Distance", distance);
 
-	//Wait until the PID controller has reached the target and the robot is steady
-	double traveled, distDiff, velocity;
-	do
-	{
-		//Calculate Velocity of Robot
-		traveled = PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0));
-		Wait(0.01);
-		distDiff = PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)) - traveled;
-		velocity = distDiff / 0.01;
-	}
-	while(!DistanceController.OnTarget() || velocity > 0.1);
-	DistanceController.Disable();
+	StopPID(DistanceController, DistancePID);
 }
 
 void Robot::TurnAngle(double angle)
@@ -107,18 +112,7 @@ void Robot::TurnAngle(double angle)
 
 	SmartDashboard::PutNumber("Target Angle", angle);
 
-	//Wait until the PID controller has reached the target and the robot is steady
-	double turned, angleDiff, angleVelocity;
-	do
-	{
-		//Calculate Angular Velocity of Robot
-		turned = AngleSensors.GetAngle();
-		Wait(0.01);
-		angleDiff = AngleSensors.GetAngle() - turned;
-		angleVelocity = angleDiff / 0.01;
-	}
-	while(!AngleController.OnTarget() || angleVelocity > 0.1);
-	AngleController.Disable();
+	StopPID(AngleController, AngleSensors);
 }
 
 void Robot::DriveFor(double seconds, double speed = 0.5)
@@ -143,18 +137,7 @@ void Robot::RaiseElevator(double distance)
 	ElevatorPIDController.SetSetpoint(distance);
 	ElevatorPIDController.Enable();
 
-	//Wait until the PID controller has reached the target and the robot is steady
-	double elevatorDist, elevatorDistDiff, elevatorVelocity;
-	do
-	{
-		//Calculate Elevator Velocity
-		elevatorDist = ElevatorPID.PIDGet();
-		Wait(0.01);
-		elevatorDistDiff = ElevatorPID.PIDGet() - elevatorDist;
-		elevatorVelocity = elevatorDistDiff / 0.01;
-	}
-	while(!ElevatorPIDController.OnTarget() || elevatorVelocity > 0.1);
-	ElevatorPIDController.Disable();
+	StopPID(ElevatorPIDController, ElevatorPID);
 }
 
 void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scalePosition)
