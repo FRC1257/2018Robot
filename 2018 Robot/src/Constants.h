@@ -7,14 +7,16 @@ namespace consts
 	{
 		LEFT_START,
 		MIDDLE_START,
-		RIGHT_START
+		RIGHT_START,
+		DEFAULT
 	};
 
 	enum class AutoObjective
 	{
 		SWITCH,
 		SCALE,
-		BASELINE
+		BASELINE,
+		DEFAULT
 	};
 
 	enum class MiddleApproach

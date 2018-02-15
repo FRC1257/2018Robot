@@ -19,19 +19,40 @@ void Robot::AutonomousInit()
 	switch(AutoLocationChooser->GetSelected())
 	{
 		case consts::AutoPosition::LEFT_START:
-			SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
+			switch(AutoObjectiveChooser->GetSelected())
+			{
+				case consts::AutoObjective::DEFAULT:
+					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
+					break;
+				case consts::AutoObjective::SWITCH:
+					break;
+				case consts::AutoObjective::SCALE:
+					break;
+				case consts::AutoObjective::BASELINE:
+					break;
+			}
 			break;
 
 		case consts::AutoPosition::RIGHT_START:
-			SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
+			switch(AutoObjectiveChooser->GetSelected())
+			{
+				case consts::AutoObjective::DEFAULT:
+					SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
+					break;
+				case consts::AutoObjective::SWITCH:
+					break;
+				case consts::AutoObjective::SCALE:
+					break;
+				case consts::AutoObjective::BASELINE:
+					break;
+			}
 			break;
 
 		case consts::AutoPosition::MIDDLE_START:
 			MiddlePath(gameData[1]);
 			break;
 
-		default:
-			//If the robot receives no input, cross the baseline
+		case consts::AutoPosition::DEFAULT:
 			DriveForward(85);
 			break;
 	}
