@@ -92,6 +92,8 @@ public:
 	void TurnAngle(double angle);
 
 	void SidePath(consts::AutoPosition start, char switchPosition, char scalePosition);
+	void OppositeSwitch(consts::AutoPosition start, char switchPosition);
+	void OppositeScale(consts::AutoPosition start, char scalePosition);
 	void MiddlePath(char switchPosition);
 	void DropCube(char switchPosition, double driveDistance, bool elevate);
 	void EjectCube();

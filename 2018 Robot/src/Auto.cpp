@@ -178,6 +178,44 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 	}
 }
 
+void Robot::OppositeSwitch(consts::AutoPosition start, char switchPosition)
+{
+	//90 for left, -90 for right
+	int multiplier = start == consts::AutoPosition::LEFT_START ? 1 : -1;
+	double angle = 90 * multiplier;
+
+	DriveForward(42.5);
+	TurnAngle(angle);
+
+	DriveForward(155);
+	TurnAngle(-angle);
+
+	DropCube(switchPosition, 59, false);
+}
+
+void Robot::OppositeScale(consts::AutoPosition start, char scalePosition)
+{
+	//90 for left, -90 for right
+	int multiplier = start == consts::AutoPosition::LEFT_START ? 1 : -1;
+	double angle = 90 * multiplier;
+
+	DriveForward(211);
+	TurnAngle(angle);
+
+	DriveForward(200);
+	TurnAngle(-angle);
+
+	DriveForward(37.5);
+	TurnAngle(angle);
+
+	DriveForward(14);
+	TurnAngle(-angle);
+
+	DriveForward(56);
+
+	DropCube(scalePosition, 5, true);
+}
+
 void Robot::MiddlePath(char switchPosition)
 {
 	double angle = 90;
