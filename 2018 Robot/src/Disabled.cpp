@@ -2,11 +2,13 @@
 
 void Robot::DisabledInit()
 {
-	AutoLocationChooser->AddDefault("Left Start", consts::AutoPosition::LEFT_START);
+	AutoLocationChooser->AddDefault("Default", consts::AutoPosition::DEFAULT);
+	AutoLocationChooser->AddObject("Left Start", consts::AutoPosition::LEFT_START);
 	AutoLocationChooser->AddObject("Middle Start", consts::AutoPosition::MIDDLE_START);
 	AutoLocationChooser->AddObject("Right Start", consts::AutoPosition::RIGHT_START);
 
-	AutoObjectiveChooser->AddDefault("Switch", consts::AutoObjective::SWITCH);
+	AutoObjectiveChooser->AddDefault("Default", consts::AutoObjective::DEFAULT);
+	AutoObjectiveChooser->AddObject("Switch", consts::AutoObjective::SWITCH);
 	AutoObjectiveChooser->AddObject("Scale", consts::AutoObjective::SCALE);
 	AutoObjectiveChooser->AddObject("Baseline", consts::AutoObjective::BASELINE);
 
