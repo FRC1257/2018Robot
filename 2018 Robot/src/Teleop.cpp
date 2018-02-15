@@ -2,8 +2,12 @@
 
 void Robot::TeleopInit()
 {
+	//Close the log file
 	outf.close();
+
+	//Disable/reset everything from autonomous
 	ResetEncoders();
+	AngleSensors.Reset();
 	AngleController.Disable();
 	MaintainAngleController.Disable();
 	DistanceController.Disable();

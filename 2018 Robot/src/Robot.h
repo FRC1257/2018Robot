@@ -42,6 +42,8 @@ private:
 
 	// - 3 SendableChoosers for selecting an autonomous mode
 
+	// - 1 ofstream for logging motor outputs
+
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
 	WPI_TalonSRX BackLeftMotor;
@@ -67,7 +69,6 @@ private:
 	SendableChooser<consts::AutoPosition> *AutoLocationChooser;
 	SendableChooser<consts::AutoObjective> *AutoObjectiveChooser;
 	SendableChooser<consts::MiddleApproach> *MiddleApproachChooser;
-
 
 	std::ofstream outf;
 

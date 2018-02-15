@@ -44,18 +44,17 @@ void Robot::AutonomousPeriodic()
 
 void Robot::LogMotorOutput()
 {
-	/*Every time period, record motor output, and store it in txt file
-	Get all of the motor outputs
-	Create a string with these outputs
-	Write that string to a text file */
+	//Record motor output and store it in text file
 
-	std::string MotorVoltage = "";
-
+	//Check if the file can be written to
 	if (!outf)
 	{
 		std::cerr << "MotorOutputLog could not be opened" << std::endl;
 		return;
 	}
+
+	//Write all motor data
+	std::string MotorVoltage = "";
 
 	double leftMotorOutput = LeftMotors.Get();
 	MotorVoltage += std::to_string(leftMotorOutput);
@@ -77,7 +76,6 @@ void Robot::LogMotorOutput()
 	MotorVoltage += std::to_string(elevatorOutput);
 
 	outf << MotorVoltage << std::endl;
-
 }
 
 void Robot::DriveForward(double distance)
