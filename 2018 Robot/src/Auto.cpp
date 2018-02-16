@@ -212,7 +212,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 	//Check if the switch is nearby, and if it is, place a cube in it
 	if(switchPosition == startPosition)
 	{
-		DropCube(switchPosition, 5, false, 10); // 4th parameter is filler number
+		DropCube(switchPosition, 5, false, consts::ElevatorIncrement::GROUND); // 4th parameter is filler number
 
 		return; //End auto just in case the cube misses
 	}
@@ -229,7 +229,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 		TurnAngle(angle);
 		DriveForward(56);
 
-		DropCube(scalePosition, 5, true, 10); // 4th parameter is filler number
+		DropCube(scalePosition, 5, true, consts::ElevatorIncrement::GROUND); // 4th parameter is filler number
 
 		return; //End auto just in case the cube misses
 	}
@@ -247,7 +247,7 @@ void Robot::OppositeSwitch(consts::AutoPosition start, char switchPosition)
 	DriveForward(155);
 	TurnAngle(-angle);
 
-	DropCube(switchPosition, 59, false, 10); // 4th parameter is filler number
+	DropCube(switchPosition, 59, false, consts::ElevatorIncrement::GROUND); // 4th parameter is filler number
 }
 
 void Robot::OppositeScale(consts::AutoPosition start, char scalePosition)
@@ -269,7 +269,7 @@ void Robot::OppositeScale(consts::AutoPosition start, char scalePosition)
 
 	DriveForward(56);
 
-	DropCube(scalePosition, 5, true, 10); // 4th parameter is filler number
+	DropCube(scalePosition, 5, true, consts::ElevatorIncrement::GROUND); // 4th parameter is filler number
 }
 
 void Robot::MiddlePath(char switchPosition)
@@ -288,14 +288,14 @@ void Robot::MiddlePath(char switchPosition)
 			TurnAngle(-angle);
 			DriveForward(80);
 
-			DropCube(switchPosition, 78, false, 10); // 4th parameter is filler number
+			DropCube(switchPosition, 78, false, consts::ElevatorIncrement::GROUND); // 4th parameter is filler number
 		}
 		else if(switchPosition == 'R')
 		{
 			TurnAngle(angle);
 			DriveForward(29);
 
-			DropCube(switchPosition, 78, false, 10); // 4th parameter is filler number
+			DropCube(switchPosition, 78, false, consts::ElevatorIncrement::GROUND); // 4th parameter is filler number
 		}
 	}
 	else
@@ -309,7 +309,7 @@ void Robot::MiddlePath(char switchPosition)
 			TurnAngle(angle);
 			DriveForward(106);
 
-			DropCube(switchPosition, 5, false, 10); // 4th parameter is filler number
+			DropCube(switchPosition, 5, false, consts::ElevatorIncrement::GROUND); // 4th parameter is filler number
 		}
 		else if(switchPosition == 'R')
 		{
@@ -319,7 +319,7 @@ void Robot::MiddlePath(char switchPosition)
 			TurnAngle(-angle);
 			DriveForward(106);
 
-			DropCube(switchPosition, 5, false, 10); // 4th parameter is filler number
+			DropCube(switchPosition, 5, false, consts::ElevatorIncrement::GROUND); // 4th parameter is filler number
 		}
 	}
 }
