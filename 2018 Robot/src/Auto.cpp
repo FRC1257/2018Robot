@@ -6,15 +6,29 @@ void Robot::AutonomousInit()
 	ResetEncoders();
 	AngleSensors.Reset();
 
-	std::string gameData;
-	DriverStation::GetInstance().WaitForData();
-//	while (gameData == NULL) Not sure if this works
-//	{
-	gameData = DriverStation::GetInstance().GetGameSpecificMessage();
-//	}
 
+	std::string gameData;
+	Timer gameDataTimer;
+	gameDataTimer.Start();
+
+	// Poll for the game data for some timout period or until we've received the data
+	while (gameData.length() == 0 && !gameDataTimer.HasPeriodPassed(consts::GAME_DATA_TIMOUT_S))
+	{
+		gameData = DriverStation::GetInstance().GetGameSpecificMessage();
+	}
+	gameDataTimer.Stop();
+
+	// Add an optional delay to account for other robot auto paths
 	double delayTime = SmartDashboard::GetNumber("Auto Delay", 0);
 	Wait(delayTime);
+
+	// If we didn't receive any game data, drive to the baseline
+	if(gameData.length() == 0)
+	{
+		DriverStation::GetInstance().ReportError("Unable to read game data. Driving to Baseline");
+		DriveToBaseline();
+		return;
+	}
 
 	switch(AutoLocationChooser->GetSelected())
 	{
@@ -29,6 +43,9 @@ void Robot::AutonomousInit()
 				case consts::AutoObjective::SCALE:
 					break;
 				case consts::AutoObjective::BASELINE:
+					break;
+				default:
+					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 					break;
 			}
 			break;
@@ -45,6 +62,9 @@ void Robot::AutonomousInit()
 					break;
 				case consts::AutoObjective::BASELINE:
 					break;
+				default:
+					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
+					break;
 			}
 			break;
 
@@ -52,8 +72,8 @@ void Robot::AutonomousInit()
 			MiddlePath(gameData[1]);
 			break;
 
-		case consts::AutoPosition::DEFAULT:
-			DriveForward(85);
+		default:
+			DriveToBaseline();
 			break;
 	}
 }
@@ -64,8 +84,13 @@ void Robot::AutonomousPeriodic()
 	SmartDashboard::PutNumber("Distance", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
+void Robot::DriveToBaseline()
+{
+	DriveForward(85);
+}
+
 //Wait until the PID controller has reached the target and the robot is steady
-void StopUntilPIDSteady(PIDController& pidController, PIDSource& pidSource)
+void WaitUntilPIDSteady(PIDController& pidController, PIDSource& pidSource)
 {
 	double distance, diff, velocity;
 	do
@@ -108,7 +133,7 @@ void Robot::DriveForward(double distance)
 
 	SmartDashboard::PutNumber("Target Distance", distance);
 
-	StopUntilPIDSteady(DistanceController, DistancePID);
+	WaitUntilPIDSteady(DistanceController, DistancePID);
 }
 
 void Robot::TurnAngle(double angle)
@@ -133,7 +158,7 @@ void Robot::TurnAngle(double angle)
 
 	SmartDashboard::PutNumber("Target Angle", angle);
 
-	StopUntilPIDSteady(AngleController, AngleSensors);
+	WaitUntilPIDSteady(AngleController, AngleSensors);
 }
 
 void Robot::DriveFor(double seconds, double speed = 0.5)
@@ -158,17 +183,16 @@ void Robot::RaiseElevator(double distance)
 	ElevatorPIDController.SetSetpoint(distance);
 	ElevatorPIDController.Enable();
 
-	StopUntilPIDSteady(ElevatorPIDController, ElevatorPID);
+	WaitUntilPIDSteady(ElevatorPIDController, ElevatorPID);
 }
 
 void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scalePosition)
 {
 	//90 for left, -90 for right
-	int multiplier = start == consts::AutoPosition::LEFT_START ? 1 : -1;
-	double angle = 90 * multiplier;
+	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
 
 	//L for left, R for right
-	char startPosition = start == consts::AutoPosition::LEFT_START ? 'L' : 'R';
+	char startPosition = (start == consts::AutoPosition::LEFT_START) ? 'L' : 'R';
 
 	//Cross the baseline
 	DriveForward(148);
@@ -202,7 +226,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 void Robot::OppositeSwitch(consts::AutoPosition start, char switchPosition)
 {
 	//90 for left, -90 for right
-	int multiplier = start == consts::AutoPosition::LEFT_START ? 1 : -1;
+	int multiplier = (start == consts::AutoPosition::LEFT_START) ? 1 : -1;
 	double angle = 90 * multiplier;
 
 	DriveForward(42.5);
@@ -217,8 +241,7 @@ void Robot::OppositeSwitch(consts::AutoPosition start, char switchPosition)
 void Robot::OppositeScale(consts::AutoPosition start, char scalePosition)
 {
 	//90 for left, -90 for right
-	int multiplier = start == consts::AutoPosition::LEFT_START ? 1 : -1;
-	double angle = 90 * multiplier;
+	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
 
 	DriveForward(211);
 	TurnAngle(angle);

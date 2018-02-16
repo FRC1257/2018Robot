@@ -91,6 +91,8 @@ public:
 	void DriveForward(double distance);
 	void TurnAngle(double angle);
 
+	// Autonomous Robot Functionality
+	void DriveToBaseline();
 	void SidePath(consts::AutoPosition start, char switchPosition, char scalePosition);
 	void OppositeSwitch(consts::AutoPosition start, char switchPosition);
 	void OppositeScale(consts::AutoPosition start, char scalePosition);
