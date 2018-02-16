@@ -65,7 +65,7 @@ void Robot::AutonomousPeriodic()
 }
 
 //Wait until the PID controller has reached the target and the robot is steady
-void StopPID(PIDController& pidController, PIDSource& pidSource)
+void StopUntilPIDSteady(PIDController& pidController, PIDSource& pidSource)
 {
 	double distance, diff, velocity;
 	do
@@ -108,7 +108,7 @@ void Robot::DriveForward(double distance)
 
 	SmartDashboard::PutNumber("Target Distance", distance);
 
-	StopPID(DistanceController, DistancePID);
+	StopUntilPIDSteady(DistanceController, DistancePID);
 }
 
 void Robot::TurnAngle(double angle)
@@ -133,7 +133,7 @@ void Robot::TurnAngle(double angle)
 
 	SmartDashboard::PutNumber("Target Angle", angle);
 
-	StopPID(AngleController, AngleSensors);
+	StopUntilPIDSteady(AngleController, AngleSensors);
 }
 
 void Robot::DriveFor(double seconds, double speed = 0.5)
@@ -158,7 +158,7 @@ void Robot::RaiseElevator(double distance)
 	ElevatorPIDController.SetSetpoint(distance);
 	ElevatorPIDController.Enable();
 
-	StopPID(ElevatorPIDController, ElevatorPID);
+	StopUntilPIDSteady(ElevatorPIDController, ElevatorPID);
 }
 
 void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scalePosition)
