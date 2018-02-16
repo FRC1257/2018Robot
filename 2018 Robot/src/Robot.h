@@ -97,7 +97,7 @@ public:
 	void OppositeSwitch(consts::AutoPosition start, char switchPosition);
 	void OppositeScale(consts::AutoPosition start, char scalePosition);
 	void MiddlePath(char switchPosition);
-	void DropCube(char switchPosition, double driveDistance, bool elevate);
+	void DropCube(char switchPosition, double driveDistance, bool elevate, double elevatorDistance);
 	void EjectCube();
 	void RaiseElevator(double distance);
 

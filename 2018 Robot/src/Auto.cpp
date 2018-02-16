@@ -168,6 +168,18 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 	DriveTrain.ArcadeDrive(0, 0);
 }
 
+void Robot::DropCube(char switchPosition, double driveDistance, bool elevate, double elevatorDistance)
+{
+	double angle = switchPosition == 'L' ? 90 : -90; //90 for L, -90 for R
+
+	TurnAngle(angle);
+	DriveForward(driveDistance);
+
+	RaiseElevator(elevatorDistance);
+
+	DriveForward(-driveDistance);
+}
+
 void Robot::EjectCube()
 {
 	RightIntakeMotor.Set(1);
@@ -310,16 +322,4 @@ void Robot::MiddlePath(char switchPosition)
 			DropCube(switchPosition, 5, false);
 		}
 	}
-}
-
-void Robot::DropCube(char switchPosition, double driveDistance, bool elevate)
-{
-	double angle = switchPosition == 'L' ? 90 : -90; //90 for L, -90 for R
-
-	TurnAngle(angle);
-	DriveForward(driveDistance);
-
-	//Drop Cube w/ elevate if needed
-
-	DriveForward(-driveDistance);
 }
