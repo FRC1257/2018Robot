@@ -67,7 +67,8 @@ public:
 	double GetClosestStepNumber();
 
 	void DriveTest();
-	void ElevatorTest();
+	void FullElevatorTest();
+	void ManualElevatorTest();
 	void LinkageTest();
 	void IntakeTest();
 	void ClimbTest();
