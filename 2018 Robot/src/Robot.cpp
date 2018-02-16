@@ -3,8 +3,8 @@
 Robot::Robot() :
 	FrontLeftMotor(1),
 	FrontRightMotor(2),
-	BackLeftMotor(3),
-	BackRightMotor(4),
+	BackLeftMotor(0),
+	BackRightMotor(1),
 	ElevatorMotor(5),
 	RightIntakeMotor(6),
 	LeftIntakeMotor(7),
@@ -20,7 +20,8 @@ Robot::Robot() :
 	DistanceController(0.05, 0, 0, DistancePID, DistancePID),
 	ElevatorEncoder(0, 1, false, Encoder::EncodingType::k4X), // TODO: delete or replace aChannel and bChannel
 	ElevatorPID(0.25, 0, 0, ElevatorEncoder, ElevatorMotor),
-	outf("/home/lvuser/MotorOutputLog.txt")
+	outf("/home/lvuser/MotorOutputLog.txt"),
+	inf("/home/lvuser/MotorInput.txt")
 {
 	AutoLocationChooser = new SendableChooser<consts::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<consts::AutoObjective>();

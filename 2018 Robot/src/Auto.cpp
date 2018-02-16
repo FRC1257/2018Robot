@@ -58,24 +58,64 @@ void Robot::LogMotorOutput()
 
 	double leftMotorOutput = LeftMotors.Get();
 	MotorVoltage += std::to_string(leftMotorOutput);
-	MotorVoltage += " ";
+	MotorVoltage += ",";
 
 	double rightMotorOutput = RightMotors.Get();
 	MotorVoltage += std::to_string(rightMotorOutput);
-	MotorVoltage += " ";
+	MotorVoltage += ",";
 
 	double leftIntakeOutput = LeftIntakeMotor.Get();
 	MotorVoltage += std::to_string(leftIntakeOutput);
-	MotorVoltage += " ";
+	MotorVoltage += ",";
 
 	double rightIntakeOutput = RightIntakeMotor.Get();
 	MotorVoltage += std::to_string(rightIntakeOutput);
-	MotorVoltage += " ";
+	MotorVoltage += ",";
 
 	double elevatorOutput = ElevatorMotor.Get();
 	MotorVoltage += std::to_string(elevatorOutput);
 
 	outf << MotorVoltage << std::endl;
+}
+
+void Robot::ReadLog()
+{
+	if(!inf)
+	{
+		std::cout << "MotorOutputLog could not be read" << std::endl;
+		return;
+	}
+
+	std::string motorInput;
+	std::getline(inf, motorInput);
+	std::cout << motorInput << std::endl;
+	std::stringstream streamOfCommands(motorInput);
+
+	std::string leftMotorOutput, rightMotorOutput, leftIntakeOutput, rightIntakeOutput, elevatorOutput;
+
+	std::getline(streamOfCommands, leftMotorOutput, ',');
+	double lMotor = std::atof(leftMotorOutput.c_str());
+
+	std::getline(streamOfCommands, rightMotorOutput, ',');
+	double rMotor = std::atof(rightMotorOutput.c_str());
+
+	std::getline(streamOfCommands, leftIntakeOutput, ',');
+	double lIntake = std::atof(leftIntakeOutput.c_str());
+
+	std::getline(streamOfCommands, rightIntakeOutput, ',');
+	double rIntake = std::atof(rightIntakeOutput.c_str());
+
+	std::getline(streamOfCommands, elevatorOutput, ',');
+	double elev = std::atof(elevatorOutput.c_str());
+
+	std::cout << "Left Motor Output: " << lMotor << std::endl;
+	std::cout << "Right Motor Output: " << rMotor << std::endl;
+	std::cout << "Left Intake Output: " << lIntake <<  std::endl;
+	std::cout << "Right Intake Output: " << rIntake <<  std::endl;
+	std::cout << "Elevator Motor Output: " << elev <<  std::endl;
+
+	LeftMotors.Set(lMotor);
+	RightMotors.Set(rMotor);
 }
 
 void Robot::DriveForward(double distance)

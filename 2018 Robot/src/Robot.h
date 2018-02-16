@@ -8,6 +8,8 @@
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
+#include <string.h>
+#include <sstream>
 
 #include "Constants.h"
 #include "PID/AnglePIDOutput.h"
@@ -46,8 +48,8 @@ private:
 
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
-	WPI_TalonSRX BackLeftMotor;
-	WPI_TalonSRX BackRightMotor;
+	Spark BackLeftMotor;
+	Spark BackRightMotor;
 	WPI_TalonSRX ElevatorMotor;
 	WPI_TalonSRX RightIntakeMotor;
 	WPI_TalonSRX LeftIntakeMotor;
@@ -71,6 +73,7 @@ private:
 	SendableChooser<consts::MiddleApproach> *MiddleApproachChooser;
 
 	std::ofstream outf;
+	std::ifstream inf;
 
 public:
 	// Here, we're declaring the following functions:
@@ -103,6 +106,7 @@ public:
 	void TurnAngleTest(double angle);
 
 	void LogMotorOutput();
+	void ReadLog();
 
 	void ResetEncoders();
 };

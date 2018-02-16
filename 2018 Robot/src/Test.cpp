@@ -3,6 +3,8 @@
 void Robot::TestInit()
 {
 
+	//Close the log file
+	outf.close();
 }
 
 void Robot::TestPeriodic()

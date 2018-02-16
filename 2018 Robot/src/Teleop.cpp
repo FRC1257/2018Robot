@@ -2,8 +2,6 @@
 
 void Robot::TeleopInit()
 {
-	//Close the log file
-	outf.close();
 
 	//Disable/reset everything from autonomous
 	ResetEncoders();
@@ -17,6 +15,11 @@ void Robot::TeleopPeriodic()
 {
 	double speedVal = 0;
 	double turnVal = 0;
+//	LogMotorOutput();
+	std::cout << "HI, I AM HERE" << std::endl;
+	ReadLog();
+
+	std::cout << "HI, I AM HERE 2" << std::endl;
 
 	// If they press A, use single stick arcade with the left joystick
 	if(DriveController.GetAButton())
