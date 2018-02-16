@@ -99,7 +99,7 @@ public:
 	void MiddlePath(char switchPosition);
 	void DropCube(char switchPosition, double driveDistance, bool elevate, double elevatorDistance);
 	void EjectCube();
-	void RaiseElevator(double distance);
+	void RaiseElevator(consts::ElevatorIncrement elevatorSetpoint);
 
 	// PID Tuning Functions (JUST FOR TESTING)
 	void MaintainHeadingTest();
