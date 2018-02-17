@@ -10,10 +10,11 @@ void Robot::AutonomousInit()
 	Timer gameDataTimer;
 	gameDataTimer.Start();
 
-	// Poll for the game data for some timout period or until we've received the data
+	// Poll for the game data for some timeout period or until we've received the data
 	while (gameData.length() == 0 && !gameDataTimer.HasPeriodPassed(consts::GAME_DATA_TIMOUT_S))
 	{
 		gameData = DriverStation::GetInstance().GetGameSpecificMessage();
+		Wait(0.01);
 	}
 	gameDataTimer.Stop();
 
