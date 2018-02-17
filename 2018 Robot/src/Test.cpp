@@ -33,7 +33,13 @@ void Robot::DriveTest()
 
 void Robot::ManualElevatorTest()
 {
+	// Use the right trigger to manually raise the elevator and
+	// the left trigger to lower the elevator
+	double raiseElevatorOutput = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand);
+	double lowerElevatorOutput = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
 
+	SmartDashboard::PutNumber("RaiseElev", raiseElevatorOutput);
+	SmartDashboard::PutNumber("LowerElev", lowerElevatorOutput);
 }
 
 void Robot::FullElevatorTest()
@@ -151,5 +157,5 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
-	ElevatorTest();
+
 }
