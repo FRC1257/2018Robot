@@ -56,7 +56,7 @@ void Robot::AutonomousInit()
 					}
 					else if(gameData[1] == 'R')
 					{
-						OpositeScale(consts::AutoPosition start);
+						OppositeScale(consts::AutoPosition::LEFT_START);
 					}
 					else
 					{
@@ -97,9 +97,9 @@ void Robot::AutonomousInit()
 					{
 						SidePath(consts::AutoPosition::RIGHT_START, 'N', gameData[1]);
 					}
-					else if(gameData[1] == 'R')
+					else if(gameData[1] == 'L')
 					{
-						OppositeScale(consts::AutoPosition start);
+						OppositeScale(consts::AutoPosition::RIGHT_START);
 					}
 					else
 					{
@@ -107,8 +107,8 @@ void Robot::AutonomousInit()
 					}
 					break;
 				case consts::AutoObjective::BASELINE:
-					break;
 					DriveToBaseline();
+					break;
 				default:
 					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 					break;
