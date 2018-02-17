@@ -41,8 +41,6 @@ void Robot::AutonomousPeriodic()
 {
 	SmartDashboard::PutNumber("Angle", AngleSensors.GetAngle());
 	SmartDashboard::PutNumber("Distance", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
-
-
 }
 
 void Robot::LogMotorOutput()
@@ -67,15 +65,15 @@ void Robot::LogMotorOutput()
 	MotorVoltage += std::to_string(rightMotorOutput);
 	MotorVoltage += ",";
 
-	double leftIntakeOutput = LeftIntakeMotor.Get();
+	double leftIntakeOutput = deadband(LeftIntakeMotor.Get());
 	MotorVoltage += std::to_string(leftIntakeOutput);
 	MotorVoltage += ",";
 
-	double rightIntakeOutput = RightIntakeMotor.Get();
+	double rightIntakeOutput = deadband(RightIntakeMotor.Get());
 	MotorVoltage += std::to_string(rightIntakeOutput);
 	MotorVoltage += ",";
 
-	double elevatorOutput = ElevatorMotor.Get();
+	double elevatorOutput = deadband(ElevatorMotor.Get());
 	MotorVoltage += std::to_string(elevatorOutput);
 
 	outf << MotorVoltage << std::endl;
@@ -119,6 +117,9 @@ void Robot::ReadLog()
 
 	LeftMotors.Set(deadband(lMotor));
 	RightMotors.Set(deadband(rMotor));
+	LeftIntakeMotor.Set(deadband(lIntake));
+	RightIntakeMotor.Set(deadband(rIntake));
+	ElevatorMotor.Set(deadband(elev));
 }
 
 void Robot::DriveForward(double distance)

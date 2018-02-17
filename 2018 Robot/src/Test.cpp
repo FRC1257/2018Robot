@@ -14,7 +14,7 @@ void Robot::TestPeriodic()
 	{
 		if(!inf.is_open())
 		{
-			inf.open("/home/lvuser/" + EchoAutoFileNameChooser->GetSelected());
+			inf.open("consts::AUTO_PATH" + EchoAutoFileNameChooser->GetSelected());
 		}
 
 		ReadLog();
@@ -28,6 +28,9 @@ void Robot::TestPeriodic()
 
 		LeftMotors.Set(0);
 		RightMotors.Set(0);
+		LeftIntakeMotor.Set(0);
+		RightIntakeMotor.Set(0);
+		ElevatorMotor.Set(0);
 	}
 }
 

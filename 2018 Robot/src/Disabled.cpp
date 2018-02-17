@@ -35,7 +35,7 @@ void Robot::DisabledInit()
 	SmartDashboard::PutNumber("Auto Delay", 0);
 
 	std::vector<std::string> fileNames;
-	ReadDirectory("/home/lvuser/", fileNames);
+	ReadDirectory(consts::AUTO_PATH, fileNames);
 
 	for(std::string file : fileNames)
 	{
