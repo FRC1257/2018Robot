@@ -33,8 +33,6 @@ void Robot::AutonomousInit()
 		default:
 			break;
 	}
-
-
 }
 
 void Robot::AutonomousPeriodic()
