@@ -32,40 +32,50 @@ void Robot::AutonomousInit()
 			switch(AutoObjectiveChooser->GetSelected())
 			{
 				case consts::AutoObjective::DEFAULT:
+					SmartDashboard::PutString("Auto Path", std::string("LeftStart: Path to Switch ") +
+							gameData[0] + "; Path to Scale " + gameData[1]);
 					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 					break;
 				case consts::AutoObjective::SWITCH:
 					if(gameData[0] == 'L')
 					{
+						SmartDashboard::PutString("Auto Path", "LeftStart: Path to Switch " + gameData[0]);
 						SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 					}
 					else if(gameData[0] == 'R')
 					{
+						SmartDashboard::PutString("Auto Path", "LeftStart: Path to Switch" + gameData[1]);
 						OppositeSwitch(consts::AutoPosition::LEFT_START);
 					}
 					else
 					{
+						SmartDashboard::PutString("Auto Path", "LeftStart: Drive to Baseline");
 						DriveToBaseline();
 					}
 					break;
 				case consts::AutoObjective::SCALE:
 					if(gameData[1] == 'L')
 					{
+						SmartDashboard::PutString("Auto Path", "LeftStart: Path to Scale " + gameData[1]);
 						SidePath(consts::AutoPosition::LEFT_START, 'N', gameData[1]);
 					}
 					else if(gameData[1] == 'R')
 					{
+						SmartDashboard::PutString("Auto Path", "LeftStart: Path to Scale " + gameData[1]);
 						OppositeScale(consts::AutoPosition::LEFT_START);
 					}
 					else
 					{
+						SmartDashboard::PutString("Auto Path", "LeftStart: Drive to Baseline");
 						DriveToBaseline();
 					}
 					break;
 				case consts::AutoObjective::BASELINE:
+					SmartDashboard::PutString("Auto Path", "LeftStart: Drive to Baseline");
 					DriveToBaseline();
 					break;
 				default:
+					SmartDashboard::PutString("Auto Path", "LeftStart: Default Path");
 					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 					break;
 			}
@@ -75,40 +85,50 @@ void Robot::AutonomousInit()
 			switch(AutoObjectiveChooser->GetSelected())
 			{
 				case consts::AutoObjective::DEFAULT:
+					SmartDashboard::PutString("Auto Path", std::string("RightStart: Path to Switch ") +
+							gameData[0] + "; Path to Scale " + gameData[1]);
 					SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
 					break;
 				case consts::AutoObjective::SWITCH:
 					if(gameData[0] == 'R')
 					{
+						cout << "RightStart: Path to Switch " + gameData[0]<< endl;
 						SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
 					}
 					else if(gameData[0] == 'L')
 					{
+						cout << "RightStart: Path to Switch " + gameData[0]<< endl;
 						OppositeSwitch(consts::AutoPosition::RIGHT_START);
 					}
 					else
 					{
+						SmartDashboard::PutString("Auto Path", "RightStart: Drive to Baseline");
 						DriveToBaseline();
 					}
 					break;
 				case consts::AutoObjective::SCALE:
 					if(gameData[1] == 'R')
 					{
+						SmartDashboard::PutString("Auto Path", "RightStart: Path to Scale " + gameData[1]);
 						SidePath(consts::AutoPosition::RIGHT_START, 'N', gameData[1]);
 					}
 					else if(gameData[1] == 'L')
 					{
+						SmartDashboard::PutString("Auto Path", "RightStart: Path to Scale " + gameData[1]);
 						OppositeScale(consts::AutoPosition::RIGHT_START);
 					}
 					else
 					{
+						SmartDashboard::PutString("Auto Path", "RightStart: Drive to Baseline");
 						DriveToBaseline();
 					}
 					break;
 				case consts::AutoObjective::BASELINE:
+					SmartDashboard::PutString("Auto Path", "RightStart: Drive to Baseline");
 					DriveToBaseline();
 					break;
 				default:
+					SmartDashboard::PutString("Auto Path", "RightStart: Default Path");
 					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 					break;
 			}
@@ -119,6 +139,7 @@ void Robot::AutonomousInit()
 			break;
 
 		default:
+			SmartDashboard::PutString("Auto Path", "MiddleStart: Driving to Baseline");
 			DriveToBaseline();
 			break;
 	}
@@ -156,9 +177,9 @@ string WaitForGameData()
 
 void Robot::DriveToBaseline()
 {
-	cout << "Crossing Baseline" << endl;
+	SmartDashboard::PutString("Auto Status", "Crossing Baseline");
 	DriveDistance(85);
-	cout << "Finished crossing Baseline" << endl;
+	SmartDashboard::PutString("Auto Status", "Finished crossing Baseline");
 }
 
 //Wait until the PID controller has reached the target and the robot is steady
@@ -179,7 +200,7 @@ void WaitUntilPIDSteady(PIDController& pidController, PIDSource& pidSource)
 
 void Robot::DriveDistance(double distance)
 {
-	cout << "Driving a Distance" << endl;
+	SmartDashboard::PutString("Auto Status", "Driving a Distance");
 	//Disable other controllers
 	AngleController.Disable();
 
@@ -208,12 +229,12 @@ void Robot::DriveDistance(double distance)
 
 	WaitUntilPIDSteady(DistanceController, DistancePID);
 
-	cout << "Drive complete" << endl;
+	SmartDashboard::PutString("Auto Status", "Drive complete");
 }
 
 void Robot::TurnAngle(double angle)
 {
-	cout << "Rotating..." << endl;
+	SmartDashboard::PutString("Auto Status", "Rotating...");
 	//Disable other controllers
 	DistanceController.Disable();
 	MaintainAngleController.Disable();
@@ -236,7 +257,7 @@ void Robot::TurnAngle(double angle)
 
 	WaitUntilPIDSteady(AngleController, AngleSensors);
 
-	cout << "Rotation complete" << endl;;
+	SmartDashboard::PutString("Auto Status", "Rotation complete");;
 }
 
 void Robot::DriveFor(double seconds, double speed = 0.5)
@@ -249,7 +270,7 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 //Drives forward a distance, places a power cube, and then backs up
 void Robot::DropCube(double driveSetpoint, consts::ElevatorIncrement elevatorSetpoint)
 {
-	cout << "Dropping Cube..." << endl;
+	SmartDashboard::PutString("Auto Status", "Dropping Cube...");
 	DriveDistance(driveSetpoint);
 
 
@@ -257,35 +278,35 @@ void Robot::DropCube(double driveSetpoint, consts::ElevatorIncrement elevatorSet
 	EjectCube();
 	RaiseElevator(consts::ElevatorIncrement::GROUND);
 	DriveDistance(-driveSetpoint);
-	cout << "Cube Dropped" << endl;
+	SmartDashboard::PutString("Auto Status", "Cube Dropped");
 }
 
 void Robot::EjectCube()
 {
-	cout << "Ejecting Cube..." << endl;
+	SmartDashboard::PutString("Auto Status", "Ejecting Cube...");
 	RightIntakeMotor.Set(1);
 	LeftIntakeMotor.Set(-1);
 	Wait(0.4);
 	RightIntakeMotor.Set(0);
 	LeftIntakeMotor.Set(0);
-	cout << "Ejected Cube" << endl;
+	SmartDashboard::PutString("Auto Status", "Ejected Cube");
 }
 
 void Robot::RaiseElevator(consts::ElevatorIncrement elevatorSetpoint)
 {
-	cout << "Raising Elevator..." << endl;
+	SmartDashboard::PutString("Auto Status", "Raising Elevator...");
 	ElevatorMotor.Set(0);
 	ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[elevatorSetpoint]);
 	ElevatorPIDController.Enable();
 
 	WaitUntilPIDSteady(ElevatorPIDController, ElevatorPID);
-	cout << "Elevator Raised" << endl;
+	SmartDashboard::PutString("Auto Status", "Elevator Raised");
 }
 
 //Puts the power cube in either the same side scale or same switch switch
 void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scalePosition)
 {
-	cout << "Starting SidePath..." << endl;
+	SmartDashboard::PutString("Auto Status", "Starting SidePath...");
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
 	//L for left, R for right
@@ -299,7 +320,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 	{
 		TurnAngle(angle);
 		DropCube(5, consts::ElevatorIncrement::SWITCH);
-		cout << "Finished SidePath" << endl;
+		SmartDashboard::PutString("Auto Status", "Finished SidePath");
 		return; //End auto just in case the cube misses
 	}
 
@@ -317,7 +338,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 
 		TurnAngle(angle);
 		DropCube(5, consts::ElevatorIncrement::SCALE);
-		cout << "Finished SidePath" << endl;
+		SmartDashboard::PutString("Auto Status", "Finished SidePath");
 		return; //End auto just in case the cube misses
 	}
 }
@@ -325,7 +346,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 //Puts a power cube in the switch on the side opposite of the robot
 void Robot::OppositeSwitch(consts::AutoPosition start)
 {
-	cout << "Starting OppositeSwitch..." << endl;
+	SmartDashboard::PutString("Auto Status", "Starting OppositeSwitch...");
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
 
@@ -353,13 +374,13 @@ void Robot::OppositeSwitch(consts::AutoPosition start)
 
 		DropCube(5, consts::ElevatorIncrement::SWITCH);
 	}
-	cout << "Finished OppositeSwitch" << endl;
+	SmartDashboard::PutString("Auto Status", "Finished OppositeSwitch");
 }
 
 //Puts a power cube in the scale on the side opposite of the robot
 void Robot::OppositeScale(consts::AutoPosition start)
 {
-	cout << "Starting OppositeScale..." << endl;
+	SmartDashboard::PutString("Auto Status", "Starting OppositeScale...");
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
 
@@ -379,13 +400,13 @@ void Robot::OppositeScale(consts::AutoPosition start)
 
 	TurnAngle(angle);
 	DropCube(5, consts::ElevatorIncrement::SCALE);
-	cout << "Finished OppositeScale" << endl;
+	SmartDashboard::PutString("Auto Status", "Finished OppositeScale");
 }
 
 //Puts a power cube in the switch from the middle position
 void Robot::MiddlePath(char switchPosition)
 {
-	cout << "Starting MiddlePath..." << endl;
+	SmartDashboard::PutString("Auto Status", "Starting MiddlePath...");
 	double angle = 90;
 
 	//Go forward
@@ -438,5 +459,5 @@ void Robot::MiddlePath(char switchPosition)
 			DropCube(5, consts::ElevatorIncrement::SWITCH);
 		}
 	}
-	cout << "Finished MiddlePath" << endl;
+	SmartDashboard::PutString("Auto Status", "Finished MiddlePath");
 }
