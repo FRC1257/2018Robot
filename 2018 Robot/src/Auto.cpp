@@ -89,7 +89,6 @@ void Robot::ReadLog()
 
 	std::string motorInput;
 	std::getline(inf, motorInput);
-	std::cout << motorInput << std::endl;
 	std::stringstream streamOfCommands(motorInput);
 
 	std::string motorOutput;
@@ -108,12 +107,6 @@ void Robot::ReadLog()
 
 	std::getline(streamOfCommands, motorOutput, ',');
 	double elev = std::atof(motorOutput.c_str());
-
-	std::cout << "Left Motor Output: " << lMotor << std::endl;
-	std::cout << "Right Motor Output: " << rMotor << std::endl;
-	std::cout << "Left Intake Output: " << lIntake <<  std::endl;
-	std::cout << "Right Intake Output: " << rIntake <<  std::endl;
-	std::cout << "Elevator Motor Output: " << elev <<  std::endl;
 
 	LeftMotors.Set(deadband(lMotor));
 	RightMotors.Set(deadband(rMotor));

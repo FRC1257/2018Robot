@@ -6,12 +6,11 @@ void ReadDirectory(const std::string& name, std::vector<std::string>& list)
     struct dirent* dp;
     for(int i = 1; (dp = readdir(dir)) != NULL; i++)
     {
-    	//Add all nonhidden files
-    	if(dp->d_name[0] != '.')
-    	{
-			std::cout << "File " << i << ": " << dp->d_name << std::endl;
+		//Add all nonhidden files
+		if(dp->d_name[0] != '.')
+		{
 			list.push_back(dp->d_name);
-    	}
+		}
     }
     closedir(dir);
 }
