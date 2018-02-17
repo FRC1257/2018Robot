@@ -36,10 +36,35 @@ void Robot::AutonomousInit()
 					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 					break;
 				case consts::AutoObjective::SWITCH:
+					if(gameData[0] == 'L')
+					{
+						SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
+					}
+					else if(gameData[0] == 'R')
+					{
+						OppositeSwitch(consts::AutoPosition::LEFT_START);
+					}
+					else
+					{
+						DriveToBaseline();
+					}
 					break;
 				case consts::AutoObjective::SCALE:
+					if(gameData[1] == 'L')
+					{
+						SidePath(consts::AutoPosition::LEFT_START, 'N', gameData[1]);
+					}
+					else if(gameData[1] == 'R')
+					{
+						OpositeScale(consts::AutoPosition start);
+					}
+					else
+					{
+						DriveToBaseline();
+					}
 					break;
 				case consts::AutoObjective::BASELINE:
+					DriveToBaseline();
 					break;
 				default:
 					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
@@ -54,11 +79,36 @@ void Robot::AutonomousInit()
 					SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
 					break;
 				case consts::AutoObjective::SWITCH:
+					if(gameData[0] == 'R')
+					{
+						SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
+					}
+					else if(gameData[0] == 'L')
+					{
+						OppositeSwitch(consts::AutoPosition::RIGHT_START);
+					}
+					else
+					{
+						DriveToBaseline();
+					}
 					break;
 				case consts::AutoObjective::SCALE:
+					if(gameData[1] == 'R')
+					{
+						SidePath(consts::AutoPosition::RIGHT_START, 'N', gameData[1]);
+					}
+					else if(gameData[1] == 'R')
+					{
+						OppositeScale(consts::AutoPosition start);
+					}
+					else
+					{
+						DriveToBaseline();
+					}
 					break;
 				case consts::AutoObjective::BASELINE:
 					break;
+					DriveToBaseline();
 				default:
 					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 					break;
@@ -66,7 +116,7 @@ void Robot::AutonomousInit()
 			break;
 
 		case consts::AutoPosition::MIDDLE_START:
-			MiddlePath(gameData[1]);
+			MiddlePath(gameData[0]);
 			break;
 
 		default:
