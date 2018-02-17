@@ -25,6 +25,8 @@ namespace consts
 		SIDE
 	};
 
+	// Because this is an enum and not an enum class, you can use
+	// the enum value as an array inded for the ELEVATOR_SETPOINTS array
 	enum ElevatorIncrement
 	{
 		GROUND,
@@ -34,8 +36,8 @@ namespace consts
 		MAXHEIGHT
 	};
 
-	constexpr int PIDLoopIdx = 0;
-	constexpr int timeoutMs = 10;
+	constexpr int PID_LOOP_ID = 0;
+	constexpr int TALON_TIMEOUT_MS = 10;
 
 	//Numbers are fillers until build attaches the elevator
 	constexpr int NUM_ELEVATOR_SETPOINTS = 5;
