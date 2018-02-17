@@ -137,7 +137,7 @@ string WaitForGameData()
 	gameDataTimer.Start();
 
 	// Poll for the game data for some timeout period or until we've received the data
-	while (gameData.length() == 0 && !gameDataTimer.HasPeriodPassed(consts::GAME_DATA_TIMOUT_S))
+	while (gameData.length() == 0 && !gameDataTimer.HasPeriodPassed(consts::GAME_DATA_TIMEOUT_S))
 	{
 		gameData = DriverStation::GetInstance().GetGameSpecificMessage();
 		Wait(0.05);
@@ -247,7 +247,7 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 }
 
 //Drives forward a distance, places a power cube, and then backs up
-void Robot::DropCube(int driveSetpoint, consts::ElevatorIncrement elevatorSetpoint)
+void Robot::DropCube(double driveSetpoint, consts::ElevatorIncrement elevatorSetpoint)
 {
 	cout << "Dropping Cube..." << endl;
 	DriveDistance(driveSetpoint);
