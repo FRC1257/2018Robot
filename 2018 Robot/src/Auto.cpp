@@ -1,5 +1,8 @@
 #include "Robot.h"
 
+std::string WaitForGameData();
+
+
 void Robot::AutonomousInit()
 {
 	//Zeroing the angle sensor and encoders
@@ -7,27 +10,22 @@ void Robot::AutonomousInit()
 	AngleSensors.Reset();
 
 	std::string gameData;
-	Timer gameDataTimer;
-	gameDataTimer.Start();
-
-	// Poll for the game data for some timeout period or until we've received the data
-	while (gameData.length() == 0 && !gameDataTimer.HasPeriodPassed(consts::GAME_DATA_TIMOUT_S))
+	try
 	{
-		gameData = DriverStation::GetInstance().GetGameSpecificMessage();
+		gameData = WaitForGameData();
 	}
-	gameDataTimer.Stop();
-
-	// Add an optional delay to account for other robot auto paths
-	double delayTime = SmartDashboard::GetNumber("Auto Delay", 0);
-	Wait(delayTime);
-
-	// If we didn't receive any game data, drive to the baseline
-	if(gameData.length() == 0)
+	catch(std::string& error)
 	{
+		// If we didn't receive any game data, drive to the baseline
 		DriverStation::GetInstance().ReportError("Unable to read game data. Driving to Baseline");
+
+		Wait(SmartDashboard::GetNumber("Auto Delay", 0));
 		DriveToBaseline();
 		return;
 	}
+
+	// Add an optional delay to account for other robot auto paths
+	Wait(SmartDashboard::GetNumber("Auto Delay", 0));
 
 	switch(AutoLocationChooser->GetSelected())
 	{
@@ -81,6 +79,30 @@ void Robot::AutonomousPeriodic()
 {
 	SmartDashboard::PutNumber("Angle", AngleSensors.GetAngle());
 	SmartDashboard::PutNumber("Distance", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
+}
+
+std::string WaitForGameData()
+{
+	std::string gameData;
+	Timer gameDataTimer;
+	gameDataTimer.Start();
+
+	// Poll for the game data for some timeout period or until we've received the data
+	while (gameData.length() == 0 && !gameDataTimer.HasPeriodPassed(consts::GAME_DATA_TIMOUT_S))
+	{
+		gameData = DriverStation::GetInstance().GetGameSpecificMessage();
+		Wait(0.05);
+	}
+	gameDataTimer.Stop();
+
+	if(gameData.length() == 0)
+	{
+		throw "Unable to read game data.";
+	}
+	else
+	{
+		return gameData;
+	}
 }
 
 void Robot::DriveToBaseline()

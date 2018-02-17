@@ -36,9 +36,9 @@ Robot::~Robot()
 void Robot::RobotInit()
 {
 	// Configuring the Talon Drive Encoders
-	FrontLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PIDLoopIdx, consts::timeoutMs);
+	FrontLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 	FrontLeftMotor.SetSensorPhase(true);
-	FrontRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PIDLoopIdx, consts::timeoutMs);
+	FrontRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 	FrontRightMotor.SetSensorPhase(true);
 
 	// Adding PID Controllers to LiveWindow
@@ -61,8 +61,8 @@ void Robot::RobotInit()
 
 void Robot::ResetEncoders()
 {
-	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
-	FrontRightMotor.SetSelectedSensorPosition(0, consts::PIDLoopIdx, consts::timeoutMs);
+	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
+	FrontRightMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 }
 
 
