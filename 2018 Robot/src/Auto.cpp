@@ -17,7 +17,7 @@ void Robot::AutonomousInit()
 	catch(std::string& error)
 	{
 		// If we didn't receive any game data, drive to the baseline
-		DriverStation::GetInstance().ReportError("Unable to read game data. Driving to Baseline");
+		DriverStation::GetInstance().ReportError(error);
 
 		Wait(SmartDashboard::GetNumber("Auto Delay", 0));
 		DriveToBaseline();
@@ -97,7 +97,7 @@ std::string WaitForGameData()
 
 	if(gameData.length() == 0)
 	{
-		throw "Unable to read game data.";
+		throw "Unable to read game data. Driving to Baseline";
 	}
 	else
 	{
