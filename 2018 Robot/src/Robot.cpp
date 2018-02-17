@@ -13,24 +13,26 @@ Robot::Robot() :
 	DriveController(0),
 	DriveTrain(LeftMotors, RightMotors),
 	AngleSensors(SPI::Port::kMXP, SPI::kOnboardCS0),
+
 	AnglePIDOut(DriveTrain),
 	DistancePID(FrontLeftMotor, DriveTrain),
 	AngleController(0.0111, 0, 0, 0, AngleSensors, AnglePIDOut),
 	MaintainAngleController(0.01, 0, 0, AngleSensors, AnglePIDOut),
 	DistanceController(0.05, 0, 0, DistancePID, DistancePID),
+
 	ElevatorPID(&ElevatorMotor),
 	ElevatorPIDController(0.25, 0, 0, ElevatorPID, ElevatorPID)
 {
 	AutoLocationChooser = new SendableChooser<consts::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<consts::AutoObjective>();
-	MiddleApproachChooser = new SendableChooser<consts::MiddleApproach>();
+	SwitchApproachChooser = new SendableChooser<consts::SwitchApproach>();
 }
 
 Robot::~Robot()
 {
 	delete AutoLocationChooser;
 	delete AutoObjectiveChooser;
-	delete MiddleApproachChooser;
+	delete SwitchApproachChooser;
 }
 
 void Robot::RobotInit()

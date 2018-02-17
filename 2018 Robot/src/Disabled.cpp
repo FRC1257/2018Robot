@@ -12,12 +12,12 @@ void Robot::DisabledInit()
 	AutoObjectiveChooser->AddObject("Scale", consts::AutoObjective::SCALE);
 	AutoObjectiveChooser->AddObject("Baseline", consts::AutoObjective::BASELINE);
 
-	MiddleApproachChooser->AddDefault("Front", consts::MiddleApproach::FRONT);
-	MiddleApproachChooser->AddObject("Side", consts::MiddleApproach::SIDE);
+	SwitchApproachChooser->AddDefault("Front", consts::SwitchApproach::FRONT);
+	SwitchApproachChooser->AddObject("Side", consts::SwitchApproach::SIDE);
 
 	SmartDashboard::PutData("Auto Position", AutoLocationChooser);
 	SmartDashboard::PutData("Auto Objective", AutoObjectiveChooser);
-	SmartDashboard::PutData("Middle Approach", MiddleApproachChooser);
+	SmartDashboard::PutData("Middle Approach", SwitchApproachChooser);
 	SmartDashboard::PutNumber("Auto Delay", 0);
 }
 

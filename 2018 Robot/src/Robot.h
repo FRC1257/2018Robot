@@ -65,7 +65,7 @@ private:
 
 	SendableChooser<consts::AutoPosition> *AutoLocationChooser;
 	SendableChooser<consts::AutoObjective> *AutoObjectiveChooser;
-	SendableChooser<consts::MiddleApproach> *MiddleApproachChooser;
+	SendableChooser<consts::SwitchApproach> *SwitchApproachChooser;
 
 public:
 	// Here, we're declaring the following functions:
@@ -94,8 +94,8 @@ public:
 	// Autonomous Robot Functionality
 	void DriveToBaseline();
 	void SidePath(consts::AutoPosition start, char switchPosition, char scalePosition);
-	void OppositeSwitch(consts::AutoPosition start, char switchPosition);
-	void OppositeScale(consts::AutoPosition start, char scalePosition);
+	void OppositeSwitch(consts::AutoPosition start);
+	void OppositeScale(consts::AutoPosition start);
 	void MiddlePath(char switchPosition);
 	void DropCube(int driveSetpoint, consts::ElevatorIncrement elevatorSetpoint);
 	void EjectCube();
