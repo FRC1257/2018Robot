@@ -1,7 +1,6 @@
 #include "Robot.h"
 
-std::string WaitForGameData();
-
+string WaitForGameData();
 
 void Robot::AutonomousInit()
 {
@@ -9,12 +8,12 @@ void Robot::AutonomousInit()
 	ResetEncoders();
 	AngleSensors.Reset();
 
-	std::string gameData;
+	string gameData;
 	try
 	{
 		gameData = WaitForGameData();
 	}
-	catch(std::string& error)
+	catch(string& error)
 	{
 		// If we didn't receive any game data, drive to the baseline
 		DriverStation::GetInstance().ReportError(error);
@@ -131,9 +130,9 @@ void Robot::AutonomousPeriodic()
 	SmartDashboard::PutNumber("Distance", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
-std::string WaitForGameData()
+string WaitForGameData()
 {
-	std::string gameData;
+	string gameData;
 	Timer gameDataTimer;
 	gameDataTimer.Start();
 
@@ -157,7 +156,9 @@ std::string WaitForGameData()
 
 void Robot::DriveToBaseline()
 {
+	cout << "Crossing Baseline" << endl;
 	DriveDistance(85);
+	cout << "Finished crossing Baseline" << endl;
 }
 
 //Wait until the PID controller has reached the target and the robot is steady
@@ -178,6 +179,7 @@ void WaitUntilPIDSteady(PIDController& pidController, PIDSource& pidSource)
 
 void Robot::DriveDistance(double distance)
 {
+	cout << "Driving a Distance" << endl;
 	//Disable other controllers
 	AngleController.Disable();
 
@@ -205,10 +207,13 @@ void Robot::DriveDistance(double distance)
 	SmartDashboard::PutNumber("Target Distance", distance);
 
 	WaitUntilPIDSteady(DistanceController, DistancePID);
+
+	cout << "Drive complete" << endl;
 }
 
 void Robot::TurnAngle(double angle)
 {
+	cout << "Rotating..." << endl;
 	//Disable other controllers
 	DistanceController.Disable();
 	MaintainAngleController.Disable();
@@ -230,6 +235,8 @@ void Robot::TurnAngle(double angle)
 	SmartDashboard::PutNumber("Target Angle", angle);
 
 	WaitUntilPIDSteady(AngleController, AngleSensors);
+
+	cout << "Rotation complete" << endl;;
 }
 
 void Robot::DriveFor(double seconds, double speed = 0.5)
@@ -242,13 +249,19 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 //Drives forward a distance, places a power cube, and then backs up
 void Robot::DropCube(int driveSetpoint, consts::ElevatorIncrement elevatorSetpoint)
 {
+	cout << "Dropping Cube..." << endl;
 	DriveDistance(driveSetpoint);
 
+	cout << "Raising Elevator..." << endl;
 	RaiseElevator(elevatorSetpoint);
+	cout << "Elevator Raised" << endl;
+	cout << "Ejecting Cube..." << endl;
 	EjectCube();
+	cout << "Cube Ejecting..." << endl;
 	RaiseElevator(consts::ElevatorIncrement::GROUND);
-
+	cout << "Ejected Cube" << endl;
 	DriveDistance(-driveSetpoint);
+	cout << "Cube Dropped" << endl;
 }
 
 void Robot::EjectCube()

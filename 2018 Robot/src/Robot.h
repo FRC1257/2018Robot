@@ -2,6 +2,7 @@
 #define ROBOT
 
 #include <WPILib.h>
+#include <iostream>
 #include <LiveWindow/LiveWindow.h>
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
@@ -13,6 +14,7 @@
 #include "Sensors/AngleSensorGroup.h"
 
 using namespace frc;
+using namespace std;
 
 inline double PulsesToInches(double sensorPosition)
 {
