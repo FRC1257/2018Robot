@@ -47,7 +47,7 @@ namespace consts
 	constexpr double WHEEL_DIAMETER = 6;
 	constexpr double PULSES_PER_REV = 4096;
 
-	constexpr double GAME_DATA_TIMOUT_S = 1;
+	constexpr double GAME_DATA_TIMEOUT_S = 1;
 }
 
 #endif
