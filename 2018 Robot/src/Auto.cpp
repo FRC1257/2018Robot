@@ -13,7 +13,7 @@ void Robot::AutonomousInit()
 	{
 		gameData = WaitForGameData();
 	}
-	catch(string& error)
+	catch(const char* error)
 	{
 		// If we didn't receive any game data, drive to the baseline
 		DriverStation::GetInstance().ReportError(error);
