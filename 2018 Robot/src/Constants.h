@@ -19,7 +19,7 @@ namespace consts
 		DEFAULT
 	};
 
-	enum class MiddleApproach
+	enum class SwitchApproach
 	{
 		FRONT,
 		SIDE
