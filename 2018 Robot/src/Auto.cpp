@@ -10,7 +10,7 @@ void Robot::AutonomousInit()
 	Timer gameDataTimer;
 	gameDataTimer.Start();
 
-	// Poll for the game data for some timout period or until we've received the data
+	// Poll for the game data for some timeout period or until we've received the data
 	while (gameData.length() == 0 && !gameDataTimer.HasPeriodPassed(consts::GAME_DATA_TIMOUT_S))
 	{
 		gameData = DriverStation::GetInstance().GetGameSpecificMessage();
@@ -85,7 +85,7 @@ void Robot::AutonomousPeriodic()
 
 void Robot::DriveToBaseline()
 {
-	DriveForward(85);
+	DriveDistance(85);
 }
 
 //Wait until the PID controller has reached the target and the robot is steady
@@ -104,7 +104,7 @@ void WaitUntilPIDSteady(PIDController& pidController, PIDSource& pidSource)
 	pidController.Disable();
 }
 
-void Robot::DriveForward(double distance)
+void Robot::DriveDistance(double distance)
 {
 	//Disable other controllers
 	AngleController.Disable();
@@ -167,17 +167,16 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 	DriveTrain.ArcadeDrive(0, 0);
 }
 
-void Robot::DropCube(char switchPosition, int driveSetpoint, bool elevate, consts::ElevatorIncrement elevatorSetpoint)
+//Drives forward a distance, places a power cube, and then backs up
+void Robot::DropCube(int driveSetpoint, consts::ElevatorIncrement elevatorSetpoint)
 {
-	double angle = switchPosition == 'L' ? 90 : -90; //90 for L, -90 for R
-
-	TurnAngle(angle);
-	DriveForward(driveSetpoint);
+	DriveDistance(driveSetpoint);
 
 	RaiseElevator(elevatorSetpoint);
 	EjectCube();
+	RaiseElevator(consts::ElevatorIncrement::GROUND);
 
-	DriveForward(driveSetpoint);
+	DriveDistance(-driveSetpoint);
 }
 
 void Robot::EjectCube()
@@ -198,90 +197,92 @@ void Robot::RaiseElevator(consts::ElevatorIncrement elevatorSetpoint)
 	WaitUntilPIDSteady(ElevatorPIDController, ElevatorPID);
 }
 
+//Puts the power cube in either the same side scale or same switch switch
 void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scalePosition)
 {
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
-
 	//L for left, R for right
 	char startPosition = (start == consts::AutoPosition::LEFT_START) ? 'L' : 'R';
 
 	//Cross the baseline
-	DriveForward(148);
+	DriveDistance(148);
 
 	//Check if the switch is nearby, and if it is, place a cube in it
 	if(switchPosition == startPosition)
 	{
-		// 4th parameter is filler number
-		DropCube(switchPosition, 5, false, consts::ElevatorIncrement::GROUND);
+		TurnAngle(angle);
+		DropCube(5, consts::ElevatorIncrement::SWITCH);
 
 		return; //End auto just in case the cube misses
 	}
 
 	//Otherwise, go forward to a better position
-	DriveForward(100);
+	DriveDistance(100);
 
 	//Check if the scale is nearby, and if it is, place a cube in it
 	if(scalePosition == startPosition)
 	{
 		TurnAngle(-angle);
-		DriveForward(14);
+		DriveDistance(14);
 
 		TurnAngle(angle);
-		DriveForward(56);
+		DriveDistance(56);
 
-		// 4th parameter is filler number
-		DropCube(scalePosition, 5, true, consts::ElevatorIncrement::GROUND);
+		TurnAngle(angle);
+		DropCube(5, consts::ElevatorIncrement::SCALE);
 
 		return; //End auto just in case the cube misses
 	}
 }
 
+//Puts a power cube in the switch on the side opposite of the robot
 void Robot::OppositeSwitch(consts::AutoPosition start, char switchPosition)
 {
 	//90 for left, -90 for right
-	int multiplier = (start == consts::AutoPosition::LEFT_START) ? 1 : -1;
-	double angle = 90 * multiplier;
+	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
 
-	DriveForward(42.5);
+	DriveDistance(42.5);
 	TurnAngle(angle);
 
-	DriveForward(155);
+	DriveDistance(155);
 	TurnAngle(-angle);
 
-	// 4th parameter is filler number
-	DropCube(switchPosition, 59, false, consts::ElevatorIncrement::GROUND);
+	TurnAngle(angle);
+	DropCube(59, consts::ElevatorIncrement::SWITCH);
 }
 
+//Puts a power cube in the scale on the side opposite of the robot
 void Robot::OppositeScale(consts::AutoPosition start, char scalePosition)
 {
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
 
-	DriveForward(211);
+	DriveDistance(211);
 	TurnAngle(angle);
 
-	DriveForward(200);
+	DriveDistance(200);
 	TurnAngle(-angle);
 
-	DriveForward(37.5);
+	DriveDistance(37.5);
 	TurnAngle(angle);
 
-	DriveForward(14);
+	DriveDistance(14);
 	TurnAngle(-angle);
 
-	DriveForward(56);
+	DriveDistance(56);
 
-	// 4th parameter is filler number
-	DropCube(scalePosition, 5, true, consts::ElevatorIncrement::GROUND);
+	TurnAngle(angle);
+	DropCube(5, consts::ElevatorIncrement::SCALE);
 }
 
+//Puts a power cube in the switch from the middle position
 void Robot::MiddlePath(char switchPosition)
 {
 	double angle = 90;
 
 	//Go forward
-	DriveForward(42.5);
+	DriveDistance(42.5);
 
 	//Check which way the cube should be placed
 	if(MiddleApproachChooser->GetSelected() == consts::MiddleApproach::FRONT)
@@ -290,18 +291,18 @@ void Robot::MiddlePath(char switchPosition)
 		if(switchPosition == 'L')
 		{
 			TurnAngle(-angle);
-			DriveForward(80);
+			DriveDistance(80);
 
-			// 4th parameter is filler number
-			DropCube(switchPosition, 78, false, consts::ElevatorIncrement::GROUND);
+			TurnAngle(angle);
+			DropCube(78, consts::ElevatorIncrement::SWITCH);
 		}
 		else if(switchPosition == 'R')
 		{
 			TurnAngle(angle);
-			DriveForward(29);
+			DriveDistance(29);
 
-			// 4th parameter is filler number
-			DropCube(switchPosition, 78, false, consts::ElevatorIncrement::GROUND);
+			TurnAngle(-angle);
+			DropCube(78, consts::ElevatorIncrement::SWITCH);
 		}
 	}
 	else
@@ -310,24 +311,24 @@ void Robot::MiddlePath(char switchPosition)
 		if(switchPosition == 'L')
 		{
 			TurnAngle(-angle);
-			DriveForward(126);
+			DriveDistance(126);
 
 			TurnAngle(angle);
-			DriveForward(106);
+			DriveDistance(106);
 
-			// 4th parameter is filler number
-			DropCube(switchPosition, 5, false, consts::ElevatorIncrement::GROUND);
+			TurnAngle(angle);
+			DropCube(5, consts::ElevatorIncrement::SWITCH);
 		}
 		else if(switchPosition == 'R')
 		{
 			TurnAngle(angle);
-			DriveForward(74);
+			DriveDistance(74);
 
 			TurnAngle(-angle);
-			DriveForward(106);
+			DriveDistance(106);
 
-			// 4th parameter is filler number
-			DropCube(switchPosition, 5, false, consts::ElevatorIncrement::GROUND);
+			TurnAngle(angle);
+			DropCube(5, consts::ElevatorIncrement::SWITCH);
 		}
 	}
 }

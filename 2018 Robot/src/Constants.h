@@ -27,9 +27,9 @@ namespace consts
 
 	enum ElevatorIncrement
 	{
-		//These numbers are fillers until build attached the elevator
 		GROUND,
 		SWITCH,
+		MIDDLE,
 		SCALE,
 		MAXHEIGHT
 	};
@@ -37,9 +37,7 @@ namespace consts
 	constexpr int PIDLoopIdx = 0;
 	constexpr int timeoutMs = 10;
 
-	int height;
-	int setpointDistance;
-
+	//Numbers are fillers until build attaches the elevator
 	constexpr int NUM_ELEVATOR_SETPOINTS = 5;
 	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {0, 40, 60, 90, 100};
 

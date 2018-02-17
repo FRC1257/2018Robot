@@ -36,9 +36,8 @@ private:
 
 	// - 1 AnglePIDOutput to send turning motor output to DifferentialDrive during PID turning
 	// - 1 DistancePIDHelper to manage the source and motor output of DifferentialDrive during PID driving
-	// - 3 PIDControllers to manage turning to specific angles, driving specific distances, and maintaining a specific angle
-
-	// - 1 TalonPIDHelper to manage the source
+	// - 1 TalonPIDHelper to manage the source and motor output for the elevator motor
+	// - 4 PIDControllers to manage turning to angles, driving distances, maintaining an angle, and raising the elevator
 
 	// - 3 SendableChoosers for selecting an autonomous mode
 
@@ -73,6 +72,7 @@ public:
 	// - Robot class constructor
 	// - Virtual functions from TimedRobot
 	// - Driving and turning functions for autonomous
+	// - Pathing functions for autonomous
 	// - Testing functions for PID tuning
 
 	Robot();
@@ -88,7 +88,7 @@ public:
 	void TestPeriodic() override;\
 
 	void DriveFor(double seconds, double speed);
-	void DriveForward(double distance);
+	void DriveDistance(double distance);
 	void TurnAngle(double angle);
 
 	// Autonomous Robot Functionality
@@ -97,7 +97,7 @@ public:
 	void OppositeSwitch(consts::AutoPosition start, char switchPosition);
 	void OppositeScale(consts::AutoPosition start, char scalePosition);
 	void MiddlePath(char switchPosition);
-	void DropCube(char switchPosition, int driveSetpoint, bool elevate, consts::ElevatorIncrement elevatorSetpoint);
+	void DropCube(int driveSetpoint, consts::ElevatorIncrement elevatorSetpoint);
 	void EjectCube();
 	void RaiseElevator(consts::ElevatorIncrement elevatorSetpoint);
 
