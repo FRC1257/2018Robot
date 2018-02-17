@@ -259,23 +259,39 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 }
 
 //Puts a power cube in the switch on the side opposite of the robot
-void Robot::OppositeSwitch(consts::AutoPosition start, char switchPosition)
+void Robot::OppositeSwitch(consts::AutoPosition start)
 {
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
 
-	DriveDistance(42.5);
-	TurnAngle(angle);
+	if(SwitchApproachChooser->GetSelected() == consts::SwitchApproach::FRONT)
+	{
+		DriveDistance(42.5);
+		TurnAngle(angle);
 
-	DriveDistance(155);
-	TurnAngle(-angle);
+		DriveDistance(155);
+		TurnAngle(-angle);
 
-	TurnAngle(angle);
-	DropCube(59, consts::ElevatorIncrement::SWITCH);
+		TurnAngle(angle);
+		DropCube(59, consts::ElevatorIncrement::SWITCH);
+	}
+	else
+	{
+		DriveDistance(211);
+		TurnAngle(angle);
+
+		DriveDistance(200);
+		TurnAngle(angle);
+
+		DriveDistance(62.5);
+		TurnAngle(angle);
+
+		DropCube(5, consts::ElevatorIncrement::SWITCH);
+	}
 }
 
 //Puts a power cube in the scale on the side opposite of the robot
-void Robot::OppositeScale(consts::AutoPosition start, char scalePosition)
+void Robot::OppositeScale(consts::AutoPosition start)
 {
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
@@ -307,7 +323,7 @@ void Robot::MiddlePath(char switchPosition)
 	DriveDistance(42.5);
 
 	//Check which way the cube should be placed
-	if(MiddleApproachChooser->GetSelected() == consts::MiddleApproach::FRONT)
+	if(SwitchApproachChooser->GetSelected() == consts::SwitchApproach::FRONT)
 	{
 		//If the cube is being placed from the front
 		if(switchPosition == 'L')

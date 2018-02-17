@@ -23,14 +23,14 @@ Robot::Robot() :
 {
 	AutoLocationChooser = new SendableChooser<consts::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<consts::AutoObjective>();
-	MiddleApproachChooser = new SendableChooser<consts::MiddleApproach>();
+	SwitchApproachChooser = new SendableChooser<consts::SwitchApproach>();
 }
 
 Robot::~Robot()
 {
 	delete AutoLocationChooser;
 	delete AutoObjectiveChooser;
-	delete MiddleApproachChooser;
+	delete SwitchApproachChooser;
 }
 
 void Robot::RobotInit()
