@@ -252,39 +252,40 @@ void Robot::DropCube(double driveSetpoint, consts::ElevatorIncrement elevatorSet
 	cout << "Dropping Cube..." << endl;
 	DriveDistance(driveSetpoint);
 
-	cout << "Raising Elevator..." << endl;
+
 	RaiseElevator(elevatorSetpoint);
-	cout << "Elevator Raised" << endl;
-	cout << "Ejecting Cube..." << endl;
 	EjectCube();
-	cout << "Cube Ejecting..." << endl;
 	RaiseElevator(consts::ElevatorIncrement::GROUND);
-	cout << "Ejected Cube" << endl;
 	DriveDistance(-driveSetpoint);
 	cout << "Cube Dropped" << endl;
 }
 
 void Robot::EjectCube()
 {
+	cout << "Ejecting Cube..." << endl;
 	RightIntakeMotor.Set(1);
 	LeftIntakeMotor.Set(-1);
 	Wait(0.4);
 	RightIntakeMotor.Set(0);
 	LeftIntakeMotor.Set(0);
+	cout << "Ejected Cube" << endl;
 }
 
 void Robot::RaiseElevator(consts::ElevatorIncrement elevatorSetpoint)
 {
+	cout << "Raising Elevator..." << endl;
 	ElevatorMotor.Set(0);
 	ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[elevatorSetpoint]);
 	ElevatorPIDController.Enable();
 
 	WaitUntilPIDSteady(ElevatorPIDController, ElevatorPID);
+	cout << "Elevator Raised" << endl;
 }
 
 //Puts the power cube in either the same side scale or same switch switch
 void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scalePosition)
 {
+	cout << "Starting SidePath..." << endl;
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
 	//L for left, R for right
@@ -298,7 +299,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 	{
 		TurnAngle(angle);
 		DropCube(5, consts::ElevatorIncrement::SWITCH);
-
+		cout << "Finished SidePath" << endl;
 		return; //End auto just in case the cube misses
 	}
 
@@ -316,7 +317,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 
 		TurnAngle(angle);
 		DropCube(5, consts::ElevatorIncrement::SCALE);
-
+		cout << "Finished SidePath" << endl;
 		return; //End auto just in case the cube misses
 	}
 }
@@ -324,6 +325,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 //Puts a power cube in the switch on the side opposite of the robot
 void Robot::OppositeSwitch(consts::AutoPosition start)
 {
+	cout << "Starting OppositeSwitch..." << endl;
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
 
@@ -351,11 +353,13 @@ void Robot::OppositeSwitch(consts::AutoPosition start)
 
 		DropCube(5, consts::ElevatorIncrement::SWITCH);
 	}
+	cout << "Finished OppositeSwitch" << endl;
 }
 
 //Puts a power cube in the scale on the side opposite of the robot
 void Robot::OppositeScale(consts::AutoPosition start)
 {
+	cout << "Starting OppositeScale..." << endl;
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
 
@@ -375,11 +379,13 @@ void Robot::OppositeScale(consts::AutoPosition start)
 
 	TurnAngle(angle);
 	DropCube(5, consts::ElevatorIncrement::SCALE);
+	cout << "Finished OppositeScale" << endl;
 }
 
 //Puts a power cube in the switch from the middle position
 void Robot::MiddlePath(char switchPosition)
 {
+	cout << "Starting MiddlePath..." << endl;
 	double angle = 90;
 
 	//Go forward
@@ -432,4 +438,5 @@ void Robot::MiddlePath(char switchPosition)
 			DropCube(5, consts::ElevatorIncrement::SWITCH);
 		}
 	}
+	cout << "Finished MiddlePath" << endl;
 }
