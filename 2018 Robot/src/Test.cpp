@@ -2,15 +2,33 @@
 
 void Robot::TestInit()
 {
-
-	//Close the log file
-	outf.close();
+	SmartDashboard::PutBoolean("Auto Path", 0);
 }
 
 void Robot::TestPeriodic()
 {
 	SmartDashboard::PutNumber("Auto Pos Val", (int) AutoLocationChooser->GetSelected());
 	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
+
+	if(SmartDashboard::GetBoolean("Auto Path", 0))
+	{
+		if(!inf.is_open())
+		{
+			inf.open("/home/lvuser/" + EchoAutoFileNameChooser->GetSelected());
+		}
+
+		ReadLog();
+	}
+	else
+	{
+		if(inf.is_open())
+		{
+			inf.close();
+		}
+
+		LeftMotors.Set(0);
+		RightMotors.Set(0);
+	}
 }
 
 void Robot::MaintainHeadingTest()

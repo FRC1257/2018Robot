@@ -5,11 +5,15 @@
 #include <LiveWindow/LiveWindow.h>
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
+
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
 #include <string.h>
 #include <sstream>
+#include <vector>
+#include <sys/types.h>
+#include <dirent.h>
 
 #include "Constants.h"
 #include "PID/AnglePIDOutput.h"
@@ -25,6 +29,16 @@ inline double PulsesToInches(double sensorPosition)
 	double distance = revolutions * circumference;
 
 	return distance;
+}
+
+inline double dabs(double value)
+{
+	return value > 0 ? value : -value;
+}
+
+inline double deadband(double value)
+{
+	return dabs(value) < 0.02 ? 0 : value;
 }
 
 class Robot: public TimedRobot
@@ -45,6 +59,7 @@ private:
 	// - 3 SendableChoosers for selecting an autonomous mode
 
 	// - 1 ofstream for logging motor outputs
+	// - 1 ifstream for taking in motor outputs
 
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
@@ -71,6 +86,7 @@ private:
 	SendableChooser<consts::AutoPosition> *AutoLocationChooser;
 	SendableChooser<consts::AutoObjective> *AutoObjectiveChooser;
 	SendableChooser<consts::MiddleApproach> *MiddleApproachChooser;
+	SendableChooser<std::string> *EchoAutoFileNameChooser;
 
 	std::ofstream outf;
 	std::ifstream inf;

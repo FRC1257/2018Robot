@@ -2,24 +2,39 @@
 
 void Robot::TeleopInit()
 {
-
 	//Disable/reset everything from autonomous
 	ResetEncoders();
 	AngleSensors.Reset();
 	AngleController.Disable();
 	MaintainAngleController.Disable();
 	DistanceController.Disable();
+
+	SmartDashboard::PutBoolean("Record Path", 0);
+	SmartDashboard::PutString("Record Output File", "RobotOutputLog.txt");
 }
 
 void Robot::TeleopPeriodic()
 {
+	if(SmartDashboard::GetBoolean("Record Path", 0))
+	{
+		if(!outf.is_open())
+		{
+			outf.open("/home/lvuser/" + SmartDashboard::GetString("Record Output File", "RobotOutputLog.txt"),
+					std::ios::trunc);
+		}
+
+		LogMotorOutput();
+	}
+	else
+	{
+		if(outf.is_open())
+		{
+			outf.close();
+		}
+	}
+
 	double speedVal = 0;
 	double turnVal = 0;
-//	LogMotorOutput();
-	std::cout << "HI, I AM HERE" << std::endl;
-	ReadLog();
-
-	std::cout << "HI, I AM HERE 2" << std::endl;
 
 	// If they press A, use single stick arcade with the left joystick
 	if(DriveController.GetAButton())

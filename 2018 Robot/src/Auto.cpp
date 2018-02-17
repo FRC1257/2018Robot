@@ -34,12 +34,15 @@ void Robot::AutonomousInit()
 			break;
 	}
 
+
 }
 
 void Robot::AutonomousPeriodic()
 {
 	SmartDashboard::PutNumber("Angle", AngleSensors.GetAngle());
 	SmartDashboard::PutNumber("Distance", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
+
+
 }
 
 void Robot::LogMotorOutput()
@@ -56,11 +59,11 @@ void Robot::LogMotorOutput()
 	//Write all motor data
 	std::string MotorVoltage = "";
 
-	double leftMotorOutput = LeftMotors.Get();
+	double leftMotorOutput = deadband(LeftMotors.Get());
 	MotorVoltage += std::to_string(leftMotorOutput);
 	MotorVoltage += ",";
 
-	double rightMotorOutput = RightMotors.Get();
+	double rightMotorOutput = deadband(RightMotors.Get());
 	MotorVoltage += std::to_string(rightMotorOutput);
 	MotorVoltage += ",";
 
@@ -91,22 +94,22 @@ void Robot::ReadLog()
 	std::cout << motorInput << std::endl;
 	std::stringstream streamOfCommands(motorInput);
 
-	std::string leftMotorOutput, rightMotorOutput, leftIntakeOutput, rightIntakeOutput, elevatorOutput;
+	std::string motorOutput;
 
-	std::getline(streamOfCommands, leftMotorOutput, ',');
-	double lMotor = std::atof(leftMotorOutput.c_str());
+	std::getline(streamOfCommands, motorOutput, ',');
+	double lMotor = std::atof(motorOutput.c_str());
 
-	std::getline(streamOfCommands, rightMotorOutput, ',');
-	double rMotor = std::atof(rightMotorOutput.c_str());
+	std::getline(streamOfCommands, motorOutput, ',');
+	double rMotor = std::atof(motorOutput.c_str());
 
-	std::getline(streamOfCommands, leftIntakeOutput, ',');
-	double lIntake = std::atof(leftIntakeOutput.c_str());
+	std::getline(streamOfCommands, motorOutput, ',');
+	double lIntake = std::atof(motorOutput.c_str());
 
-	std::getline(streamOfCommands, rightIntakeOutput, ',');
-	double rIntake = std::atof(rightIntakeOutput.c_str());
+	std::getline(streamOfCommands, motorOutput, ',');
+	double rIntake = std::atof(motorOutput.c_str());
 
-	std::getline(streamOfCommands, elevatorOutput, ',');
-	double elev = std::atof(elevatorOutput.c_str());
+	std::getline(streamOfCommands, motorOutput, ',');
+	double elev = std::atof(motorOutput.c_str());
 
 	std::cout << "Left Motor Output: " << lMotor << std::endl;
 	std::cout << "Right Motor Output: " << rMotor << std::endl;
@@ -114,8 +117,8 @@ void Robot::ReadLog()
 	std::cout << "Right Intake Output: " << rIntake <<  std::endl;
 	std::cout << "Elevator Motor Output: " << elev <<  std::endl;
 
-	LeftMotors.Set(lMotor);
-	RightMotors.Set(rMotor);
+	LeftMotors.Set(deadband(lMotor));
+	RightMotors.Set(deadband(rMotor));
 }
 
 void Robot::DriveForward(double distance)

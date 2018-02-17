@@ -1,5 +1,21 @@
 #include "Robot.h"
 
+void ReadDirectory(const std::string& name, std::vector<std::string>& list)
+{
+    DIR* dir = opendir(name.c_str());
+    struct dirent* dp;
+    for(int i = 1; (dp = readdir(dir)) != NULL; i++)
+    {
+    	//Add all nonhidden files
+    	if(dp->d_name[0] != '.')
+    	{
+			std::cout << "File " << i << ": " << dp->d_name << std::endl;
+			list.push_back(dp->d_name);
+    	}
+    }
+    closedir(dir);
+}
+
 void Robot::DisabledInit()
 {
 	AutoLocationChooser->AddDefault("Left Start", consts::AutoPosition::LEFT_START);
@@ -17,6 +33,15 @@ void Robot::DisabledInit()
 	SmartDashboard::PutData("Auto Objective", AutoObjectiveChooser);
 	SmartDashboard::PutData("Middle Approach", MiddleApproachChooser);
 	SmartDashboard::PutNumber("Auto Delay", 0);
+
+	std::vector<std::string> fileNames;
+	ReadDirectory("/home/lvuser/", fileNames);
+
+	for(std::string file : fileNames)
+	{
+		EchoAutoFileNameChooser->AddObject(file, file);
+	}
+	SmartDashboard::PutData("Echo Auto File Name", EchoAutoFileNameChooser);
 }
 
 void Robot::DisabledPeriodic()
