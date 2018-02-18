@@ -1,5 +1,104 @@
 #include "Robot.h"
 
+void Robot::TestInit()
+{
+
+}
+
+void Robot::TestPeriodic()
+{
+	DriveTest();
+//	ElevatorTest();
+//	LinkageTest();
+//	IntakeTest();
+//	ClimbTest();
+}
+
+void Robot::DriveTest()
+{
+	double forwardSpeed = 0;
+	double turnSpeed = 0;
+
+
+	// If they press A, use single stick arcade with the left joystick
+	if(DriveController.GetAButton())
+	{
+		forwardSpeed = DriveController.GetY(GenericHID::JoystickHand::kLeftHand);
+		turnSpeed = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
+	}
+	// If they press the left bumper, use the left joystick for forward and
+	// backward motion and the right joystick for turning
+	else if(DriveController.GetBumper(GenericHID::JoystickHand::kLeftHand))
+	{
+		forwardSpeed = DriveController.GetY(GenericHID::JoystickHand::kLeftHand);
+		turnSpeed = DriveController.GetX(GenericHID::JoystickHand::kRightHand);
+	}
+	// If they press the right bumper, use the right joystick for forward and
+	// backward motion and the left joystick for turning
+	else if(DriveController.GetBumper(GenericHID::JoystickHand::kRightHand))
+	{
+		forwardSpeed = DriveController.GetY(GenericHID::JoystickHand::kRightHand);
+		turnSpeed = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
+	}
+
+	double leftMotorOutput;
+	double rightMotorOutput;
+	bool squaredInput = true;
+
+	forwardSpeed = Limit(forwardSpeed);
+	turnSpeed = Limit(turnSpeed);
+
+	if(squaredInput)
+	{
+		forwardSpeed = copysign(forwardSpeed * forwardSpeed, forwardSpeed);
+		turnSpeed = copysign(turnSpeed * turnSpeed, turnSpeed);
+	}
+
+	double maxInput = copysign(max(abs(forwardSpeed), abs(turnSpeed)), forwardSpeed);
+
+	if(forwardSpeed >= 0.0)
+	{
+		// First quadrant, else second quadrant
+		if(turnSpeed >= 0.0)
+		{
+		  leftMotorOutput = maxInput;
+		  rightMotorOutput = forwardSpeed - turnSpeed;
+		}
+		else
+		{
+		  leftMotorOutput = forwardSpeed + turnSpeed;
+		  rightMotorOutput = maxInput;
+		}
+	}
+	else
+	{
+		// Third quadrant, else fourth quadrant
+		if(turnSpeed >= 0.0)
+		{
+		  leftMotorOutput = forwardSpeed + turnSpeed;
+		  rightMotorOutput = maxInput;
+		}
+		else
+		{
+		  leftMotorOutput = maxInput;
+		  rightMotorOutput = forwardSpeed - turnSpeed;
+		}
+	}
+
+	SmartDashboard::PutNumber("Right Motor Output", Limit(rightMotorOutput));
+	SmartDashboard::PutNumber("Left Motor Output", Limit(leftMotorOutput));
+
+	// Set the target velocity for the talons with encoders
+	FrontRightMotor.Set(ControlMode::Velocity, Limit(rightMotorOutput) * consts::MAX_VELOCITY);
+	FrontLeftMotor.Set(ControlMode::Velocity, Limit(leftMotorOutput) * consts::MAX_VELOCITY);
+	// Set the other two motor controllers to follow the talons with encoders
+	BackRightMotor.Set(ControlMode::Follower, 4);
+	BackLeftMotor.Set(ControlMode::Follower, 1);
+
+	SmartDashboard::PutNumber("Front Right Velocity", FrontRightMotor.GetSelectedSensorVelocity(0));
+	SmartDashboard::PutNumber("Front Left Velocity", FrontLeftMotor.GetSelectedSensorVelocity(0));
+}
+
 void Robot::ElevatorTest()
 {
 	bool inAutomatic = false;
@@ -120,17 +219,4 @@ void Robot::ClimbTest()
 		ClimbMotor.Set(0);
 	}
 
-}
-
-void Robot::TestInit()
-{
-
-}
-
-void Robot::TestPeriodic()
-{
-	ElevatorTest();
-	LinkageTest();
-	IntakeTest();
-	ClimbTest();
 }

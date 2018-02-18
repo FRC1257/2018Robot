@@ -75,6 +75,7 @@ public:
 	void TestInit() override;
 	void TestPeriodic() override;
 	double GetStepNumber(double elevatorHeight);
+	void DriveTest();
 	void ElevatorTest();
 	void LinkageTest();
 	void IntakeTest();
