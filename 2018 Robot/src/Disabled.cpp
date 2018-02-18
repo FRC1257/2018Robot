@@ -2,8 +2,7 @@
 
 void Robot::DisabledInit()
 {
-	AutoLocationChooser->AddDefault("Default", consts::AutoPosition::DEFAULT);
-	AutoLocationChooser->AddObject("Left Start", consts::AutoPosition::LEFT_START);
+	AutoLocationChooser->AddDefault("Left Start", consts::AutoPosition::LEFT_START);
 	AutoLocationChooser->AddObject("Middle Start", consts::AutoPosition::MIDDLE_START);
 	AutoLocationChooser->AddObject("Right Start", consts::AutoPosition::RIGHT_START);
 

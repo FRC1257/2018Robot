@@ -7,8 +7,7 @@ namespace consts
 	{
 		LEFT_START,
 		MIDDLE_START,
-		RIGHT_START,
-		DEFAULT
+		RIGHT_START
 	};
 
 	enum class AutoObjective

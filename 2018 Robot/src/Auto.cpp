@@ -31,51 +31,47 @@ void Robot::AutonomousInit()
 		case consts::AutoPosition::LEFT_START:
 			switch(AutoObjectiveChooser->GetSelected())
 			{
-				case consts::AutoObjective::DEFAULT:
-					SmartDashboard::PutString("Auto Path", std::string("LeftStart: Path to Switch ") +
-							gameData[0] + "; Path to Scale " + gameData[1]);
-					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
-					break;
 				case consts::AutoObjective::SWITCH:
 					if(gameData[0] == 'L')
 					{
-						SmartDashboard::PutString("Auto Path", "LeftStart: Path to Switch " + gameData[0]);
+						SmartDashboard::PutString("Auto Path", "Left: Path to Switch " + gameData[0]);
 						SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 					}
 					else if(gameData[0] == 'R')
 					{
-						SmartDashboard::PutString("Auto Path", "LeftStart: Path to Switch" + gameData[1]);
+						SmartDashboard::PutString("Auto Path", "Left: Path to Switch" + gameData[1]);
 						OppositeSwitch(consts::AutoPosition::LEFT_START);
 					}
 					else
 					{
-						SmartDashboard::PutString("Auto Path", "LeftStart: Drive to Baseline");
+						SmartDashboard::PutString("Auto Path", "Left: Drive to Baseline");
 						DriveToBaseline();
 					}
 					break;
 				case consts::AutoObjective::SCALE:
 					if(gameData[1] == 'L')
 					{
-						SmartDashboard::PutString("Auto Path", "LeftStart: Path to Scale " + gameData[1]);
+						SmartDashboard::PutString("Auto Path", "Left: Path to Scale " + gameData[1]);
 						SidePath(consts::AutoPosition::LEFT_START, 'N', gameData[1]);
 					}
 					else if(gameData[1] == 'R')
 					{
-						SmartDashboard::PutString("Auto Path", "LeftStart: Path to Scale " + gameData[1]);
+						SmartDashboard::PutString("Auto Path", "Left: Path to Scale " + gameData[1]);
 						OppositeScale(consts::AutoPosition::LEFT_START);
 					}
 					else
 					{
-						SmartDashboard::PutString("Auto Path", "LeftStart: Drive to Baseline");
+						SmartDashboard::PutString("Auto Path", "Left: Drive to Baseline");
 						DriveToBaseline();
 					}
 					break;
 				case consts::AutoObjective::BASELINE:
-					SmartDashboard::PutString("Auto Path", "LeftStart: Drive to Baseline");
+					SmartDashboard::PutString("Auto Path", "Left: Drive to Baseline");
 					DriveToBaseline();
 					break;
+				case consts::AutoObjective::DEFAULT:
 				default:
-					SmartDashboard::PutString("Auto Path", "LeftStart: Default Path");
+					SmartDashboard::PutString("Auto Path", "Left: Default Path");
 					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 					break;
 			}
@@ -84,51 +80,47 @@ void Robot::AutonomousInit()
 		case consts::AutoPosition::RIGHT_START:
 			switch(AutoObjectiveChooser->GetSelected())
 			{
-				case consts::AutoObjective::DEFAULT:
-					SmartDashboard::PutString("Auto Path", std::string("RightStart: Path to Switch ") +
-							gameData[0] + "; Path to Scale " + gameData[1]);
-					SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
-					break;
 				case consts::AutoObjective::SWITCH:
 					if(gameData[0] == 'R')
 					{
-						cout << "RightStart: Path to Switch " + gameData[0]<< endl;
+						cout << "Right: Path to Switch " + gameData[0]<< endl;
 						SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
 					}
 					else if(gameData[0] == 'L')
 					{
-						cout << "RightStart: Path to Switch " + gameData[0]<< endl;
+						cout << "Right: Path to Switch " + gameData[0]<< endl;
 						OppositeSwitch(consts::AutoPosition::RIGHT_START);
 					}
 					else
 					{
-						SmartDashboard::PutString("Auto Path", "RightStart: Drive to Baseline");
+						SmartDashboard::PutString("Auto Path", "Right: Drive to Baseline");
 						DriveToBaseline();
 					}
 					break;
 				case consts::AutoObjective::SCALE:
 					if(gameData[1] == 'R')
 					{
-						SmartDashboard::PutString("Auto Path", "RightStart: Path to Scale " + gameData[1]);
+						SmartDashboard::PutString("Auto Path", "Right: Path to Scale " + gameData[1]);
 						SidePath(consts::AutoPosition::RIGHT_START, 'N', gameData[1]);
 					}
 					else if(gameData[1] == 'L')
 					{
-						SmartDashboard::PutString("Auto Path", "RightStart: Path to Scale " + gameData[1]);
+						SmartDashboard::PutString("Auto Path", "Right: Path to Scale ");
 						OppositeScale(consts::AutoPosition::RIGHT_START);
 					}
 					else
 					{
-						SmartDashboard::PutString("Auto Path", "RightStart: Drive to Baseline");
+						SmartDashboard::PutString("Auto Path", "Right: Drive to Baseline");
 						DriveToBaseline();
 					}
 					break;
 				case consts::AutoObjective::BASELINE:
-					SmartDashboard::PutString("Auto Path", "RightStart: Drive to Baseline");
+					SmartDashboard::PutString("Auto Path", "Right: Drive to Baseline");
 					DriveToBaseline();
 					break;
+				case consts::AutoObjective::DEFAULT:
 				default:
-					SmartDashboard::PutString("Auto Path", "RightStart: Default Path");
+					SmartDashboard::PutString("Auto Path", "Right: Default Path");
 					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 					break;
 			}
@@ -139,7 +131,7 @@ void Robot::AutonomousInit()
 			break;
 
 		default:
-			SmartDashboard::PutString("Auto Path", "MiddleStart: Driving to Baseline");
+			SmartDashboard::PutString("Auto Path", "Driving to Baseline");
 			DriveToBaseline();
 			break;
 	}
@@ -158,7 +150,7 @@ string WaitForGameData()
 	gameDataTimer.Start();
 
 	// Poll for the game data for some timeout period or until we've received the data
-	while (gameData.length() == 0 && !gameDataTimer.HasPeriodPassed(consts::GAME_DATA_TIMEOUT_S))
+	while(gameData.length() == 0 && !gameDataTimer.HasPeriodPassed(consts::GAME_DATA_TIMEOUT_S))
 	{
 		gameData = DriverStation::GetInstance().GetGameSpecificMessage();
 		Wait(0.05);
@@ -272,7 +264,6 @@ void Robot::DropCube(double driveSetpoint, consts::ElevatorIncrement elevatorSet
 {
 	SmartDashboard::PutString("Auto Status", "Dropping Cube...");
 	DriveDistance(driveSetpoint);
-
 
 	RaiseElevator(elevatorSetpoint);
 	EjectCube();

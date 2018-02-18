@@ -111,6 +111,4 @@ public:
 	void ResetEncoders();
 };
 
-
-
 #endif /* ROBOT */
