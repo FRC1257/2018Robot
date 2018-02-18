@@ -1,15 +1,15 @@
 #include "Robot.h"
 
 Robot::Robot() :
-	FrontLeftMotor(3),
+	BackRightMotor(1),
 	FrontRightMotor(2),
-	BackLeftMotor(1),
-	BackRightMotor(4),
-	ElevatorMotor (8), //TODO Check port values
-	RightIntakeMotor (6), //TODO Check port values
-	LeftIntakeMotor (9),  //TODO Check port values
-	LinkageMotor (5),  //TODO Check port values
-	ClimbMotor (7),    //TODO Check port values
+	FrontLeftMotor(3),
+	BackLeftMotor(4),
+	LinkageMotor(5),
+	RightIntakeMotor(6),
+	ClimbMotor(7),
+	ElevatorMotor(8),
+	LeftIntakeMotor(9),
 	IntakeUltrasonic(1, 0), // TODO check port #
 	ElevatorEncoder(0, 1, false, Encoder::EncodingType::k4X), // TODO: delete or replace aChannel and bChannel
 	ElevatorPID(0.25, 0, 0, ElevatorEncoder, ElevatorMotor),
@@ -34,7 +34,7 @@ void Robot::RobotInit()
 	RightIntakeMotor.Set(0);
 	LeftIntakeMotor.Set(0);
 	LinkageMotor.SetNeutralMode(Brake);
-	IntakeUltrasonic.SetAutomaticMode(true);
+	RightMotors.SetInverted(true);
 
 	// Talon Configuration for Velocity Closed Loop Drive
 	FrontLeftMotor.ConfigNominalOutputForward(0, consts::TALON_FUNCTION_TIMEOUT_MS);

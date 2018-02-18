@@ -12,7 +12,7 @@ double Robot::GetStepNumber(double elevatorHeight)
 	return 4;
 }
 
-void Robot::VelocityArcadeDrive(double forwardSpeed, double turnSpeed, bool squaredInputs)
+void Robot::VelocityArcadeDrive(double forwardSpeed, double turnSpeed, bool squaredInputs = true)
 {
 	double leftMotorOutput;
 	double rightMotorOutput;

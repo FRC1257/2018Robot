@@ -1,5 +1,5 @@
-#ifndef SRC_constexprANTS_H_
-#define SRC_constexprANTS_H_
+#ifndef CONSTANTS
+#define CONSTANTS
 
 namespace consts
 {
@@ -21,4 +21,4 @@ namespace consts
 	constexpr double MAX_VELOCITY = MAX_TICKS_PER_MS / PID_LOOPTIME_MS;
 }
 
-#endif /* SRC_constexprANTS_H_ */
+#endif /* CONSTANTS */
