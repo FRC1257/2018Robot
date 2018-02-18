@@ -48,6 +48,6 @@ double StabilizedUltrasonic::GetRangeInches()
 	}
 	m_prevDistances.push_back(DistanceSensor.GetRangeInches());
 
-	// Use the average of the past few measurements as the current distance
+	// Use the median of the past few measurements as the current distance
 	return median(m_prevDistances);
 }
