@@ -5,7 +5,7 @@ double Robot::GetClosestStepNumber()
 	for(int i = 0; i < 5; i++)
 	{
 		// If the elevator is directly below a given setpoint, go to that setpoint
-		if(ElevatorMotor.GetSelectedSensorPosition(0) < consts::EVELVATOR_SETPOINTS[i])
+		if(ElevatorMotor.GetSelectedSensorPosition(0) < consts::ELEVATOR_SETPOINTS[i])
 		{
 			return i;
 		}
@@ -83,7 +83,7 @@ void Robot::Elevator()
 			{
 				m_targetStep++;
 			}
-			ElevatorPIDController.SetSetpoint(consts::EVELVATOR_SETPOINTS[m_targetStep]);
+			ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[m_targetStep]);
 		}
 	}
 	// The left bumper will lower the elevator to the bottom

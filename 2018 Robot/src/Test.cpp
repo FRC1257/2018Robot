@@ -82,7 +82,7 @@ void Robot::FullElevatorTest()
 			{
 				m_targetStep++;
 			}
-			ElevatorPIDController.SetSetpoint(consts::EVELVATOR_SETPOINTS[m_targetStep]);
+			ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[m_targetStep]);
 		}
 	}
 	// The left bumper will lower the elevator to the bottom
