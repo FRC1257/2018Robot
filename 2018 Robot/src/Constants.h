@@ -9,7 +9,7 @@ namespace consts
 	constexpr int CONT_CURRENT_TIMEOUT_MS = 500;
 
 	constexpr int NUM_ELEVATOR_SETPOINTS = 5;
-	constexpr double EVELVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {0, 4, 8, 12, 16};
+	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {0, 4, 8, 12, 16};
 
 	// Encoder Constants
 	constexpr double PI = 3.1416;
