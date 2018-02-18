@@ -74,6 +74,7 @@ public:
 	void IntakeTest();
 	void ClimbTest();
 	void CurrentTest();
+	void RunMotorsTestFor(int numberOfSeconds);
 };
 
 #endif /* ROBOT */

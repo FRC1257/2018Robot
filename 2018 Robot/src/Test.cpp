@@ -1,5 +1,25 @@
 #include "Robot.h"
 
+void Robot::TestInit()
+{
+
+}
+
+void Robot::TestPeriodic()
+{
+
+}
+
+
+void Robot::RunMotorsTestFor(int numberOfSeconds)
+{
+	DriveTrain.ArcadeDrive(1, 0);
+	Wait(numberOfSeconds / 2);
+	DriveTrain.ArcadeDrive(-1, 0);
+	Wait(numberOfSeconds / 2);
+	DriveTrain.ArcadeDrive(0, 0);
+}
+
 void Robot::DriveTest()
 {
 	double forwardSpeed = 0;
@@ -40,6 +60,7 @@ void Robot::ManualElevatorTest()
 
 	SmartDashboard::PutNumber("RaiseElev", raiseElevatorOutput);
 	SmartDashboard::PutNumber("LowerElev", lowerElevatorOutput);
+	ElevatorMotor.Set(raiseElevatorOutput - lowerElevatorOutput);
 }
 
 void Robot::FullElevatorTest()
@@ -150,12 +171,3 @@ void Robot::CurrentTest()
 	SmartDashboard::PutNumber("LIntake Current", LeftIntakeMotor.GetOutputCurrent());
 }
 
-void Robot::TestInit()
-{
-
-}
-
-void Robot::TestPeriodic()
-{
-
-}
