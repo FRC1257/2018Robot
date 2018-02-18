@@ -1,6 +1,6 @@
 #include "StabilizedUltrasonic.h"
 
-double average(std::deque<double> array)
+double average(std::deque<double>& array)
 {
 	double avg = 0;
 	for(unsigned int i = 0; i < array.size(); i++)
@@ -14,7 +14,11 @@ double average(std::deque<double> array)
 
 double median(std::deque<double> array)
 {
-	// Should switch over to median when possible
+	// Can't use a reference because 'nth_element' would reorder the
+	// original array
+	size_t midPoint = array.size() / 2;
+	nth_element(array.begin(), array.begin() + midPoint, array.end());
+	return array[midPoint];
 }
 
 StabilizedUltrasonic::StabilizedUltrasonic(int pingChannel, int echoChannel) :
@@ -30,11 +34,11 @@ StabilizedUltrasonic::~StabilizedUltrasonic()
 
 double StabilizedUltrasonic::PIDGet()
 {
-	return GetDistance();
+	return GetRangeInches();
 }
 
 // Return an average of the past
-double StabilizedUltrasonic::GetDistance()
+double StabilizedUltrasonic::GetRangeInches()
 {
 	// Delete the oldest measurement when the array of old distances
 	// reaches max capacity
@@ -45,5 +49,5 @@ double StabilizedUltrasonic::GetDistance()
 	m_prevDistances.push_back(DistanceSensor.GetRangeInches());
 
 	// Use the average of the past few measurements as the current distance
-	return average(m_prevDistances);
+	return median(m_prevDistances);
 }

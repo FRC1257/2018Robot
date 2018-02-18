@@ -33,7 +33,6 @@ void Robot::RobotInit()
 	RightIntakeMotor.Set(0);
 	LeftIntakeMotor.Set(0);
 	LinkageMotor.SetNeutralMode(Brake);
-	IntakeUltrasonic.SetAutomaticMode(true);
 
 	// Current limiting
 	FrontLeftMotor.ConfigContinuousCurrentLimit(consts::FORTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);

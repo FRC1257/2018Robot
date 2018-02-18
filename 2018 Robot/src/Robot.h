@@ -6,6 +6,7 @@
 #include <Encoder.h>
 #include <IterativeRobot.h>
 #include <PID/TalonPIDHelper.h>
+#include <Sensors/StabilizedUltrasonic.h>
 #include "Constants.h"
 
 using namespace frc;
@@ -31,7 +32,7 @@ private:
 	WPI_TalonSRX ClimbMotor;
 	WPI_TalonSRX ElevatorMotor;
 	WPI_TalonSRX LeftIntakeMotor;
-	Ultrasonic IntakeUltrasonic;
+	StabilizedUltrasonic IntakeUltrasonic;
 	TalonPIDHelper ElevatorEncoderSource;
 	TalonPIDHelper LinkageEncoderSource;
 	PIDController ElevatorPIDController;
