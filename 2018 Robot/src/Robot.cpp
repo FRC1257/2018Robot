@@ -34,7 +34,6 @@ void Robot::RobotInit()
 	RightIntakeMotor.Set(0);
 	LeftIntakeMotor.Set(0);
 	LinkageMotor.SetNeutralMode(Brake);
-	RightMotors.SetInverted(true);
 
 	// Talon Configuration for Velocity Closed Loop Drive
 	FrontLeftMotor.ConfigNominalOutputForward(0, consts::TALON_FUNCTION_TIMEOUT_MS);
