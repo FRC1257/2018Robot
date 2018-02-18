@@ -20,7 +20,7 @@ void Robot::VelocityArcadeDrive(double forwardSpeed, double turnSpeed, bool squa
 	forwardSpeed = Limit(forwardSpeed);
 	turnSpeed = Limit(turnSpeed);
 
-	if (squaredInputs)
+	if(squaredInputs)
 	{
 		forwardSpeed = copysign(forwardSpeed * forwardSpeed, forwardSpeed);
 		turnSpeed = copysign(turnSpeed * turnSpeed, turnSpeed);
@@ -28,15 +28,15 @@ void Robot::VelocityArcadeDrive(double forwardSpeed, double turnSpeed, bool squa
 
 	double maxInput = copysign(max(abs(forwardSpeed), abs(turnSpeed)), forwardSpeed);
 
-	if (forwardSpeed >= 0.0)
+	if(forwardSpeed >= 0.0)
 	{
-	// First quadrant, else second quadrant
-	if (turnSpeed >= 0.0)
+		// First quadrant, else second quadrant
+		if(turnSpeed >= 0.0)
 		{
 		  leftMotorOutput = maxInput;
 		  rightMotorOutput = forwardSpeed - turnSpeed;
 		}
-	else
+		else
 		{
 		  leftMotorOutput = forwardSpeed + turnSpeed;
 		  rightMotorOutput = maxInput;
@@ -45,7 +45,7 @@ void Robot::VelocityArcadeDrive(double forwardSpeed, double turnSpeed, bool squa
 	else
 	{
 		// Third quadrant, else fourth quadrant
-		if (turnSpeed >= 0.0)
+		if(turnSpeed >= 0.0)
 		{
 		  leftMotorOutput = forwardSpeed + turnSpeed;
 		  rightMotorOutput = maxInput;
@@ -60,7 +60,7 @@ void Robot::VelocityArcadeDrive(double forwardSpeed, double turnSpeed, bool squa
 	// Set the target velocity for the talons with encoders
 	FrontRightMotor.Set(ControlMode::Velocity, Limit(rightMotorOutput) * consts::MAX_VELOCITY);
 	FrontLeftMotor.Set(ControlMode::Velocity, Limit(leftMotorOutput) * consts::MAX_VELOCITY);
-	// Set the other two motor controllers to follower the talons with encoders
+	// Set the other two motor controllers to follow the talons with encoders
 	BackRightMotor.Set(ControlMode::Follower, 4);
 	BackLeftMotor.Set(ControlMode::Follower, 1);
 }
