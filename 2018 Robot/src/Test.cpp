@@ -2,14 +2,29 @@
 
 void Robot::TestInit()
 {
-
+	SmartDashboard::PutBoolean("Enable Drive", 0);
+	SmartDashboard::PutBoolean("Enable Full Elevator", 0);
+	SmartDashboard::PutBoolean("Enable Manual Elevator", 0);
+	SmartDashboard::PutBoolean("Enable PID Elevator", 0);
+	SmartDashboard::PutBoolean("Enable Linkage", 0);
+	SmartDashboard::PutBoolean("Enable Intake", 0);
+	SmartDashboard::PutBoolean("Enable Climb", 0);
 }
 
 void Robot::TestPeriodic()
 {
-	ManualElevatorTest();
-	LinkageTest();
-	IntakeTest();
+	if(SmartDashboard::GetBoolean("Enable Drive", 0)) DriveTest();
+	if(SmartDashboard::GetBoolean("Enable Full Elevator", 0))
+	{
+		FullElevatorTest();
+		SmartDashboard::PutBoolean("Enable Full Elevator", 0);
+		SmartDashboard::PutBoolean("Enable Manual Elevator", 0);
+	}
+	if(SmartDashboard::GetBoolean("Enable Manual Elevator", 0)) ManualElevatorTest();
+	if(SmartDashboard::GetBoolean("Enable PID Elevator", 0)) PIDElevatorTest();
+	if(SmartDashboard::GetBoolean("Enable Linkage", 0)) LinkageTest();
+	if(SmartDashboard::GetBoolean("Enable Intake", 0)) IntakeTest();
+	if(SmartDashboard::GetBoolean("Enable Climb", 0)) ClimbTest();
 }
 
 
@@ -79,7 +94,6 @@ void Robot::PIDElevatorTest()
 
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
-		double currentSetpoint =
 		ElevatorMotor.Set(raiseElevatorOutput - lowerElevatorOutput);
 		return;
 	}
