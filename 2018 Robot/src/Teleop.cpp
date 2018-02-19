@@ -105,16 +105,16 @@ void Robot::Intake()
 	// Use the B button to intake
 	if(OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > 3) // TODO change value
 	{
-		RightIntakeMotor.Set(-1);
-		LeftIntakeMotor.Set(1);
+		RightIntakeMotor.Set(1);
+		LeftIntakeMotor.Set(-1);
 	}
 	else
 	{
 		// Use the A button to eject
 		if(OperatorController.GetAButton())
 		{
-			RightIntakeMotor.Set(1);
-			LeftIntakeMotor.Set(-1);
+			RightIntakeMotor.Set(-1);
+			LeftIntakeMotor.Set(1);
 		}
 		else
 		{
