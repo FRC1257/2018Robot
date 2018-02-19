@@ -3,18 +3,22 @@
 
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
+#include "../Constants.h"
 
 using namespace frc;
 
-class TalonPIDHelper : public PIDSource, public PIDOutput
+class ElevatorPIDHelper : public PIDSource, public PIDOutput
 {
 private:
 	WPI_TalonSRX* m_TalonWithEncoder;
 
+	static constexpr double DRUM_DIAMETER = 1.5;
+
 public:
-	TalonPIDHelper(WPI_TalonSRX* TalonWithEncoder);
-	virtual ~TalonPIDHelper();
+	ElevatorPIDHelper(WPI_TalonSRX* TalonWithEncoder);
+	virtual ~ElevatorPIDHelper();
 	double PIDGet() override;
+	double GetHeightInches();
 	void PIDWrite(double output) override;
 };
 

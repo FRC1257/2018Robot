@@ -37,7 +37,7 @@ double StabilizedUltrasonic::PIDGet()
 	return GetRangeInches();
 }
 
-// Return an average of the past
+// Return the median of the past few distance values
 double StabilizedUltrasonic::GetRangeInches()
 {
 	// Delete the oldest measurement when the array of old distances

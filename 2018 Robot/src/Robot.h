@@ -5,7 +5,7 @@
 #include <ctre/Phoenix.h>
 #include <Encoder.h>
 #include <IterativeRobot.h>
-#include <PID/TalonPIDHelper.h>
+#include <PID/ElevatorPIDHelper.h>
 #include <Sensors/StabilizedUltrasonic.h>
 #include "Constants.h"
 
@@ -20,6 +20,10 @@ inline double PulsesToInches(double sensorPosition)
 	return distance;
 }
 
+// Absolute value of a double precision floating point number
+inline double dabs(double d) { return d > 0.0 ? d : -d; }
+inline double applyDeadband(double axisVal) { return dabs(axisVal) < 0.125 ? 0 : axisVal; }
+
 class Robot: public TimedRobot
 {
 private:
@@ -33,10 +37,8 @@ private:
 	WPI_TalonSRX ElevatorMotor;
 	WPI_TalonSRX LeftIntakeMotor;
 	StabilizedUltrasonic IntakeUltrasonic;
-	TalonPIDHelper ElevatorEncoderSource;
-	TalonPIDHelper LinkageEncoderSource;
+	ElevatorPIDHelper ElevatorPID;
 	PIDController ElevatorPIDController;
-	PIDController LinkagePIDController;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
@@ -69,6 +71,7 @@ public:
 
 	void DriveTest();
 	void FullElevatorTest();
+	void PIDElevatorTest();
 	void ManualElevatorTest();
 	void LinkageTest();
 	void IntakeTest();

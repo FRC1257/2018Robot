@@ -57,33 +57,19 @@ void Robot::ManualElevatorTest()
 {
 	// Use the right trigger to manually raise the elevator and
 	// the left trigger to lower the elevator
-	double raiseElevatorOutput = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand);
-	double lowerElevatorOutput = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
+	double raiseElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
+			GenericHID::JoystickHand::kRightHand));
+	double lowerElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
+			GenericHID::JoystickHand::kLeftHand));
 
 	SmartDashboard::PutNumber("RaiseElev", raiseElevatorOutput);
 	SmartDashboard::PutNumber("LowerElev", lowerElevatorOutput);
+	ElevatorPIDController.Disable();
 	ElevatorMotor.Set(raiseElevatorOutput - lowerElevatorOutput);
 }
 
-void Robot::FullElevatorTest()
+void Robot::PIDElevatorTest()
 {
-	// Use the right trigger to manually raise the elevator and
-	// the left trigger to lower the elevator
-	double raiseElevatorOutput = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand);
-	double lowerElevatorOutput = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
-
-	SmartDashboard::PutNumber("RaiseElev", raiseElevatorOutput);
-	SmartDashboard::PutNumber("LowerElev", lowerElevatorOutput);
-
-	// If either triggers are being pressed, disable the PID and
-	// set the motor to the given speed
-	if(raiseElevatorOutput || lowerElevatorOutput)
-	{
-		ElevatorPIDController.Disable();
-		ElevatorMotor.Set(raiseElevatorOutput - lowerElevatorOutput);
-		return;
-	}
-
 	// Automatic Mode is controlled by both bumpers
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
@@ -92,6 +78,7 @@ void Robot::FullElevatorTest()
 		{
 			ElevatorMotor.Set(0);
 			m_isLowering = false;
+			ElevatorPIDController.Disable();
 		}
 		else
 		{
@@ -106,6 +93,8 @@ void Robot::FullElevatorTest()
 				m_targetStep++;
 			}
 			ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[m_targetStep]);
+			ElevatorPIDController.Enable();
+			m_isLowering = false;
 		}
 	}
 	// The left bumper will lower the elevator to the bottom
@@ -113,6 +102,61 @@ void Robot::FullElevatorTest()
 	{
 		m_isLowering = true;
 		ElevatorPIDController.SetSetpoint(0);
+		ElevatorPIDController.Enable();
+	}
+}
+
+void Robot::FullElevatorTest()
+{
+	// Use the right trigger to manually raise the elevator and
+	// the left trigger to lower the elevator
+	double raiseElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
+			GenericHID::JoystickHand::kRightHand));
+	double lowerElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
+			GenericHID::JoystickHand::kLeftHand));
+
+	// If either triggers are being pressed, disable the PID and
+	// set the motor to the given speed
+	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
+	{
+		ElevatorPIDController.Disable();
+		ElevatorMotor.Set(raiseElevatorOutput - lowerElevatorOutput);
+		return;
+	}
+
+	// Automatic Mode is controlled by both bumpers
+	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
+	{
+		// If elevator is lowering and the right bumper is pressed, stop elevator where it is
+		if (m_isLowering)
+		{
+			ElevatorMotor.Set(0);
+			m_isLowering = false;
+			ElevatorPIDController.Disable();
+		}
+		else
+		{
+			// If right bumper is being pressed for the first time, increase the desired preset by 1
+			if (!ElevatorPIDController.IsEnabled())
+			{
+				m_targetStep = GetClosestStepNumber();
+			}
+			// If right bumper has already been pressed, go to the next step.
+			else if (m_targetStep < 4)
+			{
+				m_targetStep++;
+			}
+			ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[m_targetStep]);
+			ElevatorPIDController.Enable();
+			m_isLowering = false;
+		}
+	}
+	// The left bumper will lower the elevator to the bottom
+	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
+	{
+		m_isLowering = true;
+		ElevatorPIDController.SetSetpoint(0);
+		ElevatorPIDController.Enable();
 	}
 }
 

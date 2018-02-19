@@ -5,7 +5,7 @@ double Robot::GetClosestStepNumber()
 	for(int i = 0; i < 5; i++)
 	{
 		// If the elevator is directly below a given setpoint, go to that setpoint
-		if(ElevatorMotor.GetSelectedSensorPosition(0) < consts::ELEVATOR_SETPOINTS[i])
+		if(ElevatorPID.GetHeightInches() < consts::ELEVATOR_SETPOINTS[i])
 		{
 			return i;
 		}
@@ -50,12 +50,14 @@ void Robot::Elevator()
 {
 	// Use the right trigger to manually raise the elevator and
 	// the left trigger to lower the elevator
-	double raiseElevatorOutput = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kRightHand);
-	double lowerElevatorOutput = OperatorController.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand);
+	double raiseElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
+			GenericHID::JoystickHand::kRightHand));
+	double lowerElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
+			GenericHID::JoystickHand::kLeftHand));
 
 	// If either triggers are being pressed, disable the PID and
 	// set the motor to the given speed
-	if(raiseElevatorOutput || lowerElevatorOutput)
+	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
 		ElevatorPIDController.Disable();
 		ElevatorMotor.Set(raiseElevatorOutput - lowerElevatorOutput);
@@ -70,6 +72,7 @@ void Robot::Elevator()
 		{
 			ElevatorMotor.Set(0);
 			m_isLowering = false;
+			ElevatorPIDController.Disable();
 		}
 		else
 		{
@@ -84,6 +87,8 @@ void Robot::Elevator()
 				m_targetStep++;
 			}
 			ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[m_targetStep]);
+			ElevatorPIDController.Enable();
+			m_isLowering = false;
 		}
 	}
 	// The left bumper will lower the elevator to the bottom
@@ -91,6 +96,7 @@ void Robot::Elevator()
 	{
 		m_isLowering = true;
 		ElevatorPIDController.SetSetpoint(0);
+		ElevatorPIDController.Enable();
 	}
 }
 
@@ -99,16 +105,16 @@ void Robot::Intake()
 	// Use the B button to intake
 	if(OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > 3) // TODO change value
 	{
-		RightIntakeMotor.Set(1);
-		LeftIntakeMotor.Set(-1);
+		RightIntakeMotor.Set(-1);
+		LeftIntakeMotor.Set(1);
 	}
 	else
 	{
-		// Use the A button to eject if the B button is not being held
+		// Use the A button to eject
 		if(OperatorController.GetAButton())
 		{
-			RightIntakeMotor.Set(-1);
-			LeftIntakeMotor.Set(1);
+			RightIntakeMotor.Set(1);
+			LeftIntakeMotor.Set(-1);
 		}
 		else
 		{
