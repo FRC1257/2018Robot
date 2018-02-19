@@ -7,7 +7,9 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
-
+	ManualElevatorTest();
+	LinkageTest();
+	IntakeTest();
 }
 
 
@@ -125,27 +127,23 @@ void Robot::IntakeTest()
 	// Use the B button to intake
 	if(OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > 3) // TODO change value
 	{
-		RightIntakeMotor.Set(-1);
-		LeftIntakeMotor.Set(1);
-	}
-	else
-	{
-		RightIntakeMotor.Set(0);
-		LeftIntakeMotor.Set(0);
-	}
-
-	// Use the A button to eject
-	if(OperatorController.GetAButton())
-	{
 		RightIntakeMotor.Set(1);
 		LeftIntakeMotor.Set(-1);
 	}
 	else
 	{
-		RightIntakeMotor.Set(0);
-		LeftIntakeMotor.Set(0);
+		// Use the A button to eject if the B button is not being held
+		if(OperatorController.GetAButton())
+		{
+			RightIntakeMotor.Set(-1);
+			LeftIntakeMotor.Set(1);
+		}
+		else
+		{
+			RightIntakeMotor.Set(0);
+			LeftIntakeMotor.Set(0);
+		}
 	}
-
 }
 
 void Robot::ClimbTest()

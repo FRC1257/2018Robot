@@ -34,6 +34,8 @@ void Robot::RobotInit()
 	LeftIntakeMotor.Set(0);
 	LinkageMotor.SetNeutralMode(Brake);
 
+	ElevatorMotor.SetInverted(true);
+
 	// Current limiting
 	FrontLeftMotor.ConfigContinuousCurrentLimit(consts::FORTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
 	FrontLeftMotor.EnableCurrentLimit(true);
