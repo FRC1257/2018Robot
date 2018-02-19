@@ -79,8 +79,17 @@ void Robot::ManualElevatorTest()
 
 	SmartDashboard::PutNumber("RaiseElev", raiseElevatorOutput);
 	SmartDashboard::PutNumber("LowerElev", lowerElevatorOutput);
-	ElevatorPIDController.Disable();
-	ElevatorMotor.Set(raiseElevatorOutput - lowerElevatorOutput);
+
+	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
+	{
+		ElevatorPIDController.Disable();
+		ElevatorMotor.Set(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
+		return;
+	}
+	else if(!ElevatorPIDController.IsEnabled())
+	{
+		ElevatorMotor.Set(0);
+	}
 }
 
 void Robot::PIDElevatorTest()
