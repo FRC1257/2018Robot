@@ -56,6 +56,9 @@ void Robot::Elevator()
 	double lowerElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
 			GenericHID::JoystickHand::kLeftHand));
 
+	SmartDashboard::PutNumber("RaiseElev", raiseElevatorOutput);
+	SmartDashboard::PutNumber("LowerElev", lowerElevatorOutput);
+
 	// If either triggers are being pressed, disable the PID and
 	// set the motor to the given speed
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
