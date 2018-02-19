@@ -70,6 +70,20 @@ void Robot::ManualElevatorTest()
 
 void Robot::PIDElevatorTest()
 {
+	// Use the right trigger to manually raise the elevator and
+	// the left trigger to lower the elevator
+	double raiseElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
+			GenericHID::JoystickHand::kRightHand));
+	double lowerElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
+			GenericHID::JoystickHand::kLeftHand));
+
+	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
+	{
+		double currentSetpoint =
+		ElevatorMotor.Set(raiseElevatorOutput - lowerElevatorOutput);
+		return;
+	}
+
 	// Automatic Mode is controlled by both bumpers
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
