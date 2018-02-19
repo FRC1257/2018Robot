@@ -6,14 +6,14 @@
 
 using namespace frc;
 
-class TalonPIDHelper : public PIDSource, public PIDOutput
+class ElevatorPIDHelper : public PIDSource, public PIDOutput
 {
 private:
 	WPI_TalonSRX* m_TalonWithEncoder;
 
 public:
-	TalonPIDHelper(WPI_TalonSRX* TalonWithEncoder);
-	virtual ~TalonPIDHelper();
+	ElevatorPIDHelper(WPI_TalonSRX* TalonWithEncoder);
+	virtual ~ElevatorPIDHelper();
 	double PIDGet() override;
 	void PIDWrite(double output) override;
 };

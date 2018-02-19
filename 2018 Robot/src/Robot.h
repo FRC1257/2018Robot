@@ -6,11 +6,11 @@
 #include <LiveWindow/LiveWindow.h>
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
+#include <PID/ElevatorPIDHelper.h>
 
 #include "Constants.h"
 #include "PID/AnglePIDOutput.h"
 #include "PID/DistancePIDHelper.h"
-#include "PID/TalonPIDHelper.h"
 #include "Sensors/AngleSensorGroup.h"
 
 using namespace frc;
@@ -62,7 +62,7 @@ private:
 	PIDController MaintainAngleController;
 	PIDController DistanceController;
 
-	TalonPIDHelper ElevatorPID;
+	ElevatorPIDHelper ElevatorPID;
 	PIDController ElevatorPIDController;
 
 	SendableChooser<consts::AutoPosition> *AutoLocationChooser;
