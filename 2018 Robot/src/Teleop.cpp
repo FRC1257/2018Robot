@@ -1,3 +1,4 @@
+
 #include "Robot.h"
 
 double Robot::GetClosestStepNumber()
@@ -60,8 +61,12 @@ void Robot::Elevator()
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
 		ElevatorPIDController.Disable();
-		ElevatorMotor.Set(raiseElevatorOutput - lowerElevatorOutput);
+		ElevatorMotor.Set(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
 		return;
+	}
+	else if(!ElevatorPIDController.IsEnabled())
+	{
+		ElevatorMotor.Set(0);
 	}
 
 	// Automatic Mode is controlled by both bumpers
@@ -105,16 +110,16 @@ void Robot::Intake()
 	// Use the B button to intake
 	if(OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > 3) // TODO change value
 	{
-		RightIntakeMotor.Set(-1);
-		LeftIntakeMotor.Set(1);
+		RightIntakeMotor.Set(1);
+		LeftIntakeMotor.Set(-1);
 	}
 	else
 	{
 		// Use the A button to eject
 		if(OperatorController.GetAButton())
 		{
-			RightIntakeMotor.Set(1);
-			LeftIntakeMotor.Set(-1);
+			RightIntakeMotor.Set(-1);
+			LeftIntakeMotor.Set(1);
 		}
 		else
 		{
