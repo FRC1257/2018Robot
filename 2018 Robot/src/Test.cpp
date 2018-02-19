@@ -10,14 +10,17 @@ void Robot::TestInit()
 	SmartDashboard::PutBoolean("Enable Test Distance Output", 0);
 	SmartDashboard::PutBoolean("Enable Maintain Controller", 0);
 	SmartDashboard::PutBoolean("Toggle Maintain Test", 0);
+
+//	TurnAngle(90);
+	MaintainHeadingTest();
 }
 
 void Robot::TestPeriodic()
 {
-	SmartDashboard::PutNumber("Auto Pos Val", (int) AutoLocationChooser->GetSelected());
-	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
-
-	//Display Data
+//	SmartDashboard::PutNumber("Auto Pos Val", (int) AutoLocationChooser->GetSelected());
+//	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
+//
+//	//Display Data
 	SmartDashboard::PutNumber("Angle Sensor", AngleSensors.GetAngle());
 	SmartDashboard::PutNumber("Encoder", FrontLeftMotor.GetSelectedSensorPosition(0));
 
@@ -43,7 +46,7 @@ void Robot::TestPeriodic()
 		SmartDashboard::PutBoolean("Enable Maintain Controller",
 				SmartDashboard::GetBoolean("Enable Maintain Controller", 0) ^ 1);
 
-		SmartDashboard::PutBoolean("Toggle Test", 0);
+		SmartDashboard::PutBoolean("Toggle Maintain Test", 0);
 	}
 	if(SmartDashboard::GetBoolean("Enable Test Distance Output", 0))
 	{

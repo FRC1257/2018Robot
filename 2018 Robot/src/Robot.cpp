@@ -1,13 +1,15 @@
 #include "Robot.h"
 
 Robot::Robot() :
-	FrontLeftMotor(1),
+	BackRightMotor(1),
 	FrontRightMotor(2),
-	BackLeftMotor(3),
-	BackRightMotor(4),
-	ElevatorMotor(5),
+	FrontLeftMotor(3),
+	BackLeftMotor(4),
+//	LinkageMotor(5),
 	RightIntakeMotor(6),
-	LeftIntakeMotor(7),
+//	ClimbMotor(7),
+	ElevatorMotor(8),
+	LeftIntakeMotor(9),
 	LeftMotors(FrontLeftMotor, BackLeftMotor),
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveController(0),
