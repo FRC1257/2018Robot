@@ -262,8 +262,9 @@ void Robot::LinkageTest()
 
 void Robot::IntakeTest()
 {
-	// Use the B button to intake
-	if(OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) // TODO change value
+	// Use the B button to intake, X button to override IntakeUltrasonic
+	if((OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) ||
+			OperatorController.GetXButton())
 	{
 		RightIntakeMotor.Set(consts::INTAKE_SPEED);
 		LeftIntakeMotor.Set(-consts::INTAKE_SPEED);
