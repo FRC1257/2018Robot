@@ -37,11 +37,6 @@ double StabilizedUltrasonic::PIDGet()
 	return GetRangeInches();
 }
 
-bool StabilizedUltrasonic::IsEnabled()
-{
-	return DistanceSensor.IsEnabled();
-}
-
 // Return the median of the past few distance values
 double StabilizedUltrasonic::GetRangeInches()
 {

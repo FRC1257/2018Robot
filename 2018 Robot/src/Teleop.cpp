@@ -126,15 +126,10 @@ void Robot::Elevator()
 void Robot::Intake()
 {
 	// Use the B button to intake
-	if(OperatorController.GetBButton()) // TODO change value
+	if(OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) // TODO change value
 	{
-		if((IntakeUltrasonic.IsEnabled() &&
-				IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) ||
-				!IntakeUltrasonic.IsEnabled())
-		{
-			RightIntakeMotor.Set(consts::INTAKE_SPEED);
-			LeftIntakeMotor.Set(-consts::INTAKE_SPEED);
-		}
+		RightIntakeMotor.Set(consts::INTAKE_SPEED);
+		LeftIntakeMotor.Set(-consts::INTAKE_SPEED);
 	}
 	else
 	{
