@@ -19,6 +19,7 @@ public:
 	StabilizedUltrasonic(int pingChannel, int echoChannel);
 	virtual ~StabilizedUltrasonic();
 	double PIDGet() override;
+	bool IsEnabled();
 	double GetRangeInches();
 };
 
