@@ -2,29 +2,29 @@
 
 void Robot::TestInit()
 {
-	SmartDashboard::PutBoolean("Enable Drive", 0);
-	SmartDashboard::PutBoolean("Enable Full Elevator", 0);
-	SmartDashboard::PutBoolean("Enable Manual Elevator", 0);
-	SmartDashboard::PutBoolean("Enable PID Elevator", 0);
-	SmartDashboard::PutBoolean("Enable Linkage", 0);
-	SmartDashboard::PutBoolean("Enable Intake", 0);
-	SmartDashboard::PutBoolean("Enable Climb", 0);
+	SmartDashboard::PutBoolean("Drive", 0);
+	SmartDashboard::PutBoolean("Full Elevator", 0);
+	SmartDashboard::PutBoolean("Manual Elevator", 0);
+	SmartDashboard::PutBoolean("PID Elevator", 0);
+	SmartDashboard::PutBoolean("Linkage", 0);
+	SmartDashboard::PutBoolean("Intake", 0);
+	SmartDashboard::PutBoolean("Climb", 0);
 }
 
 void Robot::TestPeriodic()
 {
-	if(SmartDashboard::GetBoolean("Enable Drive", 0)) DriveTest();
-	if(SmartDashboard::GetBoolean("Enable Full Elevator", 0))
+	if(SmartDashboard::GetBoolean("Drive", 0)) DriveTest();
+	if(SmartDashboard::GetBoolean("Full Elevator", 0))
 	{
 		FullElevatorTest();
-		SmartDashboard::PutBoolean("Enable Full Elevator", 0);
-		SmartDashboard::PutBoolean("Enable Manual Elevator", 0);
+		SmartDashboard::PutBoolean("Full Elevator", 0);
+		SmartDashboard::PutBoolean("Manual Elevator", 0);
 	}
-	if(SmartDashboard::GetBoolean("Enable Manual Elevator", 0)) ManualElevatorTest();
-	if(SmartDashboard::GetBoolean("Enable PID Elevator", 0)) PIDElevatorTest();
-	if(SmartDashboard::GetBoolean("Enable Linkage", 0)) LinkageTest();
-	if(SmartDashboard::GetBoolean("Enable Intake", 0)) IntakeTest();
-	if(SmartDashboard::GetBoolean("Enable Climb", 0)) ClimbTest();
+	if(SmartDashboard::GetBoolean("Manual Elevator", 0)) ManualElevatorTest();
+	if(SmartDashboard::GetBoolean("PID Elevator", 0)) PIDElevatorTest();
+	if(SmartDashboard::GetBoolean("Linkage", 0)) LinkageTest();
+	if(SmartDashboard::GetBoolean("Intake", 0)) IntakeTest();
+	if(SmartDashboard::GetBoolean("Climb", 0)) ClimbTest();
 }
 
 
@@ -95,17 +95,19 @@ void Robot::ManualElevatorTest()
 
 void Robot::CapElevatorSetpoint(double& setpoint)
 {
-	if(setpoint < 5.0)
+	// Prevent the setpoint from dipping below the min
+	if(setpoint < consts::ELEVATOR_SETPOINTS[0])
 	{
 		setpoint = 5.0;
 	}
-	else if(setpoint > 65.0)
+	// Prevent the setpoint from exceeding the max
+	else if(setpoint > consts::ELEVATOR_SETPOINTS[consts::NUM_ELEVATOR_SETPOINTS])
 	{
 		setpoint = 65.0;
 	}
 	else
 	{
-
+		return;
 	}
 }
 
@@ -121,27 +123,30 @@ void Robot::PIDElevatorTest()
 	// If either triggers are being pressed
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
+		// Output ranges from -1 to 1 and will act as a multiplier for the max increment
 		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
+
+		// If the elevator is in automatic mode, turn it off, and set the desired height to
+		// the current height plus some increment
 		if(m_isElevatorInAutoMode)
 		{
 			m_isElevatorInAutoMode = false;
-			// Set the desired height to the current height plus some increment
-			// that is scaled by the value on each trigger
 			double desiredSetpoint = ElevatorPID.GetHeightInches() + consts::ELEVATOR_INCREMENT_PER_CYCLE * output;
 			CapElevatorSetpoint(desiredSetpoint);
 			ElevatorPIDController.SetSetpoint(desiredSetpoint);
 		}
-		else // If automatic mode isn't on
+		else // If automatic mode isn't on, just increment the previous setpoint
 		{
-			double desiredSetpoint = ElevatorPID.GetHeightInches() + consts::ELEVATOR_INCREMENT_PER_CYCLE * output;
+			double desiredSetpoint = ElevatorPIDController.GetSetpoint() + consts::ELEVATOR_INCREMENT_PER_CYCLE * output;
 			CapElevatorSetpoint(desiredSetpoint);
 			ElevatorPIDController.SetSetpoint(desiredSetpoint);
 		}
+		ElevatorPIDController.Enable();
 		return;
 	}
-	else if(!ElevatorPIDController.IsEnabled())
+	else // If neither of the triggers are being pressed, keep the elevator at its current height
 	{
-		ElevatorMotor.Set(0);
+		ElevatorPIDController.SetSetpoint(ElevatorPID.GetHeightInches());
 	}
 
 	// Automatic Mode is controlled by both bumpers
@@ -150,14 +155,13 @@ void Robot::PIDElevatorTest()
 		// If elevator is lowering and the right bumper is pressed, stop elevator where it is
 		if (m_isElevatorLowering)
 		{
-			ElevatorMotor.Set(0);
+			ElevatorPIDController.SetSetpoint(ElevatorPID.GetHeightInches());
 			m_isElevatorLowering = false;
-			ElevatorPIDController.Disable();
 		}
 		else
 		{
 			// If right bumper is being pressed for the first time, increase the desired preset by 1
-			if (!ElevatorPIDController.IsEnabled())
+			if (!m_isElevatorInAutoMode)
 			{
 				m_targetElevatorStep = GetClosestStepNumber();
 			}
@@ -167,17 +171,25 @@ void Robot::PIDElevatorTest()
 				m_targetElevatorStep++;
 			}
 			ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[m_targetElevatorStep]);
-			ElevatorPIDController.Enable();
+			m_isElevatorInAutoMode = true;
 			m_isElevatorLowering = false;
 		}
 	}
 	// The left bumper will lower the elevator to the bottom
-	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
+	else if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
+		m_isElevatorInAutoMode = true;
 		m_isElevatorLowering = true;
-		ElevatorPIDController.SetSetpoint(0);
-		ElevatorPIDController.Enable();
+		ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[0]);
 	}
+
+	ElevatorPIDController.Enable();
+
+	SmartDashboard::PutBoolean("Lowering?", m_isElevatorLowering);
+	SmartDashboard::PutBoolean("Automatic?", m_isElevatorLowering);
+	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.GetHeightInches());
+	SmartDashboard::PutNumber("Elevator Setpoint", ElevatorPIDController.GetSetpoint());
+	SmartDashboard::PutNumber("Elevator Output", ElevatorPIDController.Get());
 }
 
 void Robot::FullElevatorTest()

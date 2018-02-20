@@ -8,7 +8,6 @@ namespace consts
 	constexpr int THIRTY_AMP_FUSE_CONT_MAX = 35; // The continuous max current draw for a 30 amp breaker
 	constexpr int CONT_CURRENT_TIMEOUT_MS = 500;
 
-
 	// Encoder Constants
 	constexpr double PI = 3.1416;
 	constexpr double WHEEL_DIAMETER = 6;
