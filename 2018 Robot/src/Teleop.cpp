@@ -57,6 +57,9 @@ void Robot::VelocityArcadeDrive(double forwardSpeed, double turnSpeed, bool squa
 		}
 	}
 
+	SmartDashboard::PutNumber("Right Arcade Out", rightMotorOutput);
+	SmartDashboard::PutNumber("Left Arcade Out", leftMotorOutput);
+
 	// Set the target velocity for the talons with encoders
 	FrontRightMotor.Set(ControlMode::Velocity, Limit(rightMotorOutput) * consts::MAX_VELOCITY);
 	FrontLeftMotor.Set(ControlMode::Velocity, Limit(leftMotorOutput) * consts::MAX_VELOCITY);
