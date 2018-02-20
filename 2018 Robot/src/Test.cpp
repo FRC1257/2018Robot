@@ -83,18 +83,29 @@ void Robot::ManualElevatorTest()
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
 		ElevatorPIDController.Disable();
-		double output = dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput);
-		if((output < 0 && ElevatorPID.GetHeightInches() < 5.0) ||
-				(output > 0 && ElevatorPID.GetHeightInches() > 65.0))
-		{
-			output = 0;
-		}
+		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
 		ElevatorMotor.Set(output);
 		return;
 	}
 	else if(!ElevatorPIDController.IsEnabled())
 	{
 		ElevatorMotor.Set(0);
+	}
+}
+
+void Robot::CapElevatorSetpoint(double& setpoint)
+{
+	if(setpoint < 5.0)
+	{
+		setpoint = 5.0;
+	}
+	else if(setpoint > 65.0)
+	{
+		setpoint = 65.0;
+	}
+	else
+	{
+
 	}
 }
 
@@ -107,15 +118,25 @@ void Robot::PIDElevatorTest()
 	double lowerElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
 			GenericHID::JoystickHand::kLeftHand));
 
+	// If either triggers are being pressed
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
-		double output = dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput);
-		if((output < 0 && ElevatorPID.GetHeightInches() < 5.0) ||
-				(output > 0 && ElevatorPID.GetHeightInches() > 65.0))
+		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
+		if(m_isElevatorInAutoMode)
 		{
-			output = 0;
+			m_isElevatorInAutoMode = false;
+			// Set the desired height to the current height plus some increment
+			// that is scaled by the value on each trigger
+			double desiredSetpoint = ElevatorPID.GetHeightInches() + consts::ELEVATOR_INCREMENT_PER_CYCLE * output;
+			CapElevatorSetpoint(desiredSetpoint);
+			ElevatorPIDController.SetSetpoint(desiredSetpoint);
 		}
-		ElevatorMotor.Set(output);
+		else // If automatic mode isn't on
+		{
+			double desiredSetpoint = ElevatorPID.GetHeightInches() + consts::ELEVATOR_INCREMENT_PER_CYCLE * output;
+			CapElevatorSetpoint(desiredSetpoint);
+			ElevatorPIDController.SetSetpoint(desiredSetpoint);
+		}
 		return;
 	}
 	else if(!ElevatorPIDController.IsEnabled())
@@ -127,10 +148,10 @@ void Robot::PIDElevatorTest()
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
 		// If elevator is lowering and the right bumper is pressed, stop elevator where it is
-		if (m_isLowering)
+		if (m_isElevatorLowering)
 		{
 			ElevatorMotor.Set(0);
-			m_isLowering = false;
+			m_isElevatorLowering = false;
 			ElevatorPIDController.Disable();
 		}
 		else
@@ -138,22 +159,22 @@ void Robot::PIDElevatorTest()
 			// If right bumper is being pressed for the first time, increase the desired preset by 1
 			if (!ElevatorPIDController.IsEnabled())
 			{
-				m_targetStep = GetClosestStepNumber();
+				m_targetElevatorStep = GetClosestStepNumber();
 			}
 			// If right bumper has already been pressed, go to the next step.
-			else if (m_targetStep < 4)
+			else if (m_targetElevatorStep < 4)
 			{
-				m_targetStep++;
+				m_targetElevatorStep++;
 			}
-			ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[m_targetStep]);
+			ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[m_targetElevatorStep]);
 			ElevatorPIDController.Enable();
-			m_isLowering = false;
+			m_isElevatorLowering = false;
 		}
 	}
 	// The left bumper will lower the elevator to the bottom
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
-		m_isLowering = true;
+		m_isElevatorLowering = true;
 		ElevatorPIDController.SetSetpoint(0);
 		ElevatorPIDController.Enable();
 	}
@@ -168,23 +189,31 @@ void Robot::FullElevatorTest()
 	double lowerElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
 			GenericHID::JoystickHand::kLeftHand));
 
+	SmartDashboard::PutNumber("RaiseElev", raiseElevatorOutput);
+	SmartDashboard::PutNumber("LowerElev", lowerElevatorOutput);
+
 	// If either triggers are being pressed, disable the PID and
 	// set the motor to the given speed
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
 		ElevatorPIDController.Disable();
-		ElevatorMotor.Set(raiseElevatorOutput - lowerElevatorOutput);
+		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
+		ElevatorMotor.Set(output);
 		return;
+	}
+	else if(!ElevatorPIDController.IsEnabled())
+	{
+		ElevatorMotor.Set(0);
 	}
 
 	// Automatic Mode is controlled by both bumpers
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
 		// If elevator is lowering and the right bumper is pressed, stop elevator where it is
-		if (m_isLowering)
+		if (m_isElevatorLowering)
 		{
 			ElevatorMotor.Set(0);
-			m_isLowering = false;
+			m_isElevatorLowering = false;
 			ElevatorPIDController.Disable();
 		}
 		else
@@ -192,22 +221,22 @@ void Robot::FullElevatorTest()
 			// If right bumper is being pressed for the first time, increase the desired preset by 1
 			if (!ElevatorPIDController.IsEnabled())
 			{
-				m_targetStep = GetClosestStepNumber();
+				m_targetElevatorStep = GetClosestStepNumber();
 			}
 			// If right bumper has already been pressed, go to the next step.
-			else if (m_targetStep < 4)
+			else if (m_targetElevatorStep < 4)
 			{
-				m_targetStep++;
+				m_targetElevatorStep++;
 			}
-			ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[m_targetStep]);
+			ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[m_targetElevatorStep]);
 			ElevatorPIDController.Enable();
-			m_isLowering = false;
+			m_isElevatorLowering = false;
 		}
 	}
 	// The left bumper will lower the elevator to the bottom
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
-		m_isLowering = true;
+		m_isElevatorLowering = true;
 		ElevatorPIDController.SetSetpoint(0);
 		ElevatorPIDController.Enable();
 	}

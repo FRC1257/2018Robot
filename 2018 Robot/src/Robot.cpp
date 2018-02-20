@@ -18,8 +18,9 @@ Robot::Robot() :
 	DriveController(0),
 	OperatorController(1),
 	DriveTrain(LeftMotors, RightMotors),
-	m_isLowering(false),
-	m_targetStep(0)
+	m_isElevatorLowering(false),
+	m_isElevatorInAutoMode(false),
+	m_targetElevatorStep(0)
 {
 
 }

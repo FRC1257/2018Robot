@@ -14,6 +14,20 @@ double Robot::GetClosestStepNumber()
 	return 4;
 }
 
+// Prevent the elevator from reaching its hard stops
+double Robot::CapElevatorOutput(double output)
+{
+	if((output < 0 && ElevatorPID.GetHeightInches() < 5.0) ||
+			(output > 0 && ElevatorPID.GetHeightInches() > 65.0))
+	{
+		return 0;
+	}
+	else
+	{
+		return output;
+	}
+}
+
 //Driver Controls
 void Robot::Drive()
 {
@@ -64,12 +78,7 @@ void Robot::Elevator()
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
 		ElevatorPIDController.Disable();
-		double output = dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput);
-		if((output < 0 && ElevatorPID.GetHeightInches() < 5.0) ||
-				(output > 0 && ElevatorPID.GetHeightInches() > 65.0))
-		{
-			output = 0;
-		}
+		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
 		ElevatorMotor.Set(output);
 		return;
 	}
@@ -82,10 +91,10 @@ void Robot::Elevator()
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
 		// If elevator is lowering and the right bumper is pressed, stop elevator where it is
-		if (m_isLowering)
+		if (m_isElevatorLowering)
 		{
 			ElevatorMotor.Set(0);
-			m_isLowering = false;
+			m_isElevatorLowering = false;
 			ElevatorPIDController.Disable();
 		}
 		else
@@ -93,22 +102,22 @@ void Robot::Elevator()
 			// If right bumper is being pressed for the first time, increase the desired preset by 1
 			if (!ElevatorPIDController.IsEnabled())
 			{
-				m_targetStep = GetClosestStepNumber();
+				m_targetElevatorStep = GetClosestStepNumber();
 			}
 			// If right bumper has already been pressed, go to the next step.
-			else if (m_targetStep < 4)
+			else if (m_targetElevatorStep < 4)
 			{
-				m_targetStep++;
+				m_targetElevatorStep++;
 			}
-			ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[m_targetStep]);
+			ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[m_targetElevatorStep]);
 			ElevatorPIDController.Enable();
-			m_isLowering = false;
+			m_isElevatorLowering = false;
 		}
 	}
 	// The left bumper will lower the elevator to the bottom
 	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
-		m_isLowering = true;
+		m_isElevatorLowering = true;
 		ElevatorPIDController.SetSetpoint(0);
 		ElevatorPIDController.Enable();
 	}
