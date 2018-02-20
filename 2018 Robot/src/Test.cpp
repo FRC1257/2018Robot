@@ -263,18 +263,18 @@ void Robot::LinkageTest()
 void Robot::IntakeTest()
 {
 	// Use the B button to intake
-	if(OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > 3) // TODO change value
+	if(OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) // TODO change value
 	{
-		RightIntakeMotor.Set(0.5);
-		LeftIntakeMotor.Set(-0.5);
+		RightIntakeMotor.Set(consts::INTAKE_SPEED);
+		LeftIntakeMotor.Set(-consts::INTAKE_SPEED);
 	}
 	else
 	{
 		// Use the A button to eject if the B button is not being held
 		if(OperatorController.GetAButton())
 		{
-			RightIntakeMotor.Set(-0.5);
-			LeftIntakeMotor.Set(0.5);
+			RightIntakeMotor.Set(-consts::INTAKE_SPEED);
+			LeftIntakeMotor.Set(consts::INTAKE_SPEED);
 		}
 		else
 		{
