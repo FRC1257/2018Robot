@@ -11,8 +11,8 @@ void Robot::TestInit()
 	SmartDashboard::PutBoolean("Enable Maintain Controller", 0);
 	SmartDashboard::PutBoolean("Toggle Maintain Test", 0);
 
-//	TurnAngle(90);
-	MaintainHeadingTest();
+	TurnAngle(0);
+//	MaintainHeadingTest();
 }
 
 void Robot::TestPeriodic()
