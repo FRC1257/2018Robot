@@ -12,7 +12,7 @@ class StabilizedUltrasonic : public PIDSource
 {
 private:
 	Ultrasonic DistanceSensor;
-	static constexpr int MAX_NUM_OF_DISTANCES = 5;
+	static constexpr int MAX_NUM_OF_DISTANCES = 11;
 	std::deque<double> m_prevDistances;
 
 public:
