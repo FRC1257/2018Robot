@@ -64,7 +64,13 @@ void Robot::Elevator()
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
 		ElevatorPIDController.Disable();
-		ElevatorMotor.Set(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
+		double output = dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput);
+		if((output < 0 && ElevatorPID.GetHeightInches() < 5.0) ||
+				(output > 0 && ElevatorPID.GetHeightInches() > 65.0))
+		{
+			output = 0;
+		}
+		ElevatorMotor.Set(output);
 		return;
 	}
 	else if(!ElevatorPIDController.IsEnabled())
