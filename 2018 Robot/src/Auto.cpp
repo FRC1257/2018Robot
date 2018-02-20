@@ -177,6 +177,10 @@ void Robot::DriveToBaseline()
 //Wait until the PID controller has reached the target and the robot is steady
 void WaitUntilPIDSteady(PIDController& pidController, PIDSource& pidSource)
 {
+
+	Timer PIDTimer;
+	PIDTimer.Start();
+
 	double distance, diff, velocity;
 	do
 	{
@@ -188,7 +192,8 @@ void WaitUntilPIDSteady(PIDController& pidController, PIDSource& pidSource)
 
 		SmartDashboard::PutNumber("PID Velocity", velocity);
 	}
-	while(!pidController.OnTarget() || abs(velocity) > 0.5);
+	while((!pidController.OnTarget() || abs(velocity) > 0.5) && !PIDTimer.HasPeriodPassed(consts::PID_TIMEOUT_S));
+	PIDTimer.Stop();
 	pidController.Disable();
 }
 
