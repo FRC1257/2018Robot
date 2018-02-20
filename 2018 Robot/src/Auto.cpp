@@ -185,14 +185,16 @@ void WaitUntilPIDSteady(PIDController& pidController, PIDSource& pidSource)
 		Wait(0.01);
 		diff = pidSource.PIDGet() - distance;
 		velocity = diff / 0.01;
+
+		SmartDashboard::PutNumber("PID Velocity", velocity);
 	}
-	while(!pidController.OnTarget() || abs(velocity) > 0.1);
+	while(!pidController.OnTarget() || abs(velocity) > 0.5);
 	pidController.Disable();
 }
 
 void Robot::DriveDistance(double distance)
 {
-	SmartDashboard::PutString("Auto Status", "Driving a Distance");
+	SmartDashboard::PutString("Auto Status", "Driving a Distance...");
 	//Disable other controllers
 	AngleController.Disable();
 
