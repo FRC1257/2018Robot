@@ -18,9 +18,9 @@ Robot::Robot() :
 
 	AnglePIDOut(DriveTrain),
 	DistancePID(FrontLeftMotor, DriveTrain),
-	AngleController(0.042, 0.01, 0.1, AngleSensors, AnglePIDOut),
-	MaintainAngleController(0.03, 0.01, 0.1, AngleSensors, AnglePIDOut),
-	DistanceController(0.05, 0, 0, DistancePID, DistancePID),
+	AngleController(0.035, 0.0075, 0.095, AngleSensors, AnglePIDOut),
+	MaintainAngleController(0.02, 0.01, 0.11, AngleSensors, AnglePIDOut),
+	DistanceController(0.0225, 0, 0.005, DistancePID, DistancePID),
 
 	ElevatorPID(&ElevatorMotor),
 	ElevatorPIDController(0.25, 0, 0, ElevatorPID, ElevatorPID)
@@ -51,7 +51,7 @@ void Robot::RobotInit()
 	LiveWindow::GetInstance()->Add(&DistanceController);
 
 	// Configuring Angle PID Controller
-	AngleController.SetAbsoluteTolerance(0.5);
+	AngleController.SetAbsoluteTolerance(1);
 	AngleController.SetOutputRange(-1.0, 1.0);
 
 	// Configuring Maintain Angle PID Controller
@@ -60,7 +60,7 @@ void Robot::RobotInit()
 
 	// Configuring Distance PID Controller
 	DistanceController.SetPercentTolerance(1);
-	DistanceController.SetOutputRange(-1.0, 1.0);
+	DistanceController.SetOutputRange(-0.85, 0.85);
 }
 
 void Robot::ResetEncoders()
