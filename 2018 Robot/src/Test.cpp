@@ -69,8 +69,9 @@ void Robot::TestPeriodic()
 	}
 	else
 	{
-		DriveDistance(100);
+		DriveDistance(148);
 		TurnAngle(90);
+		SmartDashboard::PutBoolean("Go Forward, Turn Right", 0);
 	}
 }
 
