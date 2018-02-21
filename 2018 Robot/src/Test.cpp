@@ -19,11 +19,12 @@ void Robot::TestPeriodic()
 //	SmartDashboard::PutNumber("Auto Pos Val", (int) AutoLocationChooser->GetSelected());
 //	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
 
+	//Display Data
+	SmartDashboard::PutNumber("Angle Sensor", AngleSensors.GetAngle());
+	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
+
 	if(!SmartDashboard::GetBoolean("Go Forward, Turn Right", 0))
 	{
-		//Display Data
-		SmartDashboard::PutNumber("Angle Sensor", AngleSensors.GetAngle());
-		SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 
 		//Reset Angle Button
 		if(SmartDashboard::GetBoolean("Reset Angle", 0))

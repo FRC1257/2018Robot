@@ -189,10 +189,12 @@ void WaitUntilPIDSteady(PIDController& pidController, PIDSource& pidSource)
 		diff = pidSource.PIDGet() - distance;
 		velocity = diff / 0.01;
 
+		SmartDashboard::PutNumber("PID Value", pidController.Get());
+
 		SmartDashboard::PutBoolean("PID Controller On Target", pidController.OnTarget());
 		SmartDashboard::PutNumber("PID Velocity", velocity);
 	}
-	while((!pidController.OnTarget() || abs(velocity) > 0.5) && !PIDTimer.HasPeriodPassed(consts::PID_TIMEOUT_S));
+	while((!pidController.OnTarget()) && !PIDTimer.HasPeriodPassed(consts::PID_TIMEOUT_S));
 	PIDTimer.Stop();
 	pidController.Disable();
 }
