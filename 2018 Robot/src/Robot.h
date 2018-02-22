@@ -43,12 +43,12 @@ private:
 
 	// - 3 SendableChoosers for selecting an autonomous mode
 
-	WPI_TalonSRX FrontLeftMotor;
-	WPI_TalonSRX FrontRightMotor;
-	Spark BackLeftMotor;
 	Spark BackRightMotor;
-	WPI_TalonSRX ElevatorMotor;
+	WPI_TalonSRX FrontRightMotor;
+	WPI_TalonSRX FrontLeftMotor;
+	Spark BackLeftMotor;
 	WPI_TalonSRX RightIntakeMotor;
+	WPI_TalonSRX ElevatorMotor;
 	WPI_TalonSRX LeftIntakeMotor;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
