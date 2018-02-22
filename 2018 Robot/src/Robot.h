@@ -45,8 +45,8 @@ private:
 
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX FrontRightMotor;
-	WPI_TalonSRX BackLeftMotor;
-	WPI_TalonSRX BackRightMotor;
+	Spark BackLeftMotor;
+	Spark BackRightMotor;
 	WPI_TalonSRX ElevatorMotor;
 	WPI_TalonSRX RightIntakeMotor;
 	WPI_TalonSRX LeftIntakeMotor;
