@@ -10,7 +10,7 @@ Robot::Robot() :
 //	ClimbMotor(7),
 	ElevatorMotor(8),
 	LeftIntakeMotor(9),
-	LeftMotors(FrontLeftMotor, BackLeftMotor),
+	LeftMotors(FrontRightMotor, BackLeftMotor),
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveController(0),
 	DriveTrain(LeftMotors, RightMotors),
@@ -18,8 +18,8 @@ Robot::Robot() :
 
 	AnglePIDOut(DriveTrain),
 	DistancePID(FrontLeftMotor, DriveTrain),
-	AngleController(0.035, 0.0075, 0.095, AngleSensors, AnglePIDOut),
-	MaintainAngleController(0.02, 0.01, 0.11, AngleSensors, AnglePIDOut),
+	AngleController(0.02525, 0, 0.025, AngleSensors, AnglePIDOut), //(0.035, 0.0075, 0.095)
+	MaintainAngleController(0.03, 0.0015, 0, AngleSensors, AnglePIDOut),
 	DistanceController(0.0225, 0, 0.005, DistancePID, DistancePID),
 
 	ElevatorPID(&ElevatorMotor),

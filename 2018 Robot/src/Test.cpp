@@ -12,6 +12,20 @@ void Robot::TestInit()
 	SmartDashboard::PutBoolean("Toggle Maintain Test", 0);
 
 	SmartDashboard::PutBoolean("Go Forward, Turn Right", 0);
+	SmartDashboard::PutBoolean("Toggle Distance Test", 0);
+
+	if(SmartDashboard::GetBoolean("Test Angle", 0))
+	{
+		TurnAngleTest(0);
+	}
+	if(SmartDashboard::GetBoolean("Test Angle", 0))
+	{
+		MaintainHeadingTest();
+	}
+	if(SmartDashboard::GetBoolean("Test Angle", 0))
+	{
+		DriveDistance(0);
+	}
 }
 
 void Robot::TestPeriodic()
@@ -21,11 +35,10 @@ void Robot::TestPeriodic()
 
 	//Display Data
 	SmartDashboard::PutNumber("Angle Sensor", AngleSensors.GetAngle());
-	SmartDashboard::PutNumber("Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
+	SmartDashboard::PutNumber("Encoder", DistancePID.PIDGet());
 
 	if(!SmartDashboard::GetBoolean("Go Forward, Turn Right", 0))
 	{
-
 		//Reset Angle Button
 		if(SmartDashboard::GetBoolean("Reset Angle", 0))
 		{
@@ -65,6 +78,19 @@ void Robot::TestPeriodic()
 		}
 		else
 		{
+			if(MaintainAngleController.IsEnabled()) MaintainAngleController.Disable();
+		}
+	}
+	else if(SmartDashboard::GetBoolean("Test Distance", 0))
+	{
+		if(SmartDashboard::GetBoolean("Toggle Distance Test", 0))
+		{
+			MaintainAngleController.Enable();
+			DistanceController.Enable();
+		}
+		else
+		{
+			DistanceController.Disable();
 			MaintainAngleController.Disable();
 		}
 	}

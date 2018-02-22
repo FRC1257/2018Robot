@@ -18,6 +18,10 @@ void Robot::DisabledInit()
 	SmartDashboard::PutData("Auto Objective", AutoObjectiveChooser);
 	SmartDashboard::PutData("Middle Approach", SwitchApproachChooser);
 	SmartDashboard::PutNumber("Auto Delay", 0);
+
+	SmartDashboard::PutBoolean("Test Angle", 0);
+	SmartDashboard::PutBoolean("Test Maintain", 0);
+	SmartDashboard::PutBoolean("Test Distance", 0);
 }
 
 void Robot::DisabledPeriodic()
