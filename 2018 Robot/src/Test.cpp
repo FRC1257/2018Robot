@@ -131,7 +131,7 @@ void Robot::PIDElevatorTest()
 		if(m_isElevatorInAutoMode)
 		{
 			m_isElevatorInAutoMode = false;
-			double desiredSetpoint = ElevatorPID.GetHeightInches() + consts::ELEVATOR_INCREMENT_PER_CYCLE * output;
+			double desiredSetpoint = ElevatorPID.PIDGet() + consts::ELEVATOR_INCREMENT_PER_CYCLE * output;
 			CapElevatorSetpoint(desiredSetpoint);
 			ElevatorPIDController.SetSetpoint(desiredSetpoint);
 		}
@@ -146,7 +146,7 @@ void Robot::PIDElevatorTest()
 	}
 	else // If neither of the triggers are being pressed, keep the elevator at its current height
 	{
-		ElevatorPIDController.SetSetpoint(ElevatorPID.GetHeightInches());
+		ElevatorPIDController.SetSetpoint(ElevatorPID.PIDGet());
 	}
 
 	// Automatic Mode is controlled by both bumpers
@@ -155,7 +155,7 @@ void Robot::PIDElevatorTest()
 		// If elevator is lowering and the right bumper is pressed, stop elevator where it is
 		if (m_isElevatorLowering)
 		{
-			ElevatorPIDController.SetSetpoint(ElevatorPID.GetHeightInches());
+			ElevatorPIDController.SetSetpoint(ElevatorPID.PIDGet());
 			m_isElevatorLowering = false;
 		}
 		else
@@ -187,7 +187,7 @@ void Robot::PIDElevatorTest()
 
 	SmartDashboard::PutBoolean("Lowering?", m_isElevatorLowering);
 	SmartDashboard::PutBoolean("Automatic?", m_isElevatorLowering);
-	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.GetHeightInches());
+	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 	SmartDashboard::PutNumber("Elevator Setpoint", ElevatorPIDController.GetSetpoint());
 	SmartDashboard::PutNumber("Elevator Output", ElevatorPIDController.Get());
 }
@@ -306,8 +306,6 @@ void Robot::CurrentTest()
 {
 	SmartDashboard::PutNumber("FL Current",      FrontLeftMotor.GetOutputCurrent());
 	SmartDashboard::PutNumber("FR Current",      FrontRightMotor.GetOutputCurrent());
-	SmartDashboard::PutNumber("BL Current",      BackLeftMotor.GetOutputCurrent());
-	SmartDashboard::PutNumber("BR Current",      BackRightMotor.GetOutputCurrent());
 	SmartDashboard::PutNumber("RIntake Current", RightIntakeMotor.GetOutputCurrent());
 	SmartDashboard::PutNumber("LIntake Current", LeftIntakeMotor.GetOutputCurrent());
 }

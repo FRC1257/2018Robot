@@ -7,6 +7,8 @@
 #include <IterativeRobot.h>
 #include <PID/ElevatorPIDHelper.h>
 #include <Sensors/StabilizedUltrasonic.h>
+#include <PID/AnglePIDOutput.h>
+#include <PID/DistancePIDHelper.h>
 #include "Constants.h"
 
 using namespace frc;
@@ -27,23 +29,23 @@ inline double applyDeadband(double axisVal) { return dabs(axisVal) < 0.08 ? 0 : 
 class Robot: public TimedRobot
 {
 private:
-	WPI_TalonSRX BackRightMotor;
+	Spark BackRightMotor;
 	WPI_TalonSRX FrontRightMotor;
 	WPI_TalonSRX FrontLeftMotor;
-	WPI_TalonSRX BackLeftMotor;
+	Spark BackLeftMotor;
 	WPI_TalonSRX LinkageMotor;
 	WPI_TalonSRX RightIntakeMotor;
 	WPI_TalonSRX ClimbMotor;
 	WPI_TalonSRX ElevatorMotor;
 	WPI_TalonSRX LeftIntakeMotor;
 	StabilizedUltrasonic IntakeUltrasonic;
-	ElevatorPIDHelper ElevatorPID;
 	PIDController ElevatorPIDController;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
 	XboxController OperatorController;
 	DifferentialDrive DriveTrain;
+	DistancePIDHelper ElevatorPID;
 
 	// Keep track of the state of the Elevator PID
 	bool m_isElevatorLowering;

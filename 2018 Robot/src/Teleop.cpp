@@ -6,7 +6,7 @@ double Robot::GetClosestStepNumber()
 	for(int i = 0; i < 5; i++)
 	{
 		// If the elevator is directly below a given setpoint, go to that setpoint
-		if(ElevatorPID.GetHeightInches() < consts::ELEVATOR_SETPOINTS[i])
+		if(ElevatorPID.PIDGet() < consts::ELEVATOR_SETPOINTS[i])
 		{
 			return i;
 		}
@@ -17,8 +17,8 @@ double Robot::GetClosestStepNumber()
 // Prevent the elevator from reaching its hard stops
 double Robot::CapElevatorOutput(double output)
 {
-	if((output < 0 && ElevatorPID.GetHeightInches() < 5.0) ||
-			(output > 0 && ElevatorPID.GetHeightInches() > 65.0))
+	if((output < 0 && ElevatorPID.PIDGet() < 5.0) ||
+			(output > 0 && ElevatorPID.PIDGet() > 65.0))
 	{
 		return 0;
 	}
@@ -26,6 +26,7 @@ double Robot::CapElevatorOutput(double output)
 	{
 		return output;
 	}
+	return output;
 }
 
 //Driver Controls
