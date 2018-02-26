@@ -34,10 +34,6 @@ void Robot::TeleopPeriodic()
 		turnVal = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
 	}
 
-	// Encoder testing
-	SmartDashboard::PutNumber("Front Left Encoder", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
-	SmartDashboard::PutNumber("Front Right Encoder", PulsesToInches(FrontRightMotor.GetSelectedSensorPosition(0)));
-
 	//Negative is used to invert the speed since the controller sends inverted values (make forward <--> backward)
 	DriveTrain.ArcadeDrive(-speedVal, turnVal);
 }

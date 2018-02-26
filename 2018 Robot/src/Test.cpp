@@ -18,13 +18,13 @@ void Robot::TestInit()
 	{
 		TurnAngleTest(0);
 	}
-	if(SmartDashboard::GetBoolean("Test Angle", 0))
+	if(SmartDashboard::GetBoolean("Test Maintain", 0))
 	{
 		MaintainHeadingTest();
 	}
-	if(SmartDashboard::GetBoolean("Test Angle", 0))
+	if(SmartDashboard::GetBoolean("Test Distance", 0))
 	{
-		DriveDistanceTest(0);
+		DriveDistance(0);
 	}
 }
 
@@ -35,7 +35,7 @@ void Robot::TestPeriodic()
 
 	//Display Data
 	SmartDashboard::PutNumber("Angle Sensor", AngleSensors.GetAngle());
-	SmartDashboard::PutNumber("Encoder", DistancePID.PIDGet());
+	SmartDashboard::PutNumber("Encoder R", DistancePID.PIDGet());
 
 	if(!SmartDashboard::GetBoolean("Go Forward, Turn Right", 0))
 	{
@@ -81,24 +81,26 @@ void Robot::TestPeriodic()
 			if(MaintainAngleController.IsEnabled()) MaintainAngleController.Disable();
 		}
 	}
-	else if(SmartDashboard::GetBoolean("Test Distance", 0))
+	if(SmartDashboard::GetBoolean("Test Distance", 0))
 	{
 		if(SmartDashboard::GetBoolean("Toggle Distance Test", 0))
 		{
+			SmartDashboard::PutBoolean("Enable Maintain Controller", 1);
 			MaintainAngleController.Enable();
 			DistanceController.Enable();
 		}
 		else
 		{
+			SmartDashboard::PutBoolean("Enable Maintain Controller", 0);
 			DistanceController.Disable();
 			MaintainAngleController.Disable();
 		}
 	}
 	else
 	{
-		DriveDistance(148);
-		TurnAngle(90);
-		SmartDashboard::PutBoolean("Go Forward, Turn Right", 0);
+//		DriveDistance(148);
+//		TurnAngle(90);
+//		SmartDashboard::PutBoolean("Go Forward, Turn Right", 0);
 	}
 }
 

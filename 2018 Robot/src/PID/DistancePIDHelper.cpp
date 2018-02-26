@@ -17,7 +17,7 @@ DistancePIDHelper::~DistancePIDHelper()
 
 double DistancePIDHelper::PIDGet()
 {
-	return PulsesToInches(m_motor.GetSelectedSensorPosition(0));
+	return -PulsesToInches(m_motor.GetSelectedSensorPosition(0));
 }
 
 void DistancePIDHelper::PIDWrite(double output)

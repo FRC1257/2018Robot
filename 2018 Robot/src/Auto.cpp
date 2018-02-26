@@ -140,7 +140,7 @@ void Robot::AutonomousInit()
 void Robot::AutonomousPeriodic()
 {
 	SmartDashboard::PutNumber("Angle", AngleSensors.GetAngle());
-	SmartDashboard::PutNumber("Distance", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
+	SmartDashboard::PutNumber("Distance", DistancePID.PIDGet());
 }
 
 string WaitForGameData()

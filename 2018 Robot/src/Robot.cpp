@@ -1,10 +1,10 @@
 #include "Robot.h"
 
 Robot::Robot() :
-	BackRightMotor(1),
-	FrontRightMotor(2),
-	FrontLeftMotor(1),
-	BackLeftMotor(0),
+	BackRightMotor(2),
+	FrontRightMotor(1),
+	FrontLeftMotor(0),
+	BackLeftMotor(1),
 //	LinkageMotor(5),
 	RightIntakeMotor(6),
 //	ClimbMotor(7),
@@ -17,10 +17,10 @@ Robot::Robot() :
 	AngleSensors(SPI::Port::kMXP, SPI::kOnboardCS0),
 
 	AnglePIDOut(DriveTrain),
-	DistancePID(FrontLeftMotor, DriveTrain),
-	AngleController(0.02525, 0, 0.025, AngleSensors, AnglePIDOut), //(0.035, 0.0075, 0.095)
-	MaintainAngleController(0.03, 0.0015, 0, AngleSensors, AnglePIDOut),
-	DistanceController(0.0225, 0, 0.005, DistancePID, DistancePID),
+	DistancePID(BackRightMotor, DriveTrain),
+	AngleController(0.02525, 0, 0.025, AngleSensors, AnglePIDOut), // (0.02525, 0, 0.025)
+	MaintainAngleController(0.03, 0.0015, 0.05, AngleSensors, AnglePIDOut), // (0.03, 0.0025, 0)
+	DistanceController(0.0225, 0, 0.005, DistancePID, DistancePID), // ()
 
 	ElevatorPID(&ElevatorMotor),
 	ElevatorPIDController(0.25, 0, 0, ElevatorPID, ElevatorPID)
@@ -40,10 +40,10 @@ Robot::~Robot()
 void Robot::RobotInit()
 {
 	// Configuring the Talon Drive Encoders
-	FrontLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
-	FrontLeftMotor.SetSensorPhase(true);
-	FrontRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
-	FrontRightMotor.SetSensorPhase(true);
+	BackRightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
+	BackRightMotor.SetSensorPhase(true);
+	BackLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
+	BackLeftMotor.SetSensorPhase(true);
 
 	// Adding PID Controllers to LiveWindow
 	LiveWindow::GetInstance()->Add(&AngleController);
@@ -59,14 +59,14 @@ void Robot::RobotInit()
 	MaintainAngleController.SetOutputRange(-1.0, 1.0);
 
 	// Configuring Distance PID Controller
-	DistanceController.SetPercentTolerance(20);
+	DistanceController.SetPercentTolerance(3);
 	DistanceController.SetOutputRange(-0.85, 0.85);
 }
 
 void Robot::ResetEncoders()
 {
-	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
-	FrontRightMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
+	BackLeftMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
+	BackRightMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 }
 
 
