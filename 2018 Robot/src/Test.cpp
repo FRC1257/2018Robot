@@ -24,7 +24,7 @@ void Robot::TestInit()
 	}
 	if(SmartDashboard::GetBoolean("Test Angle", 0))
 	{
-		DriveDistance(0);
+		DriveDistanceTest(0);
 	}
 }
 
@@ -158,7 +158,7 @@ void Robot::DriveDistanceTest(double distance)
 	MaintainAngleController.Enable();
 	DistanceController.Enable();
 
-	SmartDashboard::PutNumber("Target Distance", distance);
+	SmartDashboard::PutBoolean("At Target Distance?", DistanceController.IsEnabled());
 }
 
 
