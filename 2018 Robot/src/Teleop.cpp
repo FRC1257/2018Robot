@@ -153,7 +153,7 @@ void Robot::Climb()
 	// Use the y button to climb
 	if(OperatorController.GetYButton())
 	{
-		ClimbMotor.Set(-1);
+		ClimbMotor.Set(0.5);
 	}
 	else
 	{
