@@ -95,8 +95,6 @@ void Robot::MaintainHeadingTest()
 	//Configure the PID controller to make sure the robot drives straight with the NavX
 	MaintainAngleController.Reset();
 	MaintainAngleController.SetSetpoint(0);
-	MaintainAngleController.SetAbsoluteTolerance(0.5);
-	MaintainAngleController.SetOutputRange(-1.0, 1.0);
 
 	MaintainAngleController.Enable();
 }
@@ -120,14 +118,10 @@ void Robot::DriveDistanceTest(double distance)
 	//Configure the PID controller to make sure the robot drives straight with the NavX
 	MaintainAngleController.Reset();
 	MaintainAngleController.SetSetpoint(0);
-	MaintainAngleController.SetAbsoluteTolerance(0.5);
-	MaintainAngleController.SetOutputRange(-1.0, 1.0);
 
 	//Configure the robot to drive a given distance
 	DistanceController.Reset();
 	DistanceController.SetSetpoint(distance);
-	DistanceController.SetPercentTolerance(1);
-	DistanceController.SetOutputRange(-1.0, 1.0);
 
 	MaintainAngleController.Enable();
 	DistanceController.Enable();
@@ -154,8 +148,6 @@ void Robot::TurnAngleTest(double angle)
 
 	AngleController.Reset();
 	AngleController.SetSetpoint(angle);
-	AngleController.SetAbsoluteTolerance(0.5);
-	AngleController.SetOutputRange(-1.0, 1.0);
 	AngleController.Enable();
 
 	SmartDashboard::PutNumber("Target Angle", angle);
