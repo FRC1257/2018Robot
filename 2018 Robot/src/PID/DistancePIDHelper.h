@@ -3,6 +3,7 @@
 
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
+#include "../Sensors/AngleSensorGroup.h"
 
 using namespace frc;
 
@@ -15,9 +16,12 @@ private:
 	DifferentialDrive& m_DriveTrain;
 	double m_output;                 // Stores the motor output so that other classes can access it
 	AnglePIDOutput* m_AnglePID;
+	AngleSensorGroup& m_Gyro;
+	double m_prevDistance;
+	double m_distanceTraveled;
 
 public:
-	DistancePIDHelper(WPI_TalonSRX& motor, DifferentialDrive& driveTrain);
+	DistancePIDHelper(WPI_TalonSRX& motor, DifferentialDrive& driveTrain, AngleSensorGroup& gyro);
 	virtual ~DistancePIDHelper();
 
 	double PIDGet() override;
@@ -25,6 +29,8 @@ public:
 
 	double GetOutput();
 	void SetAnglePID(AnglePIDOutput* anglePID);
+
+	void ResetPrevOutput();
 };
 
 #endif

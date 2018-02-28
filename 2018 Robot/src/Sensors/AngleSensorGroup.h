@@ -20,6 +20,11 @@ public:
 
 	void Reset();
 	double GetAngle();
+
+	double GetDisplacementX();
+	double GetDisplacementZ();
+	double GetDisplacementY();
+	void ResetDisplacement();
 };
 
 #endif

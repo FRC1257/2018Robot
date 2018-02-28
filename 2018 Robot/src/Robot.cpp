@@ -17,10 +17,10 @@ Robot::Robot() :
 	AngleSensors(SPI::Port::kMXP, SPI::kOnboardCS0),
 
 	AnglePIDOut(DriveTrain),
-	DistancePID(BackRightMotor, DriveTrain),
+	DistancePID(BackRightMotor, DriveTrain, AngleSensors),
 	AngleController(0.02525, 0, 0.025, AngleSensors, AnglePIDOut), // (0.02525, 0, 0.025)
-	MaintainAngleController(0.03, 0.0015, 0.05, AngleSensors, AnglePIDOut), // (0.03, 0.0025, 0)
-	DistanceController(0.0225, 0, 0.005, DistancePID, DistancePID), // ()
+	MaintainAngleController(0.03, 0.0015, 0.06, AngleSensors, AnglePIDOut), // (0.03, 0.0015, 0.06)
+	DistanceController(0.04, 0, 0, DistancePID, DistancePID), // ()
 
 	ElevatorPID(&ElevatorMotor),
 	ElevatorPIDController(0.25, 0, 0, ElevatorPID, ElevatorPID)
@@ -59,7 +59,8 @@ void Robot::RobotInit()
 	MaintainAngleController.SetOutputRange(-1.0, 1.0);
 
 	// Configuring Distance PID Controller
-	DistanceController.SetPercentTolerance(3);
+	DistanceController.SetAbsoluteTolerance(5);
+	DistanceController.SetToleranceBuffer(4);
 	DistanceController.SetOutputRange(-0.80, 0.80);
 }
 
@@ -67,6 +68,8 @@ void Robot::ResetEncoders()
 {
 	BackLeftMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 	BackRightMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
+
+	DistancePID.ResetPrevOutput();
 }
 
 

@@ -26,6 +26,12 @@ void Robot::TestInit()
 	{
 		DriveDistance(0);
 	}
+
+//	DriveDistance(148);
+
+	//Display Data
+	SmartDashboard::PutNumber("Angle Sensor", AngleSensors.GetAngle());
+	SmartDashboard::PutNumber("Encoder R", DistancePID.PIDGet());
 }
 
 void Robot::TestPeriodic()

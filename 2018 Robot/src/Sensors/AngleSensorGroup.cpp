@@ -34,3 +34,23 @@ double AngleSensorGroup::GetAngle()
 		return m_Gyro.GetAngle();
 	}
 }
+
+double AngleSensorGroup::GetDisplacementX()
+{
+	return m_NavX.GetDisplacementX() * 39.37;
+}
+
+double AngleSensorGroup::GetDisplacementZ()
+{
+	return m_NavX.GetDisplacementZ() * 39.37;
+}
+
+double AngleSensorGroup::GetDisplacementY()
+{
+	return m_NavX.GetDisplacementY() * 39.37;
+}
+
+void AngleSensorGroup::ResetDisplacement()
+{
+	m_NavX.ResetDisplacement();
+}

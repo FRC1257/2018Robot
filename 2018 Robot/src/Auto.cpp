@@ -180,21 +180,13 @@ void WaitUntilPIDSteady(PIDController& pidController, PIDSource& pidSource)
 	Timer PIDTimer;
 	PIDTimer.Start();
 
-	double distance, diff, velocity;
 	do
 	{
-		//Calculate velocity of the PID
-		distance = pidSource.PIDGet();
-		Wait(0.01);
-		diff = pidSource.PIDGet() - distance;
-		velocity = diff / 0.01;
-
-		SmartDashboard::PutNumber("PID Value", pidController.Get());
-
+		SmartDashboard::PutNumber("PID Value", pidSource.PIDGet());
+//		SmartDashboard::PutNumber("PID ")
 		SmartDashboard::PutBoolean("PID Controller On Target", pidController.OnTarget());
-		SmartDashboard::PutNumber("PID Velocity", velocity);
 	}
-	while((!pidController.OnTarget() || velocity < 0.5) && !PIDTimer.HasPeriodPassed(consts::PID_TIMEOUT_S));
+	while(!pidController.OnTarget() && !PIDTimer.HasPeriodPassed(consts::PID_TIMEOUT_S));
 	PIDTimer.Stop();
 	pidController.Disable();
 }

@@ -41,7 +41,7 @@ namespace consts
 
 	//Numbers are fillers until build attaches the elevator
 	constexpr int NUM_ELEVATOR_SETPOINTS = 5;
-	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {0, 40, 60, 90, 100};
+	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {0, 10, 30, 60, 65};
 
 	// Encoder Constants
 	constexpr double PI = 3.1416;
@@ -50,7 +50,7 @@ namespace consts
 
 	// Auto Constants
 	constexpr double GAME_DATA_TIMEOUT_S = 1;
-	constexpr double PID_TIMEOUT_S = 5;
+	constexpr double PID_TIMEOUT_S = 10;
 }
 
 #endif
