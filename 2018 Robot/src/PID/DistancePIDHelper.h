@@ -3,6 +3,7 @@
 
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
+#include <cmath>
 #include "../Sensors/AngleSensorGroup.h"
 
 using namespace frc;

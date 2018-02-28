@@ -22,11 +22,7 @@ double DistancePIDHelper::PIDGet()
 {
 	double changeInDistance = -PulsesToInches(m_motor.GetSelectedSensorPosition(0)) - m_prevDistance;
 	double angleError = m_Gyro.GetAngle();
-	double scaleFactor = 1;
-	if(angleError > 1)
-	{
-		 scaleFactor /= 20 * m_Gyro.GetAngle();
-	}
+	double scaleFactor = m_AnglePID->GetOutput();
 	m_distanceTraveled += changeInDistance * scaleFactor;
 	m_prevDistance = m_distanceTraveled;
 	return m_distanceTraveled;
@@ -53,5 +49,6 @@ void DistancePIDHelper::SetAnglePID(AnglePIDOutput* anglePID)
 
 void DistancePIDHelper::ResetPrevOutput()
 {
+	m_distanceTraveled = 0;
 	m_prevDistance = 0;
 }
