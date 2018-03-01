@@ -34,7 +34,7 @@ bool isApproachingMechanicalStop(double output, double currentHeight)
 }
 
 // Prevent the elevator from reaching its hard stops
-double Robot::CapElevatorOutput(double output, bool safetyModeEnabled = false)
+double Robot::CapElevatorOutput(double output, bool safetyModeEnabled)
 {
 	double currentHeight = ElevatorPID.GetHeightInches();
 
