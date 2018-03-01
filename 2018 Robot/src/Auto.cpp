@@ -170,7 +170,7 @@ string WaitForGameData()
 void Robot::DriveToBaseline()
 {
 	SmartDashboard::PutString("Auto Status", "Crossing Baseline");
-	DriveDistance(85);
+	DriveDistance(90);
 	SmartDashboard::PutString("Auto Status", "Finished crossing Baseline");
 }
 
