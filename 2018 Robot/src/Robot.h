@@ -67,6 +67,8 @@ public:
 	void TestInit() override;
 	void TestPeriodic() override;
 
+	static void VisionThread();
+
 	void Drive();
 	void Elevator();
 	void Climb();

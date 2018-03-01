@@ -61,6 +61,10 @@ void Robot::RobotInit()
 	LinkageMotor.SetSensorPhase(true);
 	ElevatorMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_X, consts::TIMEOUT_MS);
 	ElevatorMotor.SetSensorPhase(true);
+
+	//Setup Vision
+	std::thread visionThread(VisionThread);
+	visionThread.detach();
 }
 
 START_ROBOT_CLASS(Robot)
