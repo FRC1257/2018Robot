@@ -52,7 +52,7 @@ void Robot::RobotInit()
 
 	// Configuring Angle PID Controller
 	AngleController.SetAbsoluteTolerance(1);
-	AngleController.SetOutputRange(-1.0, 1.0);
+	AngleController.SetOutputRange(-0.75, 0.75);
 
 	// Configuring Maintain Angle PID Controller
 	MaintainAngleController.SetAbsoluteTolerance(0.5);
