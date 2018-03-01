@@ -256,6 +256,9 @@ void Robot::TurnAngle(double angle)
 
 	SmartDashboard::PutNumber("Target Angle", angle);
 
+	RightIntakeMotor.Set(consts::INTAKE_TURNING_SPEED);
+	LeftIntakeMotor.Set(-consts::INTAKE_TURNING_SPEED);
+
 	WaitUntilPIDSteady(AngleController, AngleSensors);
 
 	SmartDashboard::PutString("Auto Status", "Rotation complete");;
