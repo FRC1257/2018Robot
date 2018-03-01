@@ -9,6 +9,8 @@ void Robot::TestInit()
 	SmartDashboard::PutBoolean("Linkage", 0);
 	SmartDashboard::PutBoolean("Intake", 0);
 	SmartDashboard::PutBoolean("Climb", 0);
+
+	SmartDashboard::PutBoolean("Toggle Elevator Safety", 0);
 }
 
 void Robot::TestPeriodic()
@@ -83,7 +85,8 @@ void Robot::ManualElevatorTest()
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
 		ElevatorPIDController.Disable();
-		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
+		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput),
+				SmartDashboard::GetBoolean("Toggle Elevator Safety", 0));
 		ElevatorMotor.Set(output);
 		return;
 	}
@@ -209,7 +212,8 @@ void Robot::FullElevatorTest()
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
 		ElevatorPIDController.Disable();
-		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
+		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput),
+				SmartDashboard::GetBoolean("Toggle Elevator Safety", 0));
 		ElevatorMotor.Set(output);
 		return;
 	}

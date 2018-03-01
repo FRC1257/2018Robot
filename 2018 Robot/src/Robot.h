@@ -23,6 +23,11 @@ inline double PulsesToInches(double sensorPosition)
 // Absolute value of a double precision floating point number
 inline double dabs(double d) { return d > 0.0 ? d : -d; }
 inline double applyDeadband(double axisVal) { return dabs(axisVal) < 0.08 ? 0 : axisVal; }
+inline double limit(double d) {
+	if(d > 1)      return 1;
+	else if(d < 1) return -1;
+	else           return d;
+}
 
 class Robot: public TimedRobot
 {
@@ -69,7 +74,7 @@ public:
 	void Linkage();
 
 	double GetClosestStepNumber();
-	double CapElevatorOutput(double output);
+	double CapElevatorOutput(double output, bool safetyModeEnabled = false);
 	void CapElevatorSetpoint(double& setpoint);
 
 	void DriveTest();

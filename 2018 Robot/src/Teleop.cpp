@@ -3,29 +3,58 @@
 
 double Robot::GetClosestStepNumber()
 {
-	for(int i = 0; i < 5; i++)
+	double currentHeight = ElevatorPID.GetHeightInches();
+	for(int i = 0; i < consts::NUM_ELEVATOR_SETPOINTS; i++)
 	{
 		// If the elevator is directly below a given setpoint, go to that setpoint
-		if(ElevatorPID.GetHeightInches() < consts::ELEVATOR_SETPOINTS[i])
+		if(currentHeight < consts::ELEVATOR_SETPOINTS[i])
 		{
 			return i;
 		}
 	}
-	return 4;
+	return consts::NUM_ELEVATOR_SETPOINTS - 1;
 }
 
-// Prevent the elevator from reaching its hard stops
-double Robot::CapElevatorOutput(double output)
+bool isApproachingMechanicalStop(double output, double currentHeight)
 {
-	if((output < 0 && ElevatorPID.GetHeightInches() < 5.0) ||
-			(output > 0 && ElevatorPID.GetHeightInches() > 65.0))
+	// If the elevator is moving down towards the bottom
+	if(output < 0 && currentHeight < consts::ELEVATOR_SETPOINTS[1])
 	{
-		return 0;
+		return true;
+	}
+	// If the elevator is moving up towards the top
+	else if (output > 0 && currentHeight > consts::ELEVATOR_SETPOINTS[consts::NUM_ELEVATOR_SETPOINTS - 2])
+	{
+		return true;
 	}
 	else
 	{
-		return output;
+		return false;
 	}
+}
+
+// Prevent the elevator from reaching its hard stops
+double Robot::CapElevatorOutput(double output, bool safetyModeEnabled = false)
+{
+	double currentHeight = ElevatorPID.GetHeightInches();
+
+	// If we're trying to run the elevator down after reaching the bottom or trying
+	// to run it up after reaching the max height, set the motor output to 0
+	if((output < 0 && currentHeight < consts::ELEVATOR_SETPOINTS[0]) ||
+			(output > 0 && currentHeight > consts::ELEVATOR_SETPOINTS[consts::NUM_ELEVATOR_SETPOINTS - 1]))
+	{
+		output = 0;
+	}
+	else if(safetyModeEnabled)
+	{
+		// If the elevator is approaching a mechanical stop, slow down the motor
+		if(isApproachingMechanicalStop(output, currentHeight))
+		{
+			output *= consts::ELEVATOR_SPEED_REDUCTION;
+		}
+	}
+
+	return output;
 }
 
 //Driver Controls
