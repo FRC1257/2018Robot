@@ -59,8 +59,8 @@ void Robot::RobotInit()
 	MaintainAngleController.SetOutputRange(-1.0, 1.0);
 
 	// Configuring Distance PID Controller
-	DistanceController.SetPercentTolerance(3);
-	DistanceController.SetOutputRange(-0.85, 0.85);
+	DistanceController.SetAbsoluteTolerance(5);
+	DistanceController.SetOutputRange(-0.80, 0.80);
 }
 
 void Robot::ResetEncoders()

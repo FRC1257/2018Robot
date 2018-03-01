@@ -50,7 +50,7 @@ namespace consts
 
 	// Auto Constants
 	constexpr double GAME_DATA_TIMEOUT_S = 1;
-	constexpr double PID_TIMEOUT_S = 5;
+	constexpr double PID_TIMEOUT_S = 6;
 }
 
 #endif
