@@ -2,7 +2,7 @@
 
 void Robot::AutonomousInit()
 {
-
+	StopCurrentProcesses();
 }
 
 void Robot::AutonomousPeriodic()

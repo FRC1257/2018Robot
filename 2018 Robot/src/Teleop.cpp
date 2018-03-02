@@ -198,10 +198,7 @@ void Robot::Linkage()
 
 void Robot::TeleopInit()
 {
-	ClimbMotor.Set(0);
-	ElevatorMotor.Set(0);
-	RightIntakeMotor.Set(0);
-	LeftIntakeMotor.Set(0);
+	StopCurrentProcesses();
 }
 
 void Robot::TeleopPeriodic()

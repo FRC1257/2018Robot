@@ -56,6 +56,7 @@ private:
 	int m_targetElevatorStep;
 
 public:
+	// Constructor and virtual functions
 	Robot();
 	void RobotInit() override;
 	void DisabledInit() override;
@@ -67,18 +68,28 @@ public:
 	void TestInit() override;
 	void TestPeriodic() override;
 
+	// Camera Stream code
 	static void VisionThread();
 
+	// Code to kill current processes between robot loops
+	void StopCurrentProcesses();
+	void ResetSensors();
+	void DisablePIDControllers();
+	void ZeroMotors();
+
+	// Teleoperated helper functions
 	void Drive();
 	void Elevator();
 	void Climb();
 	void Intake();
 	void Linkage();
 
+	// Automatic elevator functionality
 	double GetClosestStepNumber();
 	double CapElevatorOutput(double output, bool safetyModeEnabled = false);
 	void CapElevatorSetpoint(double& setpoint);
 
+	// Modular test code functions
 	void DriveTest();
 	void FullElevatorTest();
 	void PIDElevatorTest();

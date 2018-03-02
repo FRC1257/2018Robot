@@ -2,6 +2,9 @@
 
 void Robot::TestInit()
 {
+	StopCurrentProcesses();
+
+	// SmartDashboard code to toggle each test function
 	SmartDashboard::PutBoolean("Drive", 0);
 	SmartDashboard::PutBoolean("Full Elevator", 0);
 	SmartDashboard::PutBoolean("Manual Elevator", 0);
@@ -19,10 +22,22 @@ void Robot::TestPeriodic()
 	if(SmartDashboard::GetBoolean("Full Elevator", 0))
 	{
 		FullElevatorTest();
-		SmartDashboard::PutBoolean("Full Elevator", 0);
+		SmartDashboard::PutBoolean("PID Elevator", 0);
 		SmartDashboard::PutBoolean("Manual Elevator", 0);
 	}
-	if(SmartDashboard::GetBoolean("Manual Elevator", 0)) ManualElevatorTest();
+	else if(SmartDashboard::GetBoolean("Full Elevator", 0))
+	{
+		ManualElevatorTest();
+		SmartDashboard::PutBoolean("PID Elevator", 0);
+		SmartDashboard::PutBoolean("Full Elevator", 0);
+	}
+	else if(SmartDashboard::GetBoolean("PID Elevator", 0))
+	{
+		PIDElevatorTest();
+		SmartDashboard::PutBoolean("PID Elevator", 0);
+		SmartDashboard::PutBoolean("Manual Elevator", 0);
+	}
+	if(SmartDashboard::GetBoolean("Manual Elevator", 0))
 	if(SmartDashboard::GetBoolean("PID Elevator", 0)) PIDElevatorTest();
 	if(SmartDashboard::GetBoolean("Linkage", 0)) LinkageTest();
 	if(SmartDashboard::GetBoolean("Intake", 0)) IntakeTest();
