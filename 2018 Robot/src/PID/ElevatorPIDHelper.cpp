@@ -21,7 +21,7 @@ double ElevatorPIDHelper::PIDGet()
 
 double ElevatorPIDHelper::GetHeightInches()
 {
-	double circumference = DRUM_DIAMETER * consts::PI;
+	double circumference = m_DRUM_DIAMETER * consts::PI;
 	double revolutions = m_TalonWithEncoder->GetSelectedSensorPosition(0) / consts::PULSES_PER_REV;
 	double distance = revolutions * circumference;
 
