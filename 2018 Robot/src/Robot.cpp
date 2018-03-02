@@ -18,9 +18,9 @@ Robot::Robot() :
 
 	AnglePIDOut(DriveTrain),
 	DistancePID(FrontLeftMotor, DriveTrain),
-	AngleController(0.035, 0.0075, 0.095, AngleSensors, AnglePIDOut),
-	MaintainAngleController(0.02, 0.01, 0.11, AngleSensors, AnglePIDOut),
-	DistanceController(0.0225, 0, 0.005, DistancePID, DistancePID),
+	AngleController(0.035, 0.0075, 0.095, AngleSensors, AnglePIDOut), //(0.02525, 0, 0.025)
+	MaintainAngleController(0.02, 0.01, 0.11, AngleSensors, AnglePIDOut), //(0.03, 0.0015, 0.06)
+	DistanceController(0.0225, 0, 0.005, DistancePID, DistancePID), //(0.04, 0, 0)
 
 	ElevatorPID(&ElevatorMotor),
 	ElevatorPIDController(0.25, 0, 0, ElevatorPID, ElevatorPID)
