@@ -4,7 +4,7 @@
 namespace consts
 {
 	// Current Limiting Constants
-	constexpr int FORTY_AMP_FUSE_CONT_MAX = 20; // The continuous max current draw for a 40 amp breaker
+	constexpr int FORTY_AMP_FUSE_CONT_MAX = 50; // The continuous max current draw for a 40 amp breaker
 	constexpr int THIRTY_AMP_FUSE_CONT_MAX = 35; // The continuous max current draw for a 30 amp breaker
 	constexpr int CONT_CURRENT_TIMEOUT_MS = 500;
 
