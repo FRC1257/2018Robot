@@ -1,4 +1,3 @@
-
 #include "Robot.h"
 
 double Robot::GetClosestStepNumber()

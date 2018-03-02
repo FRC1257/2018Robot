@@ -2,12 +2,16 @@
 #define ROBOT
 
 #include <WPILib.h>
+#include <LiveWindow/LiveWindow.h>
 #include <ctre/Phoenix.h>
-#include <Encoder.h>
-#include <IterativeRobot.h>
-#include <PID/ElevatorPIDHelper.h>
-#include <Sensors/StabilizedUltrasonic.h>
+#include <AHRS.h>
+
 #include "Constants.h"
+#include <PID/AnglePIDOutput.h>
+#include <PID/ElevatorPIDHelper.h>
+#include <PID/DistancePIDHelper.h>
+#include <Sensors/AngleSensorGroup.h>
+#include <Sensors/StabilizedUltrasonic.h>
 
 using namespace frc;
 
@@ -32,6 +36,22 @@ inline double limit(double d) {
 class Robot: public TimedRobot
 {
 private:
+	// TODO: Update the following list after merging
+	// Here's a breakdown of what member objects we're declaring:
+	// - 4 Motor Controllers for each of the drive motors (WPI_TalonSRX)
+	// - 2 SpeedControllerGroups to contain the left and right side motors
+	// - 1 Xbox Controller for controlling the robot
+	// - 1 DifferentialDrive object to access ArcadeDrive
+	// - 1 AngleSensorGroup for sensing the angle and motion of the robot
+	// 		- Internally contains one NavX (AHRS) and one ADXRS450_Gyro
+
+	// - 1 AnglePIDOutput to send turning motor output to DifferentialDrive during PID turning
+	// - 1 DistancePIDHelper to manage the source and motor output of DifferentialDrive during PID driving
+	// - 1 TalonPIDHelper to manage the source and motor output for the elevator motor
+	// - 4 PIDControllers to manage turning to angles, driving distances, maintaining an angle, and raising the elevator
+
+	// - 3 SendableChoosers for selecting an autonomous mode
+
 	WPI_TalonSRX BackRightMotor;
 	WPI_TalonSRX FrontRightMotor;
 	WPI_TalonSRX FrontLeftMotor;
@@ -41,16 +61,27 @@ private:
 	WPI_TalonSRX ClimbMotor;
 	WPI_TalonSRX ElevatorMotor;
 	WPI_TalonSRX LeftIntakeMotor;
-	StabilizedUltrasonic IntakeUltrasonic;
-	ElevatorPIDHelper ElevatorPID;
-	PIDController ElevatorPIDController;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
+	DifferentialDrive DriveTrain;
 	XboxController DriveController;
 	XboxController OperatorController;
-	DifferentialDrive DriveTrain;
+	StabilizedUltrasonic IntakeUltrasonic;
+	AngleSensorGroup AngleSensors;
 
-	// Keep track of the state of the Elevator PID
+	ElevatorPIDHelper ElevatorPID;
+	AnglePIDOutput AnglePIDOut;
+	DistancePIDHelper DistancePID;
+	PIDController AngleController;
+	PIDController MaintainAngleController;
+	PIDController DistanceController;
+	PIDController ElevatorPIDController;
+
+	SendableChooser<consts::AutoPosition> *AutoLocationChooser;
+	SendableChooser<consts::AutoObjective> *AutoObjectiveChooser;
+	SendableChooser<consts::SwitchApproach> *SwitchApproachChooser;
+
+	// Member variables to keep track of the state of the Elevator PID
 	bool m_isElevatorLowering;
 	bool m_isElevatorInAutoMode;
 	int m_targetElevatorStep;
@@ -58,6 +89,7 @@ private:
 public:
 	// Constructor and virtual functions
 	Robot();
+	~Robot();
 	void RobotInit() override;
 	void DisabledInit() override;
 	void DisabledPeriodic() override;
@@ -68,12 +100,26 @@ public:
 	void TestInit() override;
 	void TestPeriodic() override;
 
+	// Autonomous Robot Functionality
+	void DriveFor(double seconds, double speed);
+	void DriveDistance(double distance);
+	void TurnAngle(double angle);
+	void DriveToBaseline();
+	void SidePath(consts::AutoPosition start, char switchPosition, char scalePosition);
+	void OppositeSwitch(consts::AutoPosition start);
+	void OppositeScale(consts::AutoPosition start);
+	void MiddlePath(char switchPosition);
+	void DropCube(double driveSetpoint, consts::ElevatorIncrement elevatorSetpoint);
+	void EjectCube();
+	void RaiseElevator(consts::ElevatorIncrement elevatorSetpoint);
+
 	// Camera Stream code
 	static void VisionThread();
 
 	// Code to kill current processes between robot loops
 	void StopCurrentProcesses();
 	void ResetSensors();
+	void ResetEncoders();
 	void DisablePIDControllers();
 	void ZeroMotors();
 
@@ -91,6 +137,8 @@ public:
 	void CapElevatorSetpoint(double& setpoint);
 
 	// Modular test code functions
+	void TeleopTest();
+	void AutonomousTest();
 	void DriveTest();
 	void FullElevatorTest();
 	void PIDElevatorTest();
@@ -100,6 +148,11 @@ public:
 	void ClimbTest();
 	void CurrentTest();
 	void RunMotorsTestFor(int numberOfSeconds);
+
+	// PID Tuning Functions (JUST FOR TESTING)
+	void MaintainHeadingTest();
+	void DriveDistanceTest(double distance);
+	void TurnAngleTest(double angle);
 };
 
 #endif /* ROBOT */
