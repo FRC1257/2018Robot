@@ -3,7 +3,6 @@
 
 namespace consts
 {
-
 	// Auto Constants
 	constexpr double GAME_DATA_TIMEOUT_S = 1;
 	constexpr double PID_TIMEOUT_S = 6;
@@ -47,13 +46,15 @@ namespace consts
 	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {3, 20, 40, 60, 70};
 	constexpr double ELEVATOR_INCREMENT_PER_CYCLE = 35. / 20.; // 35" per second
 	constexpr double ELEVATOR_SPEED_REDUCTION = 1 / 3;
+	constexpr int ELEVATOR_CONT_CURRENT_MAX = 60;
+	constexpr int ELEVATOR_CONT_CURRENT_TIMEOUT_MS = 2000;
 
 	// Talon configuration constants
 	constexpr int PID_LOOP_ID = 0;
 	constexpr int TALON_TIMEOUT_MS = 10;
 
 	// Current Limiting Constants
-	constexpr int FORTY_AMP_FUSE_CONT_MAX = 20; // The continuous max current draw for a 40 amp breaker
+	constexpr int FORTY_AMP_FUSE_CONT_MAX = 50; // The continuous max current draw for a 40 amp breaker
 	constexpr int THIRTY_AMP_FUSE_CONT_MAX = 35; // The continuous max current draw for a 30 amp breaker
 	constexpr int CONT_CURRENT_TIMEOUT_MS = 500;
 

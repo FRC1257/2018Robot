@@ -66,7 +66,7 @@ void Robot::RobotInit()
 	LeftIntakeMotor.ConfigContinuousCurrentLimit(consts::THIRTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
 	LeftIntakeMotor.EnableCurrentLimit(true);
 
-	ElevatorMotor.ConfigContinuousCurrentLimit(consts::FORTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
+	ElevatorMotor.ConfigContinuousCurrentLimit(consts::ELEVATOR_CONT_CURRENT_MAX, consts::ELEVATOR_CONT_CURRENT_TIMEOUT_MS);
 	ElevatorMotor.EnableCurrentLimit(true);
 
 	// Linkage and Elevator Setup
