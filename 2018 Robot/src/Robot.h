@@ -3,31 +3,60 @@
 
 #include <WPILib.h>
 #include <ctre/Phoenix.h>
+#include <Encoder.h>
+#include <IterativeRobot.h>
+#include <PID/ElevatorPIDHelper.h>
+#include <Sensors/StabilizedUltrasonic.h>
+#include "Constants.h"
+
 using namespace frc;
+
+inline double PulsesToInches(double sensorPosition)
+{
+	double circumference = consts::WHEEL_DIAMETER * consts::PI;
+	double revolutions = sensorPosition / consts::PULSES_PER_REV;
+	double distance = revolutions * circumference;
+
+	return distance;
+}
+
+// Absolute value of a double precision floating point number
+inline double dabs(double d) { return d > 0.0 ? d : -d; }
+inline double applyDeadband(double axisVal) { return dabs(axisVal) < 0.08 ? 0 : axisVal; }
+inline double limit(double d) {
+	if(d > 1)      return 1;
+	else if(d < 1) return -1;
+	else           return d;
+}
 
 class Robot: public TimedRobot
 {
 private:
-	// Here's a breakdown of what member objects we're declaring:
-	// - 4 Motor Controllers for each of the drive motors (WPI_TalonSRX)
-	// - 1 Xbox Controller for controlling the robot
-	// - 1 DifferentialDrive object to access ArcadeDrive
-	// - 2 SpeedControllerGroups to contain the left and right side motors
-
-	WPI_TalonSRX FrontLeftMotor;
-	WPI_TalonSRX FrontRightMotor;
-	WPI_TalonSRX BackLeftMotor;
 	WPI_TalonSRX BackRightMotor;
+	WPI_TalonSRX FrontRightMotor;
+	WPI_TalonSRX FrontLeftMotor;
+	WPI_TalonSRX BackLeftMotor;
+	WPI_TalonSRX LinkageMotor;
+	WPI_TalonSRX RightIntakeMotor;
+	WPI_TalonSRX ClimbMotor;
+	WPI_TalonSRX ElevatorMotor;
+	WPI_TalonSRX LeftIntakeMotor;
+	StabilizedUltrasonic IntakeUltrasonic;
+	ElevatorPIDHelper ElevatorPID;
+	PIDController ElevatorPIDController;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
 	XboxController DriveController;
+	XboxController OperatorController;
 	DifferentialDrive DriveTrain;
 
-public:
-	// Here, we're declaring the following functions:
-	// - Robot class constructor
-	// - Virtual functions from TimedRobot
+	// Keep track of the state of the Elevator PID
+	bool m_isElevatorLowering;
+	bool m_isElevatorInAutoMode;
+	int m_targetElevatorStep;
 
+public:
+	// Constructor and virtual functions
 	Robot();
 	void RobotInit() override;
 	void DisabledInit() override;
@@ -36,8 +65,41 @@ public:
 	void AutonomousPeriodic() override;
 	void TeleopInit() override;
 	void TeleopPeriodic() override;
+	void TestInit() override;
+	void TestPeriodic() override;
+
+	// Camera Stream code
+	static void VisionThread();
+
+	// Code to kill current processes between robot loops
+	void StopCurrentProcesses();
+	void ResetSensors();
+	void DisablePIDControllers();
+	void ZeroMotors();
+
+	// Teleoperated helper functions
+	void Drive();
+	void Elevator();
+	void ManualElevator();
+	void Climb();
+	void Intake();
+	void Linkage();
+
+	// Automatic elevator functionality
+	double GetClosestStepNumber();
+	double CapElevatorOutput(double output, bool safetyModeEnabled = false);
+	void CapElevatorSetpoint(double& setpoint);
+
+	// Modular test code functions
+	void DriveTest();
+	void FullElevatorTest();
+	void PIDElevatorTest();
+	void ManualElevatorTest();
+	void LinkageTest();
+	void IntakeTest();
+	void ClimbTest();
+	void CurrentTest();
+	void RunMotorsTestFor(int numberOfSeconds);
 };
-
-
 
 #endif /* ROBOT */
