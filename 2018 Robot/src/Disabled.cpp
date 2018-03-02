@@ -49,6 +49,9 @@ void Robot::ResetEncoders()
 
 void Robot::DisablePIDControllers()
 {
+	AngleController.Disable();
+	MaintainAngleController.Disable();
+	DistanceController.Disable();
 	ElevatorPIDController.Disable();
 }
 
