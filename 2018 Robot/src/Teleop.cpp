@@ -89,6 +89,30 @@ void Robot::Drive()
 	DriveTrain.ArcadeDrive(-forwardSpeed, turnSpeed);
 }
 
+// Operator controls. This function or the Elevator() function will not be run during
+// the same teleopPeriodic() loop
+void Robot::ManualElevator()
+{
+	// Use the right trigger to manually raise the elevator and
+	// the left trigger to lower the elevator
+	double raiseElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
+			GenericHID::JoystickHand::kRightHand));
+	double lowerElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
+			GenericHID::JoystickHand::kLeftHand));
+
+	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
+	{
+		ElevatorPIDController.Disable();
+		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
+		ElevatorMotor.Set(output);
+		return;
+	}
+	else if(!ElevatorPIDController.IsEnabled())
+	{
+		ElevatorMotor.Set(0);
+	}
+}
+
 // Operator Controls
 void Robot::Elevator()
 {
@@ -204,7 +228,7 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
 	Drive();
-	Elevator();
+	ManualElevator();
 	Intake();
 	Climb();
 	Linkage();

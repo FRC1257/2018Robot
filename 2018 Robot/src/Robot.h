@@ -80,6 +80,7 @@ public:
 	// Teleoperated helper functions
 	void Drive();
 	void Elevator();
+	void ManualElevator();
 	void Climb();
 	void Intake();
 	void Linkage();
