@@ -14,10 +14,22 @@ ElevatorPIDHelper::~ElevatorPIDHelper()
 
 double ElevatorPIDHelper::PIDGet()
 {
-	return PulsesToInches(m_TalonWithEncoder->GetSelectedSensorPosition(0));
+	double height = GetHeightInches();
+	SmartDashboard::PutNumber("Elevator Height", height);
+	return height;
+}
+
+double ElevatorPIDHelper::GetHeightInches()
+{
+	double circumference = m_DRUM_DIAMETER * consts::PI;
+	double revolutions = m_TalonWithEncoder->GetSelectedSensorPosition(0) / consts::PULSES_PER_REV;
+	double distance = revolutions * circumference;
+
+	return distance;
 }
 
 void ElevatorPIDHelper::PIDWrite(double output)
 {
+	SmartDashboard::PutNumber("Elevator PID Output", output);
 	m_TalonWithEncoder->Set(output);
 }

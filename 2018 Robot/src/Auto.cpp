@@ -1,14 +1,13 @@
 #include "Robot.h"
 
-string WaitForGameData();
+std::string WaitForGameData();
 
 void Robot::AutonomousInit()
 {
-	//Zeroing the angle sensor and encoders
-	ResetEncoders();
-	AngleSensors.Reset();
+	StopCurrentProcesses();
 
-	string gameData;
+	// Get the game data from the FMS
+	std::string gameData;
 	try
 	{
 		gameData = WaitForGameData();
@@ -39,7 +38,7 @@ void Robot::AutonomousInit()
 					}
 					else if(gameData[0] == 'R')
 					{
-						SmartDashboard::PutString("Auto Path", "Left: Path to Switch" + gameData[1]);
+						SmartDashboard::PutString("Auto Path", "Left: Path to Switch" + gameData[0]);
 						OppositeSwitch(consts::AutoPosition::LEFT_START);
 					}
 					else
@@ -83,12 +82,12 @@ void Robot::AutonomousInit()
 				case consts::AutoObjective::SWITCH:
 					if(gameData[0] == 'R')
 					{
-						cout << "Right: Path to Switch " + gameData[0]<< endl;
+						SmartDashboard::PutString("Auto Path", "Right: Path to Switch " + gameData[0]);
 						SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
 					}
 					else if(gameData[0] == 'L')
 					{
-						cout << "Right: Path to Switch " + gameData[0]<< endl;
+						SmartDashboard::PutString("Auto Path", "Right: Path to Switch " + gameData[0]);
 						OppositeSwitch(consts::AutoPosition::RIGHT_START);
 					}
 					else
@@ -143,9 +142,9 @@ void Robot::AutonomousPeriodic()
 	SmartDashboard::PutNumber("Distance", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
 }
 
-string WaitForGameData()
+std::string WaitForGameData()
 {
-	string gameData;
+	std::string gameData;
 	Timer gameDataTimer;
 	gameDataTimer.Start();
 
@@ -247,8 +246,8 @@ void Robot::TurnAngle(double angle)
 
 	SmartDashboard::PutNumber("Target Angle", angle);
 
-	RightIntakeMotor.Set(consts::INTAKE_TURNING_SPEED);
-	LeftIntakeMotor.Set(-consts::INTAKE_TURNING_SPEED);
+	RightIntakeMotor.Set(consts::INTAKE_SPEED_WHILE_TURNING);
+	LeftIntakeMotor.Set(-consts::INTAKE_SPEED_WHILE_TURNING);
 
 	WaitUntilPIDSteady(AngleController, AngleSensors);
 

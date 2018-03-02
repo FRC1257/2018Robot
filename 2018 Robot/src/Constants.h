@@ -3,6 +3,12 @@
 
 namespace consts
 {
+
+	// Auto Constants
+	constexpr double GAME_DATA_TIMEOUT_S = 1;
+	constexpr double PID_TIMEOUT_S = 6;
+
+	// Auto Sendable Chooser enums
 	enum class AutoPosition
 	{
 		LEFT_START,
@@ -24,8 +30,9 @@ namespace consts
 		SIDE
 	};
 
-	// Because this is an enum and not an enum class, you can use
-	// the enum value as an array inded for the ELEVATOR_SETPOINTS array
+	// Elevator increment enum for automatic mode:
+	// - Because this is an enum and not an enum class, you can use
+	//   the enum value as an array inded for the ELEVATOR_SETPOINTS array
 	enum ElevatorIncrement
 	{
 		GROUND,
@@ -35,24 +42,34 @@ namespace consts
 		MAXHEIGHT
 	};
 
+	// Elevator Constants
+	constexpr int NUM_ELEVATOR_SETPOINTS = 5;
+	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {3, 20, 40, 60, 70};
+	constexpr double ELEVATOR_INCREMENT_PER_CYCLE = 35. / 20.; // 35" per second
+	constexpr double ELEVATOR_SPEED_REDUCTION = 1 / 3;
+
 	// Talon configuration constants
 	constexpr int PID_LOOP_ID = 0;
 	constexpr int TALON_TIMEOUT_MS = 10;
 
-	//Numbers are fillers until build attaches the elevator
-	constexpr int NUM_ELEVATOR_SETPOINTS = 5;
-	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {0, 40, 60, 90, 100};
+	// Current Limiting Constants
+	constexpr int FORTY_AMP_FUSE_CONT_MAX = 20; // The continuous max current draw for a 40 amp breaker
+	constexpr int THIRTY_AMP_FUSE_CONT_MAX = 35; // The continuous max current draw for a 30 amp breaker
+	constexpr int CONT_CURRENT_TIMEOUT_MS = 500;
 
 	// Encoder Constants
 	constexpr double PI = 3.1416;
 	constexpr double WHEEL_DIAMETER = 6;
 	constexpr double PULSES_PER_REV = 4096;
 
-	// Auto Constants
-	constexpr double GAME_DATA_TIMEOUT_S = 1;
-	constexpr double PID_TIMEOUT_S = 6;
+	// PID Constants
+	constexpr int PID_LOOP_X = 0;
+	constexpr int TIMEOUT_MS = 10;
 
-	constexpr double INTAKE_TURNING_SPEED = 0.5;
+	// Intake Constants
+	constexpr double MIN_DISTANCE_TO_CUBE = 9.0;
+	constexpr double INTAKE_SPEED = 0.7;
+	constexpr double INTAKE_SPEED_WHILE_TURNING = 0.5;
 }
 
 #endif
