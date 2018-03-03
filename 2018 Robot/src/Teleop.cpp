@@ -2,16 +2,6 @@
 
 double Robot::GetClosestStepNumber()
 {
-	//Disable/reset everything from autonomous
-	ResetEncoders();
-	AngleSensors.Reset();
-	AngleController.Disable();
-	MaintainAngleController.Disable();
-	DistanceController.Disable();
-
-	SmartDashboard::PutBoolean("Record Path", 0);
-	SmartDashboard::PutString("Record Output File", "RobotOutputLog.txt");
-
 	double currentHeight = ElevatorPID.GetHeightInches();
 	for(int i = 0; i < consts::NUM_ELEVATOR_SETPOINTS; i++)
 	{
@@ -250,6 +240,9 @@ void Robot::Linkage()
 void Robot::TeleopInit()
 {
 	StopCurrentProcesses();
+
+	SmartDashboard::PutBoolean("Record Path", 0);
+	SmartDashboard::PutString("Record Output File", "RobotOutputLog.txt");
 }
 
 void Robot::TeleopPeriodic()
