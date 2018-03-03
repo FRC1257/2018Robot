@@ -61,9 +61,9 @@ void Robot::Drive()
 {
 	if(SmartDashboard::GetBoolean("Record Path", 0))
 	{
-		if(!outf.is_open())
+		if(!echoAutoPathFileOut.is_open())
 		{
-			outf.open("/home/lvuser/" + SmartDashboard::GetString("Record Output File", "RobotOutputLog.txt"),
+			echoAutoPathFileOut.open("/home/lvuser/" + SmartDashboard::GetString("Record Output File", "RobotOutputLog.txt"),
 					std::ios::trunc);
 		}
 
@@ -71,9 +71,9 @@ void Robot::Drive()
 	}
 	else
 	{
-		if(outf.is_open())
+		if(echoAutoPathFileOut.is_open())
 		{
-			outf.close();
+			echoAutoPathFileOut.close();
 		}
 	}
 

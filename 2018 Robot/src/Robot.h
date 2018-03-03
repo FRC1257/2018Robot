@@ -98,8 +98,8 @@ private:
 	bool m_isElevatorInAutoMode;
 	int m_targetElevatorStep;
 
-	std::ofstream outf;
-	std::ifstream inf;
+	std::ofstream echoAutoPathFileOut;
+	std::ifstream echoAutoPathFileIn;
 
 public:
 	// Constructor and virtual functions
@@ -169,8 +169,10 @@ public:
 	void DriveDistanceTest(double distance);
 	void TurnAngleTest(double angle);
 
+	// Echo Code Testing
 	void LogMotorOutput();
-	void ReadLog();
+	void RunMotorLogTest();
+	void RunMotorLog(const char* autoPathFileName);
 };
 
 #endif /* ROBOT */

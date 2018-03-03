@@ -49,7 +49,7 @@ namespace consts
 	constexpr int ELEVATOR_CONT_CURRENT_MAX = 60;
 	constexpr int ELEVATOR_CONT_CURRENT_TIMEOUT_MS = 2000;
 
-	// Talon configuration constants
+	// Talon Configuration Constants
 	constexpr int PID_LOOP_ID = 0;
 	constexpr int TALON_TIMEOUT_MS = 10;
 

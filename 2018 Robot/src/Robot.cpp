@@ -29,8 +29,8 @@ Robot::Robot() :
 	m_isElevatorInAutoMode(false),
 	m_targetElevatorStep(0),
 
-	outf(),
-	inf()
+	echoAutoPathFileOut(),
+	echoAutoPathFileIn()
 {
 	AutoLocationChooser = new SendableChooser<consts::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<consts::AutoObjective>();

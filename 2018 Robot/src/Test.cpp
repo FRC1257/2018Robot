@@ -89,9 +89,9 @@ void Robot::AutonomousTest()
 
 	if(!SmartDashboard::GetBoolean("Auto Path", 0))
 	{
-		if(inf.is_open())
+		if(echoAutoPathFileIn.is_open())
 		{
-			inf.close();
+			echoAutoPathFileIn.close();
 			LeftMotors.Set(0);
 			RightMotors.Set(0);
 			LeftIntakeMotor.Set(0);
@@ -167,12 +167,12 @@ void Robot::AutonomousTest()
 	}
 	else
 	{
-		if(!inf.is_open())
+		if(!echoAutoPathFileIn.is_open())
 		{
-			inf.open(consts::AUTO_PATH + EchoAutoFileNameChooser->GetSelected());
+			echoAutoPathFileIn.open(consts::AUTO_PATH + EchoAutoFileNameChooser->GetSelected());
 		}
 
-		ReadLog();
+		RunMotorLogTest();
 	}
 }
 

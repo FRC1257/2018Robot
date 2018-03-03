@@ -138,16 +138,14 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
-	SmartDashboard::PutNumber("Angle", AngleSensors.GetAngle());
-	SmartDashboard::PutNumber("Distance", PulsesToInches(FrontLeftMotor.GetSelectedSensorPosition(0)));
+
 }
 
+//Record motor output and store it in text file
 void Robot::LogMotorOutput()
 {
-	//Record motor output and store it in text file
-
 	//Check if the file can be written to
-	if (!outf)
+	if (!echoAutoPathFileOut)
 	{
 		std::cerr << "MotorOutputLog could not be opened" << std::endl;
 		return;
@@ -175,19 +173,70 @@ void Robot::LogMotorOutput()
 	double elevatorOutput = applyDeadband(ElevatorMotor.Get());
 	MotorVoltage += std::to_string(elevatorOutput);
 
-	outf << MotorVoltage << std::endl;
+	echoAutoPathFileOut << MotorVoltage << std::endl;
 }
 
-void Robot::ReadLog()
+void Robot::RunMotorLog(const char* autoPathFileName)
 {
-	if(!inf)
+	// If the input file stream is open, close it so a new one
+	// can be opened
+	if(echoAutoPathFileIn)
+	{
+		echoAutoPathFileIn.close();
+	}
+
+	try
+	{
+		echoAutoPathFileIn.open(autoPathFileName);
+	}
+	catch(...)
+	{
+		DriverStation::GetInstance().ReportError("Unable to Read Input File");
+		DriveToBaseline();
+		return;
+	}
+
+	// Variables to store the commands to each motor
+	std::string motorInput;
+	std::string motorOutput;
+
+	while(std::getline(echoAutoPathFileIn, motorInput))
+	{
+		std::stringstream streamOfCommands(motorInput);
+
+		std::getline(streamOfCommands, motorOutput, ',');
+		double lMotor = std::atof(motorOutput.c_str());
+
+		std::getline(streamOfCommands, motorOutput, ',');
+		double rMotor = std::atof(motorOutput.c_str());
+
+		std::getline(streamOfCommands, motorOutput, ',');
+		double lIntake = std::atof(motorOutput.c_str());
+
+		std::getline(streamOfCommands, motorOutput, ',');
+		double rIntake = std::atof(motorOutput.c_str());
+
+		std::getline(streamOfCommands, motorOutput, ',');
+		double elev = std::atof(motorOutput.c_str());
+
+		LeftMotors.Set(applyDeadband(lMotor));
+		RightMotors.Set(applyDeadband(rMotor));
+		LeftIntakeMotor.Set(applyDeadband(lIntake));
+		RightIntakeMotor.Set(applyDeadband(rIntake));
+		ElevatorMotor.Set(applyDeadband(elev));
+	}
+}
+
+void Robot::RunMotorLogTest()
+{
+	if(!echoAutoPathFileIn)
 	{
 		std::cout << "MotorOutputLog could not be read" << std::endl;
 		return;
 	}
 
 	std::string motorInput;
-	std::getline(inf, motorInput);
+	std::getline(echoAutoPathFileIn, motorInput);
 	std::stringstream streamOfCommands(motorInput);
 
 	std::string motorOutput;
