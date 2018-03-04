@@ -100,6 +100,7 @@ private:
 
 	std::ofstream echoAutoPathFileOut;
 	std::ifstream echoAutoPathFileIn;
+	bool m_finishedEcho;
 
 public:
 	// Constructor and virtual functions
@@ -172,7 +173,7 @@ public:
 	// Echo Code Testing
 	void LogMotorOutput();
 	void RunMotorLogTest();
-	void RunMotorLog(const char* autoPathFileName);
+	void RunMotorLog(std::string autoPathFileName);
 };
 
 #endif /* ROBOT */

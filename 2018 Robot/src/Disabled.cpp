@@ -40,6 +40,7 @@ void Robot::DisabledInit()
 	std::vector<std::string> fileNames;
 	ReadDirectory(consts::AUTO_PATH, fileNames);
 
+	EchoAutoFileNameChooser->AddDefault("None", "");
 	for(std::string file : fileNames)
 	{
 		EchoAutoFileNameChooser->AddObject(file, file);

@@ -542,3 +542,39 @@ void Robot::CurrentTest()
 	SmartDashboard::PutNumber("RIntake Current", RightIntakeMotor.GetOutputCurrent());
 	SmartDashboard::PutNumber("LIntake Current", LeftIntakeMotor.GetOutputCurrent());
 }
+
+void Robot::RunMotorLogTest()
+{
+	if(!echoAutoPathFileIn)
+	{
+		std::cout << "MotorOutputLog could not be read" << std::endl;
+		return;
+	}
+
+	std::string motorInput;
+	std::getline(echoAutoPathFileIn, motorInput);
+	std::stringstream streamOfCommands(motorInput);
+
+	std::string motorOutput;
+
+	std::getline(streamOfCommands, motorOutput, ',');
+	double lMotor = std::atof(motorOutput.c_str());
+
+	std::getline(streamOfCommands, motorOutput, ',');
+	double rMotor = std::atof(motorOutput.c_str());
+
+	std::getline(streamOfCommands, motorOutput, ',');
+	double lIntake = std::atof(motorOutput.c_str());
+
+	std::getline(streamOfCommands, motorOutput, ',');
+	double rIntake = std::atof(motorOutput.c_str());
+
+	std::getline(streamOfCommands, motorOutput, ',');
+	double elev = std::atof(motorOutput.c_str());
+
+	LeftMotors.Set(applyDeadband(lMotor));
+	RightMotors.Set(applyDeadband(rMotor));
+	LeftIntakeMotor.Set(applyDeadband(lIntake));
+	RightIntakeMotor.Set(applyDeadband(rIntake));
+	ElevatorMotor.Set(applyDeadband(elev));
+}
