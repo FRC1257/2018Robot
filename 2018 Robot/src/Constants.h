@@ -49,7 +49,7 @@ namespace consts
 	constexpr int ELEVATOR_CONT_CURRENT_MAX = 60;
 	constexpr int ELEVATOR_CONT_CURRENT_TIMEOUT_MS = 2000;
 
-	// Talon configuration constants
+	// Talon Configuration Constants
 	constexpr int PID_LOOP_ID = 0;
 	constexpr int TALON_TIMEOUT_MS = 10;
 
@@ -62,6 +62,8 @@ namespace consts
 	constexpr double PI = 3.1416;
 	constexpr double WHEEL_DIAMETER = 6;
 	constexpr double PULSES_PER_REV = 4096;
+
+	constexpr char AUTO_PATH[] = "/home/lvuser/";
 
 	// PID Constants
 	constexpr int PID_LOOP_X = 0;

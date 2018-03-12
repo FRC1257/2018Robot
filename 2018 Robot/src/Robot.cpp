@@ -27,11 +27,16 @@ Robot::Robot() :
 	ElevatorPIDController(0.25, 0., 0., ElevatorPID, ElevatorPID),
 	m_isElevatorLowering(false),
 	m_isElevatorInAutoMode(false),
-	m_targetElevatorStep(0)
+	m_targetElevatorStep(0),
+
+	echoAutoPathFileOut(),
+	echoAutoPathFileIn(),
+	m_finishedEcho(false)
 {
 	AutoLocationChooser = new SendableChooser<consts::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<consts::AutoObjective>();
 	SwitchApproachChooser = new SendableChooser<consts::SwitchApproach>();
+	EchoAutoFileNameChooser = new SendableChooser<std::string>();
 }
 
 Robot::~Robot()
@@ -39,6 +44,7 @@ Robot::~Robot()
 	delete AutoLocationChooser;
 	delete AutoObjectiveChooser;
 	delete SwitchApproachChooser;
+	delete EchoAutoFileNameChooser;
 }
 
 void Robot::RobotInit()

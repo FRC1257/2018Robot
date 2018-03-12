@@ -1,5 +1,20 @@
 #include "Robot.h"
 
+void ReadDirectory(const std::string& name, std::vector<std::string>& list)
+{
+    DIR* dir = opendir(name.c_str());
+    struct dirent* dp;
+    for(int i = 1; (dp = readdir(dir)) != NULL; i++)
+    {
+		//Add all nonhidden files
+		if(dp->d_name[0] != '.')
+		{
+			list.push_back(dp->d_name);
+		}
+    }
+    closedir(dir);
+}
+
 void Robot::DisabledInit()
 {
 	StopCurrentProcesses();
@@ -21,6 +36,16 @@ void Robot::DisabledInit()
 	SmartDashboard::PutData("Auto Objective", AutoObjectiveChooser);
 	SmartDashboard::PutData("Middle Approach", SwitchApproachChooser);
 	SmartDashboard::PutNumber("Auto Delay", 0);
+
+	std::vector<std::string> fileNames;
+	ReadDirectory(consts::AUTO_PATH, fileNames);
+
+	EchoAutoFileNameChooser->AddDefault("None", "");
+	for(std::string file : fileNames)
+	{
+		EchoAutoFileNameChooser->AddObject(file, file);
+	}
+	SmartDashboard::PutData("Echo Auto File Name", EchoAutoFileNameChooser);
 }
 
 void Robot::DisabledPeriodic()

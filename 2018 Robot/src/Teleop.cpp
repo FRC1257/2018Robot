@@ -59,6 +59,24 @@ double Robot::CapElevatorOutput(double output, bool safetyModeEnabled)
 //Driver Controls
 void Robot::Drive()
 {
+	if(SmartDashboard::GetBoolean("Record Path", 0))
+	{
+		if(!echoAutoPathFileOut.is_open())
+		{
+			echoAutoPathFileOut.open("/home/lvuser/" + SmartDashboard::GetString("Record Output File", "RobotOutputLog.txt"),
+					std::ios::trunc);
+		}
+
+		LogMotorOutput();
+	}
+	else
+	{
+		if(echoAutoPathFileOut.is_open())
+		{
+			echoAutoPathFileOut.close();
+		}
+	}
+
 	double forwardSpeed = 0;
 	double turnSpeed = 0;
 
@@ -222,6 +240,9 @@ void Robot::Linkage()
 void Robot::TeleopInit()
 {
 	StopCurrentProcesses();
+
+	SmartDashboard::PutBoolean("Record Path", 0);
+	SmartDashboard::PutString("Record Output File", "RobotOutputLog.txt");
 }
 
 void Robot::TeleopPeriodic()

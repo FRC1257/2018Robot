@@ -9,6 +9,7 @@ void Robot::TestPeriodic()
 void Robot::TestInit()
 {
 	StopCurrentProcesses();
+	SmartDashboard::PutBoolean("Auto Path", 0);
 
 	SmartDashboard::PutBoolean("Reset Angle", 0);
 	SmartDashboard::PutBoolean("Reset Encoders", 0);
@@ -79,77 +80,99 @@ void Robot::TeleopTest()
 
 void Robot::AutonomousTest()
 {
-	//	SmartDashboard::PutNumber("Auto Pos Val", (int) AutoLocationChooser->GetSelected());
-	//	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
+	SmartDashboard::PutNumber("Auto Pos Val", (int) AutoLocationChooser->GetSelected());
+	SmartDashboard::PutNumber("Auto Obj Val", (int) AutoObjectiveChooser->GetSelected());
 
 	//Display Data
 	SmartDashboard::PutNumber("Angle Sensor", AngleSensors.GetAngle());
 	SmartDashboard::PutNumber("Encoder R", DistancePID.PIDGet());
 
-	if(!SmartDashboard::GetBoolean("Go Forward, Turn Right", 0))
+	if(!SmartDashboard::GetBoolean("Auto Path", 0))
 	{
-		//Reset Angle Button
-		if(SmartDashboard::GetBoolean("Reset Angle", 0))
+		if(echoAutoPathFileIn.is_open())
 		{
-			AngleSensors.Reset();
-			SmartDashboard::PutBoolean("Reset Angle", 0);
-		}
-		//Reset Encoder Button
-		if(SmartDashboard::GetBoolean("Reset Encoders", 0))
-		{
-			ResetEncoders();
-			SmartDashboard::PutBoolean("Reset Encoders", 0);
+			echoAutoPathFileIn.close();
+			LeftMotors.Set(0);
+			RightMotors.Set(0);
+			LeftIntakeMotor.Set(0);
+			RightIntakeMotor.Set(0);
+			ElevatorMotor.Set(0);
 		}
 
-		//Maintain Angle Test Buttons
-		if(SmartDashboard::GetBoolean("Toggle Maintain Test", 0))
+		if(!SmartDashboard::GetBoolean("Go Forward, Turn Right", 0))
 		{
-			//Toggle the two buttons
-			SmartDashboard::PutBoolean("Enable Test Distance Output",
-					SmartDashboard::GetBoolean("Enable Test Distance Output", 0) ^ 1);
-			SmartDashboard::PutBoolean("Enable Maintain Controller",
-					SmartDashboard::GetBoolean("Enable Maintain Controller", 0) ^ 1);
+			//Reset Angle Button
+			if(SmartDashboard::GetBoolean("Reset Angle", 0))
+			{
+				AngleSensors.Reset();
+				SmartDashboard::PutBoolean("Reset Angle", 0);
+			}
+			//Reset Encoder Button
+			if(SmartDashboard::GetBoolean("Reset Encoders", 0))
+			{
+				ResetEncoders();
+				SmartDashboard::PutBoolean("Reset Encoders", 0);
+			}
 
-			SmartDashboard::PutBoolean("Toggle Maintain Test", 0);
+			//Maintain Angle Test Buttons
+			if(SmartDashboard::GetBoolean("Toggle Maintain Test", 0))
+			{
+				//Toggle the two buttons
+				SmartDashboard::PutBoolean("Enable Test Distance Output",
+						SmartDashboard::GetBoolean("Enable Test Distance Output", 0) ^ 1);
+				SmartDashboard::PutBoolean("Enable Maintain Controller",
+						SmartDashboard::GetBoolean("Enable Maintain Controller", 0) ^ 1);
+
+				SmartDashboard::PutBoolean("Toggle Maintain Test", 0);
+			}
+			if(SmartDashboard::GetBoolean("Enable Test Distance Output", 0))
+			{
+				AnglePIDOut.SetTestDistOutput(SmartDashboard::GetNumber(
+						"Test Maintain Output", 0));
+			}
+			else
+			{
+				AnglePIDOut.SetTestDistOutput(0);
+			}
+			if(SmartDashboard::GetBoolean("Enable Maintain Controller", 0))
+			{
+				MaintainAngleController.Enable();
+			}
+			else
+			{
+				if(MaintainAngleController.IsEnabled()) MaintainAngleController.Disable();
+			}
 		}
-		if(SmartDashboard::GetBoolean("Enable Test Distance Output", 0))
+		if(SmartDashboard::GetBoolean("Test Distance", 0))
 		{
-			AnglePIDOut.SetTestDistOutput(SmartDashboard::GetNumber(
-					"Test Maintain Output", 0));
+			if(SmartDashboard::GetBoolean("Toggle Distance Test", 0))
+			{
+				SmartDashboard::PutBoolean("Enable Maintain Controller", 1);
+				MaintainAngleController.Enable();
+				DistanceController.Enable();
+			}
+			else
+			{
+				SmartDashboard::PutBoolean("Enable Maintain Controller", 0);
+				DistanceController.Disable();
+				MaintainAngleController.Disable();
+			}
 		}
 		else
 		{
-			AnglePIDOut.SetTestDistOutput(0);
-		}
-		if(SmartDashboard::GetBoolean("Enable Maintain Controller", 0))
-		{
-			MaintainAngleController.Enable();
-		}
-		else
-		{
-			if(MaintainAngleController.IsEnabled()) MaintainAngleController.Disable();
-		}
-	}
-	if(SmartDashboard::GetBoolean("Test Distance", 0))
-	{
-		if(SmartDashboard::GetBoolean("Toggle Distance Test", 0))
-		{
-			SmartDashboard::PutBoolean("Enable Maintain Controller", 1);
-			MaintainAngleController.Enable();
-			DistanceController.Enable();
-		}
-		else
-		{
-			SmartDashboard::PutBoolean("Enable Maintain Controller", 0);
-			DistanceController.Disable();
-			MaintainAngleController.Disable();
+//			DriveDistance(148);
+//			TurnAngle(90);
+//			SmartDashboard::PutBoolean("Go Forward, Turn Right", 0);
 		}
 	}
 	else
 	{
-//		DriveDistance(148);
-//		TurnAngle(90);
-//		SmartDashboard::PutBoolean("Go Forward, Turn Right", 0);
+		if(!echoAutoPathFileIn.is_open())
+		{
+			echoAutoPathFileIn.open(consts::AUTO_PATH + EchoAutoFileNameChooser->GetSelected());
+		}
+
+		RunMotorLogTest();
 	}
 }
 
@@ -518,4 +541,40 @@ void Robot::CurrentTest()
 	SmartDashboard::PutNumber("BR Current",      BackRightMotor.GetOutputCurrent());
 	SmartDashboard::PutNumber("RIntake Current", RightIntakeMotor.GetOutputCurrent());
 	SmartDashboard::PutNumber("LIntake Current", LeftIntakeMotor.GetOutputCurrent());
+}
+
+void Robot::RunMotorLogTest()
+{
+	if(!echoAutoPathFileIn)
+	{
+		std::cout << "MotorOutputLog could not be read" << std::endl;
+		return;
+	}
+
+	std::string motorInput;
+	std::getline(echoAutoPathFileIn, motorInput);
+	std::stringstream streamOfCommands(motorInput);
+
+	std::string motorOutput;
+
+	std::getline(streamOfCommands, motorOutput, ',');
+	double lMotor = std::atof(motorOutput.c_str());
+
+	std::getline(streamOfCommands, motorOutput, ',');
+	double rMotor = std::atof(motorOutput.c_str());
+
+	std::getline(streamOfCommands, motorOutput, ',');
+	double lIntake = std::atof(motorOutput.c_str());
+
+	std::getline(streamOfCommands, motorOutput, ',');
+	double rIntake = std::atof(motorOutput.c_str());
+
+	std::getline(streamOfCommands, motorOutput, ',');
+	double elev = std::atof(motorOutput.c_str());
+
+	LeftMotors.Set(applyDeadband(lMotor));
+	RightMotors.Set(applyDeadband(rMotor));
+	LeftIntakeMotor.Set(applyDeadband(lIntake));
+	RightIntakeMotor.Set(applyDeadband(rIntake));
+	ElevatorMotor.Set(applyDeadband(elev));
 }

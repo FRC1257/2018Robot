@@ -6,6 +6,15 @@
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
 
+#include <fstream>
+#include <iostream>
+#include <cstdlib>
+#include <string.h>
+#include <sstream>
+#include <vector>
+#include <sys/types.h>
+#include <dirent.h>
+
 #include "Constants.h"
 #include <PID/AnglePIDOutput.h>
 #include <PID/ElevatorPIDHelper.h>
@@ -23,7 +32,6 @@ inline double PulsesToInches(double sensorPosition)
 
 	return distance;
 }
-
 // Absolute value of a double precision floating point number
 inline double dabs(double d) { return d > 0.0 ? d : -d; }
 inline double applyDeadband(double axisVal) { return dabs(axisVal) < 0.08 ? 0 : axisVal; }
@@ -51,6 +59,9 @@ private:
 	// - 4 PIDControllers to manage turning to angles, driving distances, maintaining an angle, and raising the elevator
 
 	// - 3 SendableChoosers for selecting an autonomous mode
+
+	// - 1 ofstream for logging motor outputs
+	// - 1 ifstream for taking in motor outputs
 
 	WPI_TalonSRX BackRightMotor;
 	WPI_TalonSRX FrontRightMotor;
@@ -80,11 +91,16 @@ private:
 	SendableChooser<consts::AutoPosition> *AutoLocationChooser;
 	SendableChooser<consts::AutoObjective> *AutoObjectiveChooser;
 	SendableChooser<consts::SwitchApproach> *SwitchApproachChooser;
+	SendableChooser<std::string> *EchoAutoFileNameChooser;
 
 	// Member variables to keep track of the state of the Elevator PID
 	bool m_isElevatorLowering;
 	bool m_isElevatorInAutoMode;
 	int m_targetElevatorStep;
+
+	std::ofstream echoAutoPathFileOut;
+	std::ifstream echoAutoPathFileIn;
+	bool m_finishedEcho;
 
 public:
 	// Constructor and virtual functions
@@ -153,6 +169,11 @@ public:
 	void MaintainHeadingTest();
 	void DriveDistanceTest(double distance);
 	void TurnAngleTest(double angle);
+
+	// Echo Code Testing
+	void LogMotorOutput();
+	void RunMotorLogTest();
+	void RunMotorLog(std::string autoPathFileName);
 };
 
 #endif /* ROBOT */
