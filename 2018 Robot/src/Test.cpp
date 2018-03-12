@@ -97,7 +97,7 @@ void Robot::AutonomousTest()
 		//Reset Encoder Button
 		if(SmartDashboard::GetBoolean("Reset Encoders", 0))
 		{
-			ResetEncoders();
+			ResetDriveEncoders();
 			SmartDashboard::PutBoolean("Reset Encoders", 0);
 		}
 
@@ -184,7 +184,7 @@ void Robot::DriveDistanceTest(double distance)
 	AngleController.Disable();
 
 	//Zeroing the angle sensor and encoders
-	ResetEncoders();
+	ResetDriveEncoders();
 	AngleSensors.Reset();
 
 	//Disable test dist output for angle

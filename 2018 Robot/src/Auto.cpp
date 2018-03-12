@@ -196,7 +196,7 @@ void Robot::DriveDistance(double distance)
 	AngleController.Disable();
 
 	//Zeroing the angle sensor and encoders
-	ResetEncoders();
+	ResetDriveEncoders();
 	AngleSensors.Reset();
 
 	//Disable test dist output for angle

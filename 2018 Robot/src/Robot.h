@@ -119,7 +119,7 @@ public:
 	// Code to kill current processes between robot loops
 	void StopCurrentProcesses();
 	void ResetSensors();
-	void ResetEncoders();
+	void ResetDriveEncoders();
 	void DisablePIDControllers();
 	void ZeroMotors();
 
