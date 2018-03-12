@@ -37,11 +37,11 @@ void Robot::StopCurrentProcesses()
 
 void Robot::ResetSensors()
 {
-	ResetEncoders();
+	ResetDriveEncoders();
 	AngleSensors.Reset();
 }
 
-void Robot::ResetEncoders()
+void Robot::ResetDriveEncoders()
 {
 	FrontLeftMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 	FrontRightMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
