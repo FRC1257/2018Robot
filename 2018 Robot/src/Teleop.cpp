@@ -177,8 +177,22 @@ void Robot::Elevator()
 
 void Robot::Intake()
 {
-	// Use the B button to intake, X button to override IntakeUltrasonic
-	if((OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) ||
+	// Use the Right Y-axis for variable intake speed
+	double intakeSpeed = applyDeadband(OperatorController.GetY(GenericHID::kRightHand));
+	if(intakeSpeed != 0)
+	{
+		// If you're spinning the intaking a cube, but it is already within the intake, set the speed to 0
+		if(intakeSpeed < 0 && IntakeUltrasonic.GetRangeInches() < consts::MIN_DISTANCE_TO_CUBE)
+		{
+			intakeSpeed = 0;
+		}
+		RightIntakeMotor.Set(intakeSpeed);
+		LeftIntakeMotor.Set(-intakeSpeed);
+	}
+
+	// If the robot isn't using variable intake control, use the B button to intake cubes.
+	// The X button overrides the IntakeUltrasonic's safety feature
+	else if((OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) ||
 			OperatorController.GetXButton())
 	{
 		RightIntakeMotor.Set(consts::INTAKE_SPEED);
