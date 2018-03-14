@@ -143,6 +143,7 @@ public:
 	void FullElevatorTest();
 	void PIDElevatorTest();
 	void ManualElevatorTest();
+	void AutoElevatorTest();
 	void LinkageTest();
 	void IntakeTest();
 	void ClimbTest();
