@@ -3,7 +3,6 @@
 void Robot::TestPeriodic()
 {
 	AutonomousTest();
-	TeleopTest();
 }
 
 void Robot::TestInit()
@@ -32,20 +31,23 @@ void Robot::TeleopTest()
 		FullElevatorTest();
 		SmartDashboard::PutBoolean("PID Elevator", 0);
 		SmartDashboard::PutBoolean("Manual Elevator", 0);
+		SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 	}
 	else if(SmartDashboard::GetBoolean("Full Elevator", 0))
 	{
 		ManualElevatorTest();
 		SmartDashboard::PutBoolean("PID Elevator", 0);
 		SmartDashboard::PutBoolean("Full Elevator", 0);
+		SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 	}
 	else if(SmartDashboard::GetBoolean("PID Elevator", 0))
 	{
 		PIDElevatorTest();
 		SmartDashboard::PutBoolean("PID Elevator", 0);
 		SmartDashboard::PutBoolean("Manual Elevator", 0);
+		SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 	}
-	if(SmartDashboard::GetBoolean("Manual Elevator", 0))
+	if(SmartDashboard::GetBoolean("Manual Elevator", 0)) ManualElevatorTest();
 	if(SmartDashboard::GetBoolean("PID Elevator", 0)) PIDElevatorTest();
 	if(SmartDashboard::GetBoolean("Linkage", 0)) LinkageTest();
 	if(SmartDashboard::GetBoolean("Intake", 0)) IntakeTest();
@@ -492,7 +494,11 @@ void Robot::ClimbTest()
 	// Use the y button to climb
 	if(OperatorController.GetYButton())
 	{
-		ClimbMotor.Set(-1);
+		ClimbMotor.Set(-0.5);
+	}
+	else if(OperatorController.GetStartButton())
+	{
+		ClimbMotor.Set(-0.5);
 	}
 	else
 	{

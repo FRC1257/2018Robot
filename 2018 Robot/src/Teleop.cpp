@@ -56,6 +56,11 @@ double Robot::CapElevatorOutput(double output, bool safetyModeEnabled)
 	return output;
 }
 
+bool Robot::IsElevatorTooHigh()
+{
+	return ElevatorPID.PIDGet() > 10;
+}
+
 //Driver Controls
 void Robot::Drive()
 {
@@ -82,6 +87,15 @@ void Robot::Drive()
 		forwardSpeed = DriveController.GetY(GenericHID::JoystickHand::kRightHand);
 		turnSpeed = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
 	}
+
+	// Ensure the robot doesn't drive at full speed while the elevator is up
+	if(IsElevatorTooHigh())
+	{
+		forwardSpeed *= consts::DRIVE_SPEED_REDUCTION;
+		turnSpeed *= consts::DRIVE_SPEED_REDUCTION;
+	}
+
+	SmartDashboard::PutBoolean("Drive Speed Reduction?", IsElevatorTooHigh());
 
 	// Negative is used to make forward positive and backwards negative
 	// because the y-axes of the XboxController are natively inverted
@@ -219,12 +233,18 @@ void Robot::Climb()
 	// Use the y button to climb
 	if(OperatorController.GetYButton())
 	{
-		ClimbMotor.Set(0.5);
+		ClimbMotor.Set(1);
+	}
+	else if(OperatorController.GetStartButton())
+	{
+		ClimbMotor.Set(-1);
 	}
 	else
 	{
 		ClimbMotor.Set(0);
 	}
+
+	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 }
 
 void Robot::Linkage()

@@ -131,6 +131,9 @@ public:
 	void Intake();
 	void Linkage();
 
+	// Safety Functions
+	bool IsElevatorTooHigh();
+
 	// Automatic elevator functionality
 	double GetClosestStepNumber();
 	double CapElevatorOutput(double output, bool safetyModeEnabled = false);

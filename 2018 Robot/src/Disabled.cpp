@@ -4,6 +4,12 @@ void Robot::DisabledInit()
 {
 	StopCurrentProcesses();
 
+	// Autonomous Modes
+	SmartDashboard::PutBoolean("Test Angle", 0);
+	SmartDashboard::PutBoolean("Test Maintain", 0);
+	SmartDashboard::PutBoolean("Test Distance", 0);
+
+	// Sensor Resets
 	SmartDashboard::PutBoolean("Reset Angle", 0);
 	SmartDashboard::PutBoolean("Reset Encoders", 0);
 

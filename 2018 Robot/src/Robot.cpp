@@ -44,6 +44,7 @@ Robot::~Robot()
 void Robot::RobotInit()
 {
 	StopCurrentProcesses();
+	ElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 	LinkageMotor.SetNeutralMode(Brake);
 	ElevatorMotor.SetNeutralMode(Brake);
 
