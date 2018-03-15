@@ -44,6 +44,7 @@ Robot::~Robot()
 void Robot::RobotInit()
 {
 	StopCurrentProcesses();
+	ElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 	LinkageMotor.SetNeutralMode(Brake);
 	ElevatorMotor.SetNeutralMode(Brake);
 
@@ -103,6 +104,25 @@ void Robot::RobotInit()
 	// Setup camera stream in a separate thread
 	std::thread visionThread(VisionThread);
 	visionThread.detach();
+
+	// Configure the SendableChoosers for auto
+	AutoLocationChooser->AddDefault("Left Start", consts::AutoPosition::LEFT_START);
+	AutoLocationChooser->AddObject("Middle Start", consts::AutoPosition::MIDDLE_START);
+	AutoLocationChooser->AddObject("Right Start", consts::AutoPosition::RIGHT_START);
+
+	AutoObjectiveChooser->AddDefault("Default", consts::AutoObjective::DEFAULT);
+	AutoObjectiveChooser->AddObject("Switch", consts::AutoObjective::SWITCH);
+	AutoObjectiveChooser->AddObject("Scale", consts::AutoObjective::SCALE);
+	AutoObjectiveChooser->AddObject("Baseline", consts::AutoObjective::BASELINE);
+
+	SwitchApproachChooser->AddDefault("Front", consts::SwitchApproach::FRONT);
+	SwitchApproachChooser->AddObject("Side", consts::SwitchApproach::SIDE);
+
+	// Send the sendable choosers to SmartDashboard
+	SmartDashboard::PutData("Auto Position", AutoLocationChooser);
+	SmartDashboard::PutData("Auto Objective", AutoObjectiveChooser);
+	SmartDashboard::PutData("Middle Approach", SwitchApproachChooser);
+	SmartDashboard::PutNumber("Auto Delay", 0);
 }
 
 START_ROBOT_CLASS(Robot)

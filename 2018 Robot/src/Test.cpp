@@ -3,51 +3,25 @@
 void Robot::TestPeriodic()
 {
 	AutonomousTest();
-	TeleopTest();
 }
 
 void Robot::TestInit()
 {
 	StopCurrentProcesses();
 
-	SmartDashboard::PutBoolean("Reset Angle", 0);
-	SmartDashboard::PutBoolean("Reset Encoders", 0);
-
-	//Maintain Angle Test
-	SmartDashboard::PutNumber("Test Maintain Output", 0);
-	SmartDashboard::PutBoolean("Enable Test Distance Output", 0);
-	SmartDashboard::PutBoolean("Enable Maintain Controller", 0);
-	SmartDashboard::PutBoolean("Toggle Maintain Test", 0);
-
-	SmartDashboard::PutBoolean("Go Forward, Turn Right", 0);
-	SmartDashboard::PutBoolean("Toggle Distance Test", 0);
-
 	if(SmartDashboard::GetBoolean("Test Angle", 0))
 	{
 		TurnAngleTest(0);
 	}
-	if(SmartDashboard::GetBoolean("Test Maintain", 0))
+	else if(SmartDashboard::GetBoolean("Test Maintain", 0))
 	{
 		MaintainHeadingTest();
 	}
-	if(SmartDashboard::GetBoolean("Test Distance", 0))
+	else if(SmartDashboard::GetBoolean("Test Distance", 0))
 	{
 		DriveDistance(0);
 	}
-
-	// SmartDashboard code to toggle each test function
-	SmartDashboard::PutBoolean("Drive", 0);
-	SmartDashboard::PutBoolean("Full Elevator", 0);
-	SmartDashboard::PutBoolean("Manual Elevator", 0);
-	SmartDashboard::PutBoolean("PID Elevator", 0);
-	SmartDashboard::PutBoolean("Linkage", 0);
-	SmartDashboard::PutBoolean("Intake", 0);
-	SmartDashboard::PutBoolean("Climb", 0);
-
-	SmartDashboard::PutBoolean("Toggle Elevator Safety", 0);
 }
-
-
 
 void Robot::TeleopTest()
 {
@@ -57,20 +31,23 @@ void Robot::TeleopTest()
 		FullElevatorTest();
 		SmartDashboard::PutBoolean("PID Elevator", 0);
 		SmartDashboard::PutBoolean("Manual Elevator", 0);
+		SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 	}
 	else if(SmartDashboard::GetBoolean("Full Elevator", 0))
 	{
 		ManualElevatorTest();
 		SmartDashboard::PutBoolean("PID Elevator", 0);
 		SmartDashboard::PutBoolean("Full Elevator", 0);
+		SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 	}
 	else if(SmartDashboard::GetBoolean("PID Elevator", 0))
 	{
 		PIDElevatorTest();
 		SmartDashboard::PutBoolean("PID Elevator", 0);
 		SmartDashboard::PutBoolean("Manual Elevator", 0);
+		SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 	}
-	if(SmartDashboard::GetBoolean("Manual Elevator", 0))
+	if(SmartDashboard::GetBoolean("Manual Elevator", 0)) ManualElevatorTest();
 	if(SmartDashboard::GetBoolean("PID Elevator", 0)) PIDElevatorTest();
 	if(SmartDashboard::GetBoolean("Linkage", 0)) LinkageTest();
 	if(SmartDashboard::GetBoolean("Intake", 0)) IntakeTest();
@@ -144,6 +121,10 @@ void Robot::AutonomousTest()
 			DistanceController.Disable();
 			MaintainAngleController.Disable();
 		}
+	}
+	else if(SmartDashboard::GetBoolean("Test Auto Elevator", 0))
+	{
+		AutoElevatorTest();
 	}
 	else
 	{
@@ -309,12 +290,12 @@ void Robot::CapElevatorSetpoint(double& setpoint)
 	// Prevent the setpoint from dipping below the min
 	if(setpoint < consts::ELEVATOR_SETPOINTS[0])
 	{
-		setpoint = 5.0;
+		setpoint = consts::ELEVATOR_SETPOINTS[0];
 	}
 	// Prevent the setpoint from exceeding the max
-	else if(setpoint > consts::ELEVATOR_SETPOINTS[consts::NUM_ELEVATOR_SETPOINTS])
+	else if(setpoint > consts::ELEVATOR_SETPOINTS[consts::NUM_ELEVATOR_SETPOINTS - 1])
 	{
-		setpoint = 65.0;
+		setpoint = consts::ELEVATOR_SETPOINTS[consts::NUM_ELEVATOR_SETPOINTS - 1];
 	}
 	else
 	{
@@ -361,7 +342,7 @@ void Robot::PIDElevatorTest()
 	}
 
 	// Automatic Mode is controlled by both bumpers
-	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
+	if (OperatorController.GetBumperPressed(GenericHID::JoystickHand::kRightHand))
 	{
 		// If elevator is lowering and the right bumper is pressed, stop elevator where it is
 		if (m_isElevatorLowering)
@@ -377,7 +358,7 @@ void Robot::PIDElevatorTest()
 				m_targetElevatorStep = GetClosestStepNumber();
 			}
 			// If right bumper has already been pressed, go to the next step.
-			else if (m_targetElevatorStep < 4)
+			else if (m_targetElevatorStep < consts::NUM_ELEVATOR_SETPOINTS - 1)
 			{
 				m_targetElevatorStep++;
 			}
@@ -387,7 +368,7 @@ void Robot::PIDElevatorTest()
 		}
 	}
 	// The left bumper will lower the elevator to the bottom
-	else if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
+	else if (OperatorController.GetBumperPressed(GenericHID::JoystickHand::kLeftHand))
 	{
 		m_isElevatorInAutoMode = true;
 		m_isElevatorLowering = true;
@@ -397,7 +378,7 @@ void Robot::PIDElevatorTest()
 	ElevatorPIDController.Enable();
 
 	SmartDashboard::PutBoolean("Lowering?", m_isElevatorLowering);
-	SmartDashboard::PutBoolean("Automatic?", m_isElevatorLowering);
+	SmartDashboard::PutBoolean("Automatic?", m_isElevatorInAutoMode);
 	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.GetHeightInches());
 	SmartDashboard::PutNumber("Elevator Setpoint", ElevatorPIDController.GetSetpoint());
 	SmartDashboard::PutNumber("Elevator Output", ElevatorPIDController.Get());
@@ -431,7 +412,7 @@ void Robot::FullElevatorTest()
 	}
 
 	// Automatic Mode is controlled by both bumpers
-	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
+	if (OperatorController.GetBumperPressed(GenericHID::JoystickHand::kRightHand))
 	{
 		// If elevator is lowering and the right bumper is pressed, stop elevator where it is
 		if (m_isElevatorLowering)
@@ -448,7 +429,7 @@ void Robot::FullElevatorTest()
 				m_targetElevatorStep = GetClosestStepNumber();
 			}
 			// If right bumper has already been pressed, go to the next step.
-			else if (m_targetElevatorStep < 4)
+			else if (m_targetElevatorStep < consts::NUM_ELEVATOR_SETPOINTS - 1)
 			{
 				m_targetElevatorStep++;
 			}
@@ -458,11 +439,22 @@ void Robot::FullElevatorTest()
 		}
 	}
 	// The left bumper will lower the elevator to the bottom
-	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
+	if (OperatorController.GetBumperPressed(GenericHID::JoystickHand::kLeftHand))
 	{
 		m_isElevatorLowering = true;
-		ElevatorPIDController.SetSetpoint(0);
+		ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[0]);
 		ElevatorPIDController.Enable();
+	}
+}
+
+void Robot::AutoElevatorTest()
+{
+	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
+	SmartDashboard::PutBoolean("Elev On Target?", ElevatorPIDController.OnTarget());
+
+	if(SmartDashboard::GetBoolean("Go to Increment", 0))
+	{
+		ElevatorPIDController.SetSetpoint(SmartDashboard::GetNumber("Desired Increment", 0));
 	}
 }
 
@@ -502,7 +494,11 @@ void Robot::ClimbTest()
 	// Use the y button to climb
 	if(OperatorController.GetYButton())
 	{
-		ClimbMotor.Set(-1);
+		ClimbMotor.Set(-0.5);
+	}
+	else if(OperatorController.GetStartButton())
+	{
+		ClimbMotor.Set(-0.5);
 	}
 	else
 	{
