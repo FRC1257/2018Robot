@@ -101,7 +101,7 @@ public:
 	void TestPeriodic() override;
 
 	// Autonomous Robot Functionality
-	void DriveFor(double seconds, double speed);
+	void DriveFor(double seconds, double speed = 0.5);
 	void DriveDistance(double distance);
 	void TurnAngle(double angle);
 	void DriveToBaseline();
@@ -109,8 +109,8 @@ public:
 	void OppositeSwitch(consts::AutoPosition start);
 	void OppositeScale(consts::AutoPosition start);
 	void MiddlePath(char switchPosition);
-	void DropCube(double driveSetpoint, consts::ElevatorIncrement elevatorSetpoint);
-	void EjectCube();
+	void DropCube(consts::ElevatorIncrement elevatorSetpoint);
+	void EjectCube(double intakeSpeed = consts::INTAKE_SPEED);
 	void RaiseElevator(consts::ElevatorIncrement elevatorSetpoint);
 
 	// Camera Stream code

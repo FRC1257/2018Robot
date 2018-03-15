@@ -19,7 +19,7 @@ void Robot::TestInit()
 	}
 	else if(SmartDashboard::GetBoolean("Test Distance", 0))
 	{
-		DriveDistance(0);
+		DriveDistanceTest(0);
 	}
 }
 
@@ -132,6 +132,10 @@ void Robot::AutonomousTest()
 //		TurnAngle(90);
 //		SmartDashboard::PutBoolean("Go Forward, Turn Right", 0);
 	}
+
+	SmartDashboard::PutBoolean("DistancePID OnTarget", DistanceController.OnTarget());
+	SmartDashboard::PutBoolean("MaintainAnglePID OnTarget", MaintainAngleController.OnTarget());
+	SmartDashboard::PutBoolean("AnglePID OnTarget", AngleController.OnTarget());
 }
 
 void Robot::MaintainHeadingTest()
@@ -170,7 +174,6 @@ void Robot::DriveDistanceTest(double distance)
 
 	//Disable test dist output for angle
 	AnglePIDOut.SetTestDistOutput(0);
-
 	//Make sure the PID objects know about each other to avoid conflicts
 	DistancePID.SetAnglePID(&AnglePIDOut);
 	AnglePIDOut.SetDistancePID(&DistancePID);
@@ -178,19 +181,13 @@ void Robot::DriveDistanceTest(double distance)
 	//Configure the PID controller to make sure the robot drives straight with the NavX
 	MaintainAngleController.Reset();
 	MaintainAngleController.SetSetpoint(0);
-	MaintainAngleController.SetAbsoluteTolerance(0.5);
-	MaintainAngleController.SetOutputRange(-1.0, 1.0);
 
 	//Configure the robot to drive a given distance
 	DistanceController.Reset();
 	DistanceController.SetSetpoint(distance);
-	DistanceController.SetPercentTolerance(1);
-	DistanceController.SetOutputRange(-1.0, 1.0);
 
 	MaintainAngleController.Enable();
 	DistanceController.Enable();
-
-	SmartDashboard::PutBoolean("At Target Distance?", DistanceController.IsEnabled());
 }
 
 
