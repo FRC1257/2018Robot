@@ -115,16 +115,21 @@ void Robot::ManualElevator()
 
 	double elevatorSpeed;
 
+	bool overrideKeysBeingPressed = OperatorController.GetBumper(GenericHID::kLeftHand) &&
+			OperatorController.GetBumper(GenericHID::kRightHand);
+	bool overridesJustReleased = ( (OperatorController.GetBumperReleased(GenericHID::kLeftHand) &&
+			!OperatorController.GetBumper(GenericHID::kRightHand)) || (OperatorController.GetBumperReleased(GenericHID::kRightHand) &&
+			!OperatorController.GetBumper(GenericHID::kLeftHand)));
+
 	// If the two override keys are being pressed, allow the elevator to move past the predefined stop points
 	// --> This is done to prevent a faulty start configuration from setting the lowest elevator setting at a higher point than
 	//     intended
-	if(OperatorController.GetBumper(GenericHID::kLeftHand) && OperatorController.GetBumper(GenericHID::kRightHand))
+	if(overrideKeysBeingPressed)
 	{
 		elevatorSpeed = dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput);
 	}
-	// If either of the bumpers are released and the encoder position is negative, rezero the elevator at that point
-	else if((OperatorController.GetBumperReleased(GenericHID::kLeftHand) ||
-			OperatorController.GetBumperReleased(GenericHID::kRightHand)) && ElevatorPID.PIDGet() < 0)
+	// If the bumpers are released and the encoder position is negative, rezero the elevator at that point
+	else if(overridesJustReleased && ElevatorPID.PIDGet() < 0)
 	{
 		elevatorSpeed = 0;
 		ElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
