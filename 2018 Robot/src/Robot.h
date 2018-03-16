@@ -133,6 +133,7 @@ public:
 
 	// Safety Functions
 	bool IsElevatorTooHigh();
+	bool IsLinkageFreeToMove(double motorSpeed);
 
 	// Automatic elevator functionality
 	double GetClosestStepNumber();
