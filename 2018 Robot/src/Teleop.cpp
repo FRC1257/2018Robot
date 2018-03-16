@@ -56,6 +56,11 @@ double Robot::CapElevatorOutput(double output, bool safetyModeEnabled)
 	return output;
 }
 
+bool Robot::IsElevatorTooHigh()
+{
+	return ElevatorPID.PIDGet() > 10;
+}
+
 //Driver Controls
 void Robot::Drive()
 {
@@ -83,6 +88,15 @@ void Robot::Drive()
 		turnSpeed = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
 	}
 
+	// Ensure the robot doesn't drive at full speed while the elevator is up
+	if(IsElevatorTooHigh())
+	{
+		forwardSpeed *= consts::DRIVE_SPEED_REDUCTION;
+		turnSpeed *= consts::DRIVE_SPEED_REDUCTION;
+	}
+
+	SmartDashboard::PutBoolean("Drive Speed Reduction?", IsElevatorTooHigh());
+
 	// Negative is used to make forward positive and backwards negative
 	// because the y-axes of the XboxController are natively inverted
 	DriveTrain.ArcadeDrive(-forwardSpeed, turnSpeed);
@@ -106,7 +120,7 @@ void Robot::ManualElevator()
 		ElevatorMotor.Set(output);
 		return;
 	}
-	else if(!ElevatorPIDController.IsEnabled())
+	else
 	{
 		ElevatorMotor.Set(0);
 	}
@@ -140,7 +154,7 @@ void Robot::Elevator()
 	}
 
 	// Automatic Mode is controlled by both bumpers
-	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
+	if (OperatorController.GetBumperPressed(GenericHID::JoystickHand::kRightHand))
 	{
 		// If elevator is lowering and the right bumper is pressed, stop elevator where it is
 		if (m_isElevatorLowering)
@@ -157,7 +171,7 @@ void Robot::Elevator()
 				m_targetElevatorStep = GetClosestStepNumber();
 			}
 			// If right bumper has already been pressed, go to the next step.
-			else if (m_targetElevatorStep < 4)
+			else if (m_targetElevatorStep < consts::NUM_ELEVATOR_SETPOINTS - 1)
 			{
 				m_targetElevatorStep++;
 			}
@@ -167,10 +181,10 @@ void Robot::Elevator()
 		}
 	}
 	// The left bumper will lower the elevator to the bottom
-	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
+	if (OperatorController.GetBumperPressed(GenericHID::JoystickHand::kLeftHand))
 	{
 		m_isElevatorLowering = true;
-		ElevatorPIDController.SetSetpoint(0);
+		ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[0]);
 		ElevatorPIDController.Enable();
 	}
 }
@@ -219,12 +233,18 @@ void Robot::Climb()
 	// Use the y button to climb
 	if(OperatorController.GetYButton())
 	{
-		ClimbMotor.Set(0.5);
+		ClimbMotor.Set(1);
+	}
+	else if(OperatorController.GetStartButton())
+	{
+		ClimbMotor.Set(-1);
 	}
 	else
 	{
 		ClimbMotor.Set(0);
 	}
+
+	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 }
 
 void Robot::Linkage()
@@ -245,5 +265,4 @@ void Robot::TeleopPeriodic()
 	Intake();
 	Climb();
 	Linkage();
-	CurrentTest();
 }

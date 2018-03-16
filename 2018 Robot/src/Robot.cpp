@@ -21,9 +21,9 @@ Robot::Robot() :
 	ElevatorPID(&ElevatorMotor),
 	AnglePIDOut(DriveTrain),
 	DistancePID(FrontLeftMotor, DriveTrain),
-	AngleController(0.035, 0.0075, 0.095, AngleSensors, AnglePIDOut), //(0.02525, 0, 0.025)
-	MaintainAngleController(0.02, 0.01, 0.11, AngleSensors, AnglePIDOut), //(0.03, 0.0015, 0.06)
-	DistanceController(0.0225, 0, 0.005, DistancePID, DistancePID), //(0.04, 0, 0)
+	AngleController(0.02, 0, 0.025, AngleSensors, AnglePIDOut), //(0.02525, 0, 0.025)
+	MaintainAngleController(0.04, 0.0, 0.0, AngleSensors, AnglePIDOut), //(0.03, 0.0015, 0.06)
+	DistanceController(0.04, 0, 0.08, DistancePID, DistancePID), //(0.04, 0, 0)
 	ElevatorPIDController(0.25, 0., 0., ElevatorPID, ElevatorPID),
 	m_isElevatorLowering(false),
 	m_isElevatorInAutoMode(false),
@@ -44,6 +44,7 @@ Robot::~Robot()
 void Robot::RobotInit()
 {
 	StopCurrentProcesses();
+	ElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 	LinkageMotor.SetNeutralMode(Brake);
 	ElevatorMotor.SetNeutralMode(Brake);
 
@@ -66,8 +67,8 @@ void Robot::RobotInit()
 	LeftIntakeMotor.ConfigContinuousCurrentLimit(consts::THIRTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
 	LeftIntakeMotor.EnableCurrentLimit(true);
 
-	ElevatorMotor.ConfigContinuousCurrentLimit(consts::ELEVATOR_CONT_CURRENT_MAX, consts::ELEVATOR_CONT_CURRENT_TIMEOUT_MS);
-	ElevatorMotor.EnableCurrentLimit(true);
+//	ElevatorMotor.ConfigContinuousCurrentLimit(consts::ELEVATOR_CONT_CURRENT_MAX, consts::ELEVATOR_CONT_CURRENT_TIMEOUT_MS);
+//	ElevatorMotor.EnableCurrentLimit(true);
 
 	// Linkage and Elevator Setup
 	LinkageMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_X, consts::TIMEOUT_MS);
@@ -97,12 +98,31 @@ void Robot::RobotInit()
 	MaintainAngleController.SetOutputRange(-1.0, 1.0);
 
 	// Configuring Distance PID Controller
-	DistanceController.SetAbsoluteTolerance(5);
-	DistanceController.SetOutputRange(-0.80, 0.80);
+	DistanceController.SetAbsoluteTolerance(3.5);
+	DistanceController.SetOutputRange(-0.7, 0.7);
 
 	// Setup camera stream in a separate thread
 	std::thread visionThread(VisionThread);
 	visionThread.detach();
+
+	// Configure the SendableChoosers for auto
+	AutoLocationChooser->AddDefault("Left Start", consts::AutoPosition::LEFT_START);
+	AutoLocationChooser->AddObject("Middle Start", consts::AutoPosition::MIDDLE_START);
+	AutoLocationChooser->AddObject("Right Start", consts::AutoPosition::RIGHT_START);
+
+	AutoObjectiveChooser->AddDefault("Default", consts::AutoObjective::DEFAULT);
+	AutoObjectiveChooser->AddObject("Switch", consts::AutoObjective::SWITCH);
+	AutoObjectiveChooser->AddObject("Scale", consts::AutoObjective::SCALE);
+	AutoObjectiveChooser->AddObject("Baseline", consts::AutoObjective::BASELINE);
+
+	SwitchApproachChooser->AddDefault("Front", consts::SwitchApproach::FRONT);
+	SwitchApproachChooser->AddObject("Side", consts::SwitchApproach::SIDE);
+
+	// Send the sendable choosers to SmartDashboard
+	SmartDashboard::PutData("Auto Position", AutoLocationChooser);
+	SmartDashboard::PutData("Auto Objective", AutoObjectiveChooser);
+	SmartDashboard::PutData("Switch Approach", SwitchApproachChooser);
+	SmartDashboard::PutNumber("Auto Delay", 0);
 }
 
 START_ROBOT_CLASS(Robot)
