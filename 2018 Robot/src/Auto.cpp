@@ -2,6 +2,16 @@
 
 std::string WaitForGameData();
 
+/*
+ * Fix Measurements for:
+ * 	Same Side Switch
+ * 	Same Side Scale
+ * 	Opposite Side Switch from Front
+ * 	Opposite Side Switch from Side
+ * 	Opposite Side Scale
+ * 	Middle Switch from Side
+ */
+
 void Robot::AutonomousInit()
 {
 	StopCurrentProcesses();
@@ -183,7 +193,7 @@ void WaitUntilPIDSteady(PIDController& pidController, PIDSource& pidSource)
 	{
 		Wait(0.01);
 	}
-	while(pidController.OnTarget() && !PIDTimer.HasPeriodPassed(consts::PID_TIMEOUT_S));
+	while(!pidController.OnTarget() && !PIDTimer.HasPeriodPassed(consts::PID_TIMEOUT_S));
 
 	PIDTimer.Stop();
 	pidController.Disable();
@@ -246,15 +256,18 @@ void Robot::TurnAngle(double angle)
 
 	SmartDashboard::PutNumber("Target Angle", angle);
 
-	RightIntakeMotor.Set(consts::INTAKE_SPEED_WHILE_TURNING);
-	LeftIntakeMotor.Set(-consts::INTAKE_SPEED_WHILE_TURNING);
+//	RightIntakeMotor.Set(consts::INTAKE_SPEED_WHILE_TURNING);
+//	LeftIntakeMotor.Set(-consts::INTAKE_SPEED_WHILE_TURNING);
 
 	WaitUntilPIDSteady(AngleController, AngleSensors);
+
+//	RightIntakeMotor.Set(0);
+//	LeftIntakeMotor.Set(0);
 
 	SmartDashboard::PutString("Auto Status", "Rotation complete");;
 }
 
-void Robot::DriveFor(double seconds, double speed = 0.5)
+void Robot::DriveFor(double seconds, double speed)
 {
 	DriveTrain.ArcadeDrive(speed, 0);
 	Wait(seconds);
@@ -262,24 +275,24 @@ void Robot::DriveFor(double seconds, double speed = 0.5)
 }
 
 //Drives forward a distance, places a power cube, and then backs up
-void Robot::DropCube(double driveSetpoint, consts::ElevatorIncrement elevatorSetpoint)
+void Robot::DropCube(consts::ElevatorIncrement elevatorSetpoint)
 {
 	SmartDashboard::PutString("Auto Status", "Dropping Cube...");
-	DriveDistance(driveSetpoint);
+//	DriveDistance(driveSetpoint);
 
-	RaiseElevator(elevatorSetpoint);
+//	RaiseElevator(elevatorSetpoint);
 	EjectCube();
-	RaiseElevator(consts::ElevatorIncrement::GROUND);
-	DriveDistance(-driveSetpoint);
+//	RaiseElevator(consts::ElevatorIncrement::GROUND);
+//	DriveDistance(-driveSetpoint);
 	SmartDashboard::PutString("Auto Status", "Cube Dropped");
 }
 
-void Robot::EjectCube()
+void Robot::EjectCube(double intakeSpeed)
 {
 	SmartDashboard::PutString("Auto Status", "Ejecting Cube...");
-	RightIntakeMotor.Set(1);
-	LeftIntakeMotor.Set(-1);
-	Wait(0.4);
+	RightIntakeMotor.Set(-intakeSpeed);
+	LeftIntakeMotor.Set(intakeSpeed);
+	Wait(1.0);
 	RightIntakeMotor.Set(0);
 	LeftIntakeMotor.Set(0);
 	SmartDashboard::PutString("Auto Status", "Ejected Cube");
@@ -312,7 +325,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 	if(switchPosition == startPosition)
 	{
 		TurnAngle(angle);
-		DropCube(5, consts::ElevatorIncrement::SWITCH);
+		DropCube(consts::ElevatorIncrement::SWITCH);
 		SmartDashboard::PutString("Auto Status", "Finished SidePath");
 		return; //End auto just in case the cube misses
 	}
@@ -330,7 +343,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 		DriveDistance(56);
 
 		TurnAngle(angle);
-		DropCube(5, consts::ElevatorIncrement::SCALE);
+		DropCube(consts::ElevatorIncrement::SCALE);
 		SmartDashboard::PutString("Auto Status", "Finished SidePath");
 		return; //End auto just in case the cube misses
 	}
@@ -352,7 +365,7 @@ void Robot::OppositeSwitch(consts::AutoPosition start)
 		TurnAngle(-angle);
 
 		TurnAngle(angle);
-		DropCube(59, consts::ElevatorIncrement::SWITCH);
+		DropCube(consts::ElevatorIncrement::SWITCH);
 	}
 	else
 	{
@@ -365,7 +378,7 @@ void Robot::OppositeSwitch(consts::AutoPosition start)
 		DriveDistance(62.5);
 		TurnAngle(angle);
 
-		DropCube(5, consts::ElevatorIncrement::SWITCH);
+		DropCube(consts::ElevatorIncrement::SWITCH);
 	}
 	SmartDashboard::PutString("Auto Status", "Finished OppositeSwitch");
 }
@@ -392,7 +405,7 @@ void Robot::OppositeScale(consts::AutoPosition start)
 	DriveDistance(56);
 
 	TurnAngle(angle);
-	DropCube(5, consts::ElevatorIncrement::SCALE);
+	DropCube(consts::ElevatorIncrement::SCALE);
 	SmartDashboard::PutString("Auto Status", "Finished OppositeScale");
 }
 
@@ -403,7 +416,7 @@ void Robot::MiddlePath(char switchPosition)
 	double angle = 90;
 
 	//Go forward
-	DriveDistance(42.5);
+	DriveDistance(48);
 
 	//Check which way the cube should be placed
 	if(SwitchApproachChooser->GetSelected() == consts::SwitchApproach::FRONT)
@@ -412,18 +425,20 @@ void Robot::MiddlePath(char switchPosition)
 		if(switchPosition == 'L')
 		{
 			TurnAngle(-angle);
-			DriveDistance(80);
+			DriveDistance(52);
 
 			TurnAngle(angle);
-			DropCube(78, consts::ElevatorIncrement::SWITCH);
+			DriveDistance(48);
+			DropCube(consts::ElevatorIncrement::SWITCH);
 		}
 		else if(switchPosition == 'R')
 		{
 			TurnAngle(angle);
-			DriveDistance(29);
+			DriveDistance(52);
 
 			TurnAngle(-angle);
-			DropCube(78, consts::ElevatorIncrement::SWITCH);
+			DriveDistance(48);
+			DropCube(consts::ElevatorIncrement::SWITCH);
 		}
 	}
 	else
@@ -438,7 +453,7 @@ void Robot::MiddlePath(char switchPosition)
 			DriveDistance(106);
 
 			TurnAngle(angle);
-			DropCube(5, consts::ElevatorIncrement::SWITCH);
+			DropCube(consts::ElevatorIncrement::SWITCH);
 		}
 		else if(switchPosition == 'R')
 		{
@@ -449,7 +464,7 @@ void Robot::MiddlePath(char switchPosition)
 			DriveDistance(106);
 
 			TurnAngle(angle);
-			DropCube(5, consts::ElevatorIncrement::SWITCH);
+			DropCube(consts::ElevatorIncrement::SWITCH);
 		}
 	}
 	SmartDashboard::PutString("Auto Status", "Finished MiddlePath");
