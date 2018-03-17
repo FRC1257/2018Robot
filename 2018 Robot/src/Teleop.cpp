@@ -39,8 +39,8 @@ double Robot::CapElevatorOutput(double output, bool safetyModeEnabled)
 
 	// If we're trying to run the elevator down after reaching the bottom or trying
 	// to run it up after reaching the max height, set the motor output to 0
-	if((output < 0 && currentHeight < consts::ELEVATOR_SETPOINTS[0]) ||
-			(output > 0 && currentHeight > consts::ELEVATOR_SETPOINTS[consts::NUM_ELEVATOR_SETPOINTS - 1]))
+	if((output < 0 && currentHeight < consts::ELEVATOR_SETPOINTS[0]))// ||
+			//(output > 0 && currentHeight > consts::ELEVATOR_SETPOINTS[consts::NUM_ELEVATOR_SETPOINTS - 1]))
 	{
 		output = 0;
 	}
@@ -58,7 +58,7 @@ double Robot::CapElevatorOutput(double output, bool safetyModeEnabled)
 
 bool Robot::IsElevatorTooHigh()
 {
-	return ElevatorPID.PIDGet() > 10;
+	return ElevatorPID.PIDGet() > 12.5;
 }
 
 //Driver Controls
@@ -206,8 +206,8 @@ void Robot::Intake()
 
 	// If the robot isn't using variable intake control, use the B button to intake cubes.
 	// The X button overrides the IntakeUltrasonic's safety feature
-	else if((OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) ||
-			OperatorController.GetXButton())
+	else if((OperatorController.GetXButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) ||
+			OperatorController.GetBButton())
 	{
 		RightIntakeMotor.Set(consts::INTAKE_SPEED);
 		LeftIntakeMotor.Set(-consts::INTAKE_SPEED);

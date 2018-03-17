@@ -1,5 +1,5 @@
 {
-  "dividerPosition": 0.2879746835443038,
+  "dividerPosition": 0.17721518987341772,
   "tabPane": [
     {
       "title": "Maintain Angle Tuning",
@@ -703,7 +703,7 @@
       }
     },
     {
-      "title": "Tab 8",
+      "title": "DRIVER STATION",
       "autoPopulate": false,
       "autoPopulatePrefix": "",
       "widgetPane": {
@@ -711,10 +711,10 @@
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
-          "1,0": {
+          "0,0": {
             "size": [
-              4,
-              2
+              6,
+              3
             ],
             "content": {
               "_type": "Camera Stream",
@@ -722,18 +722,7 @@
               "_title": "Axis Camera"
             }
           },
-          "1,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Elevator Height",
-              "_title": "/SmartDashboard/Elevator Height"
-            }
-          },
-          "3,2": {
+          "6,0": {
             "size": [
               1,
               1
@@ -741,22 +730,64 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Drive Speed Reduction?",
-              "_title": "/SmartDashboard/Drive Speed Reduction?",
+              "_title": "Speed Reduced?",
               "colorWhenTrue": "#7CFC00FF",
               "colorWhenFalse": "#8B0000FF"
             }
           },
-          "4,2": {
+          "6,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Elevator Height",
+              "_title": "Elevator Height"
+            }
+          },
+          "6,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Auto Delay",
+              "_title": "Delay"
+            }
+          },
+          "0,3": {
             "size": [
               2,
               1
             ],
             "content": {
-              "_type": "Speed Controller",
-              "_source0": "network_table:///LiveWindow/Ungrouped/Talon SRX [8]",
-              "_title": "LiveWindow/Ungrouped/Talon SRX [8]",
-              "controllable": false,
-              "orientation": "HORIZONTAL"
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Objective",
+              "_title": "Auto Objective"
+            }
+          },
+          "2,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Position",
+              "_title": "Auto Position"
+            }
+          },
+          "4,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Switch Approach",
+              "_title": "Switch Approach"
             }
           }
         }

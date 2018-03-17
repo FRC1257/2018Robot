@@ -5,7 +5,7 @@ namespace consts
 {
 	// Auto Constants
 	constexpr double GAME_DATA_TIMEOUT_S = 1;
-	constexpr double PID_TIMEOUT_S = 6;
+	constexpr double PID_TIMEOUT_S = 5;
 
 	// Auto Sendable Chooser enums
 	enum class AutoPosition

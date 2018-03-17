@@ -42,7 +42,22 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic()
 {
-
+//	std::string AutoCheck = "";
+//
+//	switch(AutoLocationCHooser->GetSelected())
+//	{
+//	case consts::AutoPosition::LEFT_START:
+//		break;
+//	case consts::AutoPosition::RIGHT_START:
+//		break;
+//	case consts::AutoPosition::MIDDLE_START:
+//		break;
+//	}
+//	AutoCheck += AutoLocationChooser->GetSelected();
+//	AutoCheck += AutoObjectiveChooser->GetSelected();
+//	AutoCheck += SwitchApproachChooser->GetSelected();
+//
+//	SmartDashboard::PutString("Auto Settings", AutoCheck);
 }
 
 void Robot::StopCurrentProcesses()

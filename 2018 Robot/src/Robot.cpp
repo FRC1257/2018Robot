@@ -106,8 +106,8 @@ void Robot::RobotInit()
 	visionThread.detach();
 
 	// Configure the SendableChoosers for auto
-	AutoLocationChooser->AddDefault("Left Start", consts::AutoPosition::LEFT_START);
-	AutoLocationChooser->AddObject("Middle Start", consts::AutoPosition::MIDDLE_START);
+	AutoLocationChooser->AddObject("Left Start", consts::AutoPosition::LEFT_START);
+	AutoLocationChooser->AddDefault("Middle Start", consts::AutoPosition::MIDDLE_START);
 	AutoLocationChooser->AddObject("Right Start", consts::AutoPosition::RIGHT_START);
 
 	AutoObjectiveChooser->AddDefault("Default", consts::AutoObjective::DEFAULT);
