@@ -4,12 +4,13 @@ std::string WaitForGameData();
 
 /*
  * Fix Measurements for:
- * 	Same Side Switch (NEEDS TESTING)
- * 	Same Side Scale (NEEDS TESTING)
- * 	Opposite Side Switch from Front (NOT DOING)
- * 	Opposite Side Switch from Side
- * 	Opposite Side Scale
- * 	Middle Switch from Side (NOT DOING)
+ * 	Same Side Switch                  (NEEDS TESTING)
+ * 	Same Side Scale                   (NEEDS TESTING) (NEEDS ELEVATOR)
+ * 	Opposite Side Switch from Side    (NEEDS TESTING) (NUMBERS MUST BE CHECKED)
+ * 	Opposite Side Scale               (NEEDS TESTING) (NUMBERS MUST BE CHECKED) (NEEDS ELEVATOR)
+ *
+ * 	Opposite Side Switch from Front   (NOT DOING)
+ * 	Middle Switch from Side           (NOT DOING)
  */
 
 void Robot::AutonomousInit()
@@ -234,7 +235,7 @@ void Robot::DriveDistance(double distance, double timeout)
 	SmartDashboard::PutString("Auto Status", "Drive complete");
 }
 
-void Robot::TurnAngle(double angle, double timeout = consts::PID_TIMEOUT_S)
+void Robot::TurnAngle(double angle, double timeout)
 {
 	SmartDashboard::PutString("Auto Status", "Rotating...");
 	//Disable other controllers
@@ -275,16 +276,14 @@ void Robot::DriveFor(double seconds, double speed)
 	DriveTrain.ArcadeDrive(0, 0);
 }
 
-//Drives forward a distance, places a power cube, and then backs up
+//Raises elevator, places a power cube, and then lowers elevator
 void Robot::DropCube(consts::ElevatorIncrement elevatorSetpoint)
 {
 	SmartDashboard::PutString("Auto Status", "Dropping Cube...");
-//	DriveDistance(driveSetpoint);
 
 //	RaiseElevator(elevatorSetpoint);
 	EjectCube();
 //	RaiseElevator(consts::ElevatorIncrement::GROUND);
-//	DriveDistance(-driveSetpoint);
 	SmartDashboard::PutString("Auto Status", "Cube Dropped");
 }
 
@@ -299,7 +298,7 @@ void Robot::EjectCube(double intakeSpeed)
 	SmartDashboard::PutString("Auto Status", "Ejected Cube");
 }
 
-void Robot::RaiseElevator(consts::ElevatorIncrement elevatorSetpoint, double timeout = consts::PID_TIMEOUT_S)
+void Robot::RaiseElevator(consts::ElevatorIncrement elevatorSetpoint, double timeout)
 {
 	SmartDashboard::PutString("Auto Status", "Raising Elevator...");
 	ElevatorMotor.Set(0);
@@ -319,7 +318,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 	//L for left, R for right
 	char startPosition = (start == consts::AutoPosition::LEFT_START) ? 'L' : 'R';
 
-	//Cross the baseline
+	//Get to middle of switch
 	DriveDistance(150);
 
 	//Check if the switch is nearby, and if it is, place a cube in it
@@ -335,16 +334,16 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 	//Otherwise, go forward to a better position
 	DriveDistance(100.75);
 
-	//Check if the scale is nearby, and if it is, place a cube in it
-	if(scalePosition == startPosition)
-	{
-		TurnAngle(angle / 2.0);
-		DriveDistance(11.75);
-
-		DropCube(consts::ElevatorIncrement::SCALE);
-		SmartDashboard::PutString("Auto Status", "Finished SidePath");
-		return; //End auto just in case the cube misses
-	}
+//	//Check if the scale is nearby, and if it is, place a cube in it
+//	if(scalePosition == startPosition)
+//	{
+//		TurnAngle(angle / 2.0);
+//		DriveDistance(11.75);
+//
+//		DropCube(consts::ElevatorIncrement::SCALE);
+//		SmartDashboard::PutString("Auto Status", "Finished SidePath");
+//		return; //End auto just in case the cube misses
+//	}
 }
 
 //Puts a power cube in the switch on the side opposite of the robot
@@ -353,6 +352,7 @@ void Robot::OppositeSwitch(consts::AutoPosition start)
 	SmartDashboard::PutString("Auto Status", "Starting OppositeSwitch...");
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
+	double secondAngle = (start == consts::AutoPosition::LEFT_START) ? 130 : -130;
 
 	if(SwitchApproachChooser->GetSelected() == consts::SwitchApproach::FRONT)
 	{
@@ -367,14 +367,13 @@ void Robot::OppositeSwitch(consts::AutoPosition start)
 	}
 	else
 	{
-		DriveDistance(211);
+		DriveDistance(214.75);
 		TurnAngle(angle);
 
-		DriveDistance(200);
-		TurnAngle(angle);
+		DriveDistance(251.75);
+		TurnAngle(secondAngle);
 
-		DriveDistance(62.5);
-		TurnAngle(angle);
+		DriveDistance(44.75);
 
 		DropCube(consts::ElevatorIncrement::SWITCH);
 	}
@@ -387,22 +386,16 @@ void Robot::OppositeScale(consts::AutoPosition start)
 	SmartDashboard::PutString("Auto Status", "Starting OppositeScale...");
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
+	double secondAngle = (start == consts::AutoPosition::LEFT_START) ? -150 : 150;
 
-	DriveDistance(211);
+	DriveDistance(214,75);
 	TurnAngle(angle);
 
-	DriveDistance(200);
-	TurnAngle(-angle);
+	DriveDistance(225.75);
+	TurnAngle(secondAngle);
 
-	DriveDistance(37.5);
-	TurnAngle(angle);
+	DriveDistance(52.75);
 
-	DriveDistance(14);
-	TurnAngle(-angle);
-
-	DriveDistance(56);
-
-	TurnAngle(angle);
 	DropCube(consts::ElevatorIncrement::SCALE);
 	SmartDashboard::PutString("Auto Status", "Finished OppositeScale");
 }

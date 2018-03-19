@@ -42,22 +42,52 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic()
 {
-//	std::string AutoCheck = "";
-//
-//	switch(AutoLocationCHooser->GetSelected())
-//	{
-//	case consts::AutoPosition::LEFT_START:
-//		break;
-//	case consts::AutoPosition::RIGHT_START:
-//		break;
-//	case consts::AutoPosition::MIDDLE_START:
-//		break;
-//	}
-//	AutoCheck += AutoLocationChooser->GetSelected();
-//	AutoCheck += AutoObjectiveChooser->GetSelected();
-//	AutoCheck += SwitchApproachChooser->GetSelected();
-//
-//	SmartDashboard::PutString("Auto Settings", AutoCheck);
+	std::string AutoCheck = "";
+
+	switch(AutoLocationChooser->GetSelected())
+	{
+	case consts::AutoPosition::LEFT_START:
+		AutoCheck += "Left";
+		break;
+	case consts::AutoPosition::RIGHT_START:
+		AutoCheck += "Right";
+		break;
+	case consts::AutoPosition::MIDDLE_START:
+		AutoCheck += "Middle";
+		break;
+	}
+
+	AutoCheck += ", ";
+
+	switch(AutoObjectiveChooser->GetSelected())
+	{
+	case consts::AutoObjective::BASELINE:
+		AutoCheck += "Baseline";
+		break;
+	case consts::AutoObjective::DEFAULT:
+		AutoCheck += "Default Path";
+		break;
+	case consts::AutoObjective::SCALE:
+		AutoCheck += "Scale";
+		break;
+	case consts::AutoObjective::SWITCH:
+		AutoCheck += "Switch";
+		break;
+	}
+
+	AutoCheck += ", Switch Approach: ";
+
+	switch(SwitchApproachChooser->GetSelected())
+	{
+	case consts::SwitchApproach::FRONT:
+		AutoCheck += "Front";
+		break;
+	case consts::SwitchApproach::SIDE:
+		AutoCheck += "Side";
+		break;
+	}
+
+	SmartDashboard::PutString("Auto Settings", AutoCheck);
 }
 
 void Robot::StopCurrentProcesses()
