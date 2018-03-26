@@ -288,11 +288,23 @@ void Robot::RaiseElevator(consts::ElevatorIncrement elevatorSetpoint, double tim
 {
 	double elevatorHeight = consts::ELEVATOR_SETPOINTS[elevatorSetpoint];
 
-	if(elevatorHeight != 0)
+	if(dabs(elevatorHeight - ElevatorPID.PIDGet()) > consts::ELEVATOR_PID_DEADBAND)
 	{
 		SmartDashboard::PutString("Auto Status", "Raising Elevator...");
 		ElevatorMotor.Set(0);
 		ElevatorPIDController.SetSetpoint(elevatorHeight);
+		if(elevatorHeight > ElevatorPID.PIDGet())
+		{
+			ElevatorPIDController.SetPID(consts::ELEVATOR_PID_CONSTANTS_RISING[0],
+					consts::ELEVATOR_PID_CONSTANTS_RISING[1],
+					consts::ELEVATOR_PID_CONSTANTS_RISING[2]);
+		}
+		else
+		{
+			ElevatorPIDController.SetPID(consts::ELEVATOR_PID_CONSTANTS_LOWERING[0],
+					consts::ELEVATOR_PID_CONSTANTS_LOWERING[1],
+					consts::ELEVATOR_PID_CONSTANTS_LOWERING[2]);
+		}
 		ElevatorPIDController.Enable();
 
 		WaitUntilPIDSteady(ElevatorPIDController, ElevatorPID, timeout);

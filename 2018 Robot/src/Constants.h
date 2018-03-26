@@ -47,6 +47,10 @@ namespace consts
 	constexpr double ELEVATOR_INCREMENT_PER_CYCLE = 35. / 20.; // 35" per second
 	constexpr double ELEVATOR_SPEED_REDUCTION = 1 / 3;
 
+	constexpr double ELEVATOR_PID_DEADBAND = 1.0;
+	constexpr double ELEVATOR_PID_CONSTANTS_RISING[] = {0.25, 0., 0.};
+	constexpr double ELEVATOR_PID_CONSTANTS_LOWERING[] = {0.25, 0., 0.};
+
 	// Talon configuration constants
 	constexpr int PID_LOOP_ID = 0;
 	constexpr int TALON_TIMEOUT_MS = 10;
