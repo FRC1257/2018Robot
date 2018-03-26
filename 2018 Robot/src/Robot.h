@@ -102,16 +102,16 @@ public:
 
 	// Autonomous Robot Functionality
 	void DriveFor(double seconds, double speed);
-	void DriveDistance(double distance);
-	void TurnAngle(double angle);
+	void DriveDistance(double distance, double timeout = consts::PID_TIMEOUT_S);
+	void TurnAngle(double angle, double timeout = consts::PID_TIMEOUT_S);
 	void DriveToBaseline();
 	void SidePath(consts::AutoPosition start, char switchPosition, char scalePosition);
 	void OppositeSwitch(consts::AutoPosition start);
 	void OppositeScale(consts::AutoPosition start);
 	void MiddlePath(char switchPosition);
-	void DropCube(double driveSetpoint, consts::ElevatorIncrement elevatorSetpoint);
+	void DropCube(consts::ElevatorIncrement elevatorSetpoint);
 	void EjectCube();
-	void RaiseElevator(consts::ElevatorIncrement elevatorSetpoint);
+	void RaiseElevator(consts::ElevatorIncrement elevatorSetpoint, double timeout = consts::PID_TIMEOUT_S);
 
 	// Camera Stream code
 	static void VisionThread();

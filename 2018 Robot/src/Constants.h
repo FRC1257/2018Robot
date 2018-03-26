@@ -36,15 +36,14 @@ namespace consts
 	enum ElevatorIncrement
 	{
 		GROUND,
-		SWITCH,
-		MIDDLE,
-		SCALE,
-		MAXHEIGHT
+		SCALE_LOW,
+		SCALE_MID,
+		SCALE_HIGH
 	};
 
 	// Elevator Constants
-	constexpr int NUM_ELEVATOR_SETPOINTS = 5;
-	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {3, 20, 40, 60, 70};
+	constexpr int NUM_ELEVATOR_SETPOINTS = 4;
+	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {0, 20, 40, 60};
 	constexpr double ELEVATOR_INCREMENT_PER_CYCLE = 35. / 20.; // 35" per second
 	constexpr double ELEVATOR_SPEED_REDUCTION = 1 / 3;
 
