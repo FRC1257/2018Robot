@@ -120,7 +120,7 @@ void Robot::AutonomousInit()
 				case consts::AutoObjective::DEFAULT:
 				default:
 					SmartDashboard::PutString("Auto Path", "Right: Default Path");
-					SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
+					SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
 					break;
 			}
 			break;
@@ -310,31 +310,27 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 	char startPosition = (start == consts::AutoPosition::LEFT_START) ? 'L' : 'R';
 
 	//Cross the baseline
-	DriveDistance(148);
+	DriveDistance(150);
 
 	//Check if the switch is nearby, and if it is, place a cube in it
 	if(switchPosition == startPosition)
 	{
 		TurnAngle(angle);
-		DriveDistance(22, 2.75);
+		DriveDistance(18.25, 2.75);
 		DropCube(consts::ElevatorIncrement::GROUND);
 		SmartDashboard::PutString("Auto Status", "Finished SidePath");
 		return; //End auto just in case the cube misses
 	}
 
 	//Otherwise, go forward to a better position
-	DriveDistance(100);
+	DriveDistance(103);
 
 	//Check if the scale is nearby, and if it is, place a cube in it
 	if(scalePosition == startPosition)
 	{
-		TurnAngle(-angle);
-		DriveDistance(14);
+		TurnAngle(angle / 2.0);
+		DriveDistance(18.7);
 
-		TurnAngle(angle);
-		DriveDistance(56);
-
-		TurnAngle(angle);
 		DropCube(consts::ElevatorIncrement::SCALE_HIGH);
 		SmartDashboard::PutString("Auto Status", "Finished SidePath");
 		return; //End auto just in case the cube misses
@@ -350,26 +346,26 @@ void Robot::OppositeSwitch(consts::AutoPosition start)
 
 	if(SwitchApproachChooser->GetSelected() == consts::SwitchApproach::FRONT)
 	{
-		DriveDistance(42.5);
-		TurnAngle(angle);
-
-		DriveDistance(155);
-		TurnAngle(-angle);
-
-		TurnAngle(angle);
-		DropCube(consts::ElevatorIncrement::GROUND);
+//		DriveDistance(42.5);
+//		TurnAngle(angle);
+//
+//		DriveDistance(155);
+//		TurnAngle(-angle);
+//
+//		TurnAngle(angle);
+//		DropCube(consts::ElevatorIncrement::GROUND);
 	}
 	else
 	{
-		DriveDistance(211);
+		DriveDistance(215.4);
 		TurnAngle(angle);
 
-		DriveDistance(200);
+		DriveDistance(171.5);
 		TurnAngle(angle);
 
-		DriveDistance(62.5);
-		TurnAngle(angle);
+		DriveDistance(6.85);
 
+		//TENTATIVE, MIGHT NEED TO RAISE ELEVATOR
 		DropCube(consts::ElevatorIncrement::GROUND);
 	}
 	SmartDashboard::PutString("Auto Status", "Finished OppositeSwitch");
@@ -381,20 +377,15 @@ void Robot::OppositeScale(consts::AutoPosition start)
 	SmartDashboard::PutString("Auto Status", "Starting OppositeScale...");
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
+	double secondAngle = (start == consts::AutoPosition::LEFT_START) ? -120 : 120;
 
-	DriveDistance(211);
+	DriveDistance(215.4);
 	TurnAngle(angle);
 
-	DriveDistance(200);
-	TurnAngle(-angle);
+	DriveDistance(245);
+	TurnAngle(secondAngle);
 
-	DriveDistance(37.5);
-	TurnAngle(angle);
-
-	DriveDistance(14);
-	TurnAngle(-angle);
-
-	DriveDistance(56);
+	DriveDistance(55.25);
 
 	DropCube(consts::ElevatorIncrement::SCALE_HIGH);
 	SmartDashboard::PutString("Auto Status", "Finished OppositeScale");
@@ -407,33 +398,10 @@ void Robot::MiddlePath(char switchPosition)
 	double angle = 90;
 
 	//Go forward
-	DriveDistance(42.5);
+	DriveDistance(48);
 
 	//Check which way the cube should be placed
-	if(SwitchApproachChooser->GetSelected() == consts::SwitchApproach::FRONT)
-	{
-		//If the cube is being placed from the front
-		if(switchPosition == 'L')
-		{
-			TurnAngle(-angle);
-			DriveDistance(80);
-
-			TurnAngle(angle);
-			DropCube(consts::ElevatorIncrement::GROUND);
-		}
-		else if(switchPosition == 'R')
-		{
-			TurnAngle(angle);
-			DriveDistance(29);
-
-			TurnAngle(-angle);
-			DriveDistance(106);
-
-			TurnAngle(angle);
-			DropCube(consts::ElevatorIncrement::GROUND);
-		}
-	}
-	else
+	if(SwitchApproachChooser->GetSelected() == consts::SwitchApproach::SIDE)
 	{
 		//If the cube is being placed from the side
 		if(switchPosition == 'L')
@@ -445,13 +413,36 @@ void Robot::MiddlePath(char switchPosition)
 			DriveDistance(106);
 
 			TurnAngle(angle);
-			DriveDistance(60, 2.75);
 			DropCube(consts::ElevatorIncrement::GROUND);
 		}
 		else if(switchPosition == 'R')
 		{
 			TurnAngle(angle);
 			DriveDistance(74);
+
+			TurnAngle(-angle);
+			DriveDistance(106);
+
+			TurnAngle(angle);
+			DropCube(consts::ElevatorIncrement::GROUND);
+		}
+	}
+	else
+	{
+		//If the cube is being placed from the front
+		if(switchPosition == 'L')
+		{
+			TurnAngle(-angle);
+			DriveDistance(52);
+
+			TurnAngle(angle);
+			DriveDistance(60, 2.75);
+			DropCube(consts::ElevatorIncrement::GROUND);
+		}
+		else if(switchPosition == 'R')
+		{
+			TurnAngle(angle);
+			DriveDistance(52);
 
 			TurnAngle(-angle);
 			DriveDistance(60, 2.75);
