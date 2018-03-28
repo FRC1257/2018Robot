@@ -113,11 +113,37 @@ void Robot::ManualElevator()
 	double lowerElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
 			GenericHID::JoystickHand::kLeftHand));
 
+	double elevatorSpeed;
+
+	bool overrideKeysBeingPressed = OperatorController.GetBumper(GenericHID::kLeftHand) &&
+			OperatorController.GetBumper(GenericHID::kRightHand);
+	bool overridesJustReleased = ( (OperatorController.GetBumperReleased(GenericHID::kLeftHand) &&
+			!OperatorController.GetBumper(GenericHID::kRightHand)) || (OperatorController.GetBumperReleased(GenericHID::kRightHand) &&
+			!OperatorController.GetBumper(GenericHID::kLeftHand)));
+
+	// If the two override keys are being pressed, allow the elevator to move past the predefined stop points
+	// --> This is done to prevent a faulty start configuration from setting the lowest elevator setting at a higher point than
+	//     intended
+	if(overrideKeysBeingPressed)
+	{
+		elevatorSpeed = dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput);
+	}
+	// If the bumpers are released and the encoder position is negative, rezero the elevator at that point
+	else if(overridesJustReleased && ElevatorPID.PIDGet() < 0)
+	{
+		elevatorSpeed = 0;
+		ElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
+	}
+	else
+	{
+		elevatorSpeed = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
+	}
+
+	// If the triggers are being pressed
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
 		ElevatorPIDController.Disable();
-		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
-		ElevatorMotor.Set(output);
+		ElevatorMotor.Set(elevatorSpeed);
 		return;
 	}
 	else
@@ -247,10 +273,34 @@ void Robot::Climb()
 	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 }
 
+bool Robot::IsLinkageFreeToMove(double motorSpeed)
+{
+	// If the motor has reached a limit switch and wants to move further, it isn't free to move
+	//if((motorSpeed > 0 && LinkageMotor.GetSelectedSensorPosition(0)) || (motorSpeed > 0 && LinkageMotor.GetSelectedSensorPosition(1)))
+	if(false)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
 void Robot::Linkage()
 {
+
 	// Use the left y-axis to do the linkage
-	LinkageMotor.Set(OperatorController.GetY(GenericHID::JoystickHand::kLeftHand));
+	double motorSpeed = OperatorController.GetY(GenericHID::JoystickHand::kLeftHand);
+
+	if(IsLinkageFreeToMove(motorSpeed))
+	{
+		LinkageMotor.Set(motorSpeed);
+	}
+	else
+	{
+		LinkageMotor.Set(0);
+	}
 }
 
 void Robot::TeleopInit()
