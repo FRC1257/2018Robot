@@ -35,21 +35,24 @@ namespace consts
 	enum ElevatorIncrement
 	{
 		GROUND,
-		SWITCH,
-		MIDDLE,
-		SCALE,
-		MAXHEIGHT
+		SCALE_LOW,
+		SCALE_MID,
+		SCALE_HIGH
 	};
 
 	constexpr double DRIVE_SPEED_REDUCTION = 5. / 8.;
 
 	// Elevator Constants
 	constexpr int NUM_ELEVATOR_SETPOINTS = 4;
-	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {3, 20, 40, 60};
+	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {2, 20, 40, 60};
 	constexpr double ELEVATOR_INCREMENT_PER_CYCLE = 35. / 20.; // 35" per second
 	constexpr double ELEVATOR_SPEED_REDUCTION = 1. / 3.;
 	constexpr int ELEVATOR_CONT_CURRENT_MAX = 60;
 	constexpr int ELEVATOR_CONT_CURRENT_TIMEOUT_MS = 2000;
+
+	constexpr double ELEVATOR_PID_DEADBAND = 1.0;
+	constexpr double ELEVATOR_PID_CONSTANTS_RISING[] = {0.25, 0., 0.};
+	constexpr double ELEVATOR_PID_CONSTANTS_LOWERING[] = {0.25, 0., 0.};
 
 	// Talon configuration constants
 	constexpr int PID_LOOP_ID = 0;
