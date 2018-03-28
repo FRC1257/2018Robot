@@ -101,7 +101,7 @@ public:
 	void TestPeriodic() override;
 
 	// Autonomous Robot Functionality
-	void DriveFor(double seconds, double speed);
+	void DriveFor(double seconds, double speed = 0.5);
 	void DriveDistance(double distance, double timeout = consts::PID_TIMEOUT_S);
 	void TurnAngle(double angle, double timeout = consts::PID_TIMEOUT_S);
 	void DriveToBaseline();
@@ -110,7 +110,7 @@ public:
 	void OppositeScale(consts::AutoPosition start);
 	void MiddlePath(char switchPosition);
 	void DropCube(consts::ElevatorIncrement elevatorSetpoint);
-	void EjectCube();
+	void EjectCube(double intakeSpeed = consts::INTAKE_SPEED);
 	void RaiseElevator(consts::ElevatorIncrement elevatorSetpoint, double timeout = consts::PID_TIMEOUT_S);
 
 	// Camera Stream code
@@ -119,7 +119,7 @@ public:
 	// Code to kill current processes between robot loops
 	void StopCurrentProcesses();
 	void ResetSensors();
-	void ResetEncoders();
+	void ResetDriveEncoders();
 	void DisablePIDControllers();
 	void ZeroMotors();
 
@@ -130,6 +130,10 @@ public:
 	void Climb();
 	void Intake();
 	void Linkage();
+
+	// Safety Functions
+	bool IsElevatorTooHigh();
+	bool IsLinkageFreeToMove(double motorSpeed);
 
 	// Automatic elevator functionality
 	double GetClosestStepNumber();
@@ -143,6 +147,7 @@ public:
 	void FullElevatorTest();
 	void PIDElevatorTest();
 	void ManualElevatorTest();
+	void AutoElevatorTest();
 	void LinkageTest();
 	void IntakeTest();
 	void ClimbTest();

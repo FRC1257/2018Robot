@@ -1,5 +1,5 @@
 {
-  "dividerPosition": 0.27610759493670883,
+  "dividerPosition": 0.18354430379746836,
   "tabPane": [
     {
       "title": "Maintain Angle Tuning",
@@ -35,7 +35,7 @@
           "2,1": {
             "size": [
               2,
-              2
+              1
             ],
             "content": {
               "_type": "Text View",
@@ -87,17 +87,6 @@
               "_title": "SmartDashboard/Test Maintain"
             }
           },
-          "4,0": {
-            "size": [
-              6,
-              5
-            ],
-            "content": {
-              "_type": "Graph",
-              "_title": "Graph (no sources)",
-              "Visible time": 30.0
-            }
-          },
           "2,6": {
             "size": [
               2,
@@ -118,6 +107,18 @@
               "_type": "Toggle Button",
               "_source0": "network_table:///SmartDashboard/Reset Encoders",
               "_title": "SmartDashboard/Reset Encoders"
+            }
+          },
+          "4,0": {
+            "size": [
+              7,
+              5
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Angle Sensor",
+              "_title": "SmartDashboard/Angle Sensor",
+              "Visible time": 30.0
             }
           }
         }
@@ -246,11 +247,12 @@
           "2,0": {
             "size": [
               4,
-              3
+              4
             ],
             "content": {
               "_type": "Graph",
-              "_title": "Graph (no sources)",
+              "_source0": "network_table:///SmartDashboard/Angle Sensor",
+              "_title": "SmartDashboard/Angle Sensor",
               "Visible time": 30.0
             }
           }
@@ -258,92 +260,14 @@
       }
     },
     {
-      "title": "Test Mode",
+      "title": "Teleop Testing",
       "autoPopulate": false,
       "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 128.0,
         "hgap": 16.0,
         "vgap": 16.0,
-        "tiles": {
-          "0,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Button",
-              "_source0": "network_table:///SmartDashboard/Enable Climb",
-              "_title": "SmartDashboard/Enable Climb"
-            }
-          },
-          "0,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Button",
-              "_source0": "network_table:///SmartDashboard/Enable Drive",
-              "_title": "SmartDashboard/Enable Drive"
-            }
-          },
-          "0,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Button",
-              "_source0": "network_table:///SmartDashboard/Enable Full Elevator",
-              "_title": "SmartDashboard/Enable Full Elevator"
-            }
-          },
-          "4,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Button",
-              "_source0": "network_table:///SmartDashboard/Enable Intake",
-              "_title": "SmartDashboard/Enable Intake"
-            }
-          },
-          "2,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Button",
-              "_source0": "network_table:///SmartDashboard/Enable Linkage",
-              "_title": "SmartDashboard/Enable Linkage"
-            }
-          },
-          "2,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Button",
-              "_source0": "network_table:///SmartDashboard/Enable Manual Elevator",
-              "_title": "SmartDashboard/Enable Manual Elevator"
-            }
-          },
-          "2,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Button",
-              "_source0": "network_table:///SmartDashboard/Enable PID Elevator",
-              "_title": "SmartDashboard/Enable PID Elevator"
-            }
-          }
-        }
+        "tiles": {}
       }
     },
     {
@@ -450,8 +374,8 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Angle PID Output",
-              "_title": "/SmartDashboard/Angle PID Output"
+              "_source0": "network_table:///SmartDashboard/Distance PID Output",
+              "_title": "/SmartDashboard/Distance PID Output"
             }
           },
           "5,1": {
@@ -460,12 +384,14 @@
               1
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Distance PID Output",
-              "_title": "/SmartDashboard/Distance PID Output"
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/DistancePID OnTarget",
+              "_title": "/SmartDashboard/DistancePID OnTarget",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
             }
           },
-          "0,2": {
+          "3,2": {
             "size": [
               3,
               2
@@ -477,7 +403,7 @@
               "Visible time": 30.0
             }
           },
-          "3,2": {
+          "0,2": {
             "size": [
               3,
               2
@@ -672,20 +598,9 @@
               "_title": "SmartDashboard/Auto Position"
             }
           },
-          "0,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/Middle Approach",
-              "_title": "SmartDashboard/Middle Approach"
-            }
-          },
           "2,1": {
             "size": [
-              1,
+              2,
               1
             ],
             "content": {
@@ -718,7 +633,7 @@
               "_title": "/SmartDashboard/PID Velocity"
             }
           },
-          "3,1": {
+          "5,0": {
             "size": [
               1,
               1
@@ -782,6 +697,97 @@
               "_type": "PID Controller",
               "_source0": "network_table:///LiveWindow/Ungrouped/PIDController[3]",
               "_title": "LiveWindow/Ungrouped/PIDController[3]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "DRIVER STATION",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              6,
+              3
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://Axis Camera",
+              "_title": "Axis Camera"
+            }
+          },
+          "6,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Drive Speed Reduction?",
+              "_title": "Speed Reduced?",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
+            }
+          },
+          "6,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Elevator Height",
+              "_title": "Elevator Height"
+            }
+          },
+          "6,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Auto Delay",
+              "_title": "Delay"
+            }
+          },
+          "0,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Objective",
+              "_title": "Auto Objective"
+            }
+          },
+          "2,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Position",
+              "_title": "Auto Position"
+            }
+          },
+          "4,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Switch Approach",
+              "_title": "Switch Approach"
             }
           }
         }

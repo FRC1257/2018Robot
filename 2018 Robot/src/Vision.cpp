@@ -3,9 +3,15 @@
 void Robot::VisionThread()
 {
 	// Get the Axis camera from CameraServer
-	cs::AxisCamera camera = CameraServer::GetInstance()->AddAxisCamera("axis-camera.local");
-	camera.SetResolution(640, 480);
-
+	try
+	{
+		cs::AxisCamera camera = CameraServer::GetInstance()->AddAxisCamera("10.12.57.11");
+		camera.SetResolution(640, 480);
+	}
+	catch(...)
+	{
+		DriverStation::GetInstance().ReportError("Can't connect to axis camera");
+	}
 	/* How we would add an additional camera stream (for use w/ openCV)
 	 *
 	// Get a CvSink. This will capture Mats from the Camera

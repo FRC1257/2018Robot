@@ -39,8 +39,8 @@ double Robot::CapElevatorOutput(double output, bool safetyModeEnabled)
 
 	// If we're trying to run the elevator down after reaching the bottom or trying
 	// to run it up after reaching the max height, set the motor output to 0
-	if((output < 0 && currentHeight < consts::ELEVATOR_SETPOINTS[0]) ||
-			(output > 0 && currentHeight > consts::ELEVATOR_SETPOINTS[consts::NUM_ELEVATOR_SETPOINTS - 1]))
+	if((output < 0 && currentHeight < consts::ELEVATOR_SETPOINTS[0]))// ||
+			//(output > 0 && currentHeight > consts::ELEVATOR_SETPOINTS[consts::NUM_ELEVATOR_SETPOINTS - 1]))
 	{
 		output = 0;
 	}
@@ -54,6 +54,11 @@ double Robot::CapElevatorOutput(double output, bool safetyModeEnabled)
 	}
 
 	return output;
+}
+
+bool Robot::IsElevatorTooHigh()
+{
+	return ElevatorPID.PIDGet() > 12.5;
 }
 
 //Driver Controls
@@ -83,6 +88,15 @@ void Robot::Drive()
 		turnSpeed = DriveController.GetX(GenericHID::JoystickHand::kLeftHand);
 	}
 
+	// Ensure the robot doesn't drive at full speed while the elevator is up
+	if(IsElevatorTooHigh())
+	{
+		forwardSpeed *= consts::DRIVE_SPEED_REDUCTION;
+		turnSpeed *= consts::DRIVE_SPEED_REDUCTION;
+	}
+
+	SmartDashboard::PutBoolean("Drive Speed Reduction?", IsElevatorTooHigh());
+
 	// Negative is used to make forward positive and backwards negative
 	// because the y-axes of the XboxController are natively inverted
 	DriveTrain.ArcadeDrive(-forwardSpeed, turnSpeed);
@@ -99,14 +113,40 @@ void Robot::ManualElevator()
 	double lowerElevatorOutput = applyDeadband(OperatorController.GetTriggerAxis(
 			GenericHID::JoystickHand::kLeftHand));
 
+	double elevatorSpeed;
+
+	bool overrideKeysBeingPressed = OperatorController.GetBumper(GenericHID::kLeftHand) &&
+			OperatorController.GetBumper(GenericHID::kRightHand);
+	bool overridesJustReleased = ( (OperatorController.GetBumperReleased(GenericHID::kLeftHand) &&
+			!OperatorController.GetBumper(GenericHID::kRightHand)) || (OperatorController.GetBumperReleased(GenericHID::kRightHand) &&
+			!OperatorController.GetBumper(GenericHID::kLeftHand)));
+
+	// If the two override keys are being pressed, allow the elevator to move past the predefined stop points
+	// --> This is done to prevent a faulty start configuration from setting the lowest elevator setting at a higher point than
+	//     intended
+	if(overrideKeysBeingPressed)
+	{
+		elevatorSpeed = dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput);
+	}
+	// If the bumpers are released and the encoder position is negative, rezero the elevator at that point
+	else if(overridesJustReleased && ElevatorPID.PIDGet() < 0)
+	{
+		elevatorSpeed = 0;
+		ElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
+	}
+	else
+	{
+		elevatorSpeed = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
+	}
+
+	// If the triggers are being pressed
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
 		ElevatorPIDController.Disable();
-		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
-		ElevatorMotor.Set(output);
+		ElevatorMotor.Set(elevatorSpeed);
 		return;
 	}
-	else if(!ElevatorPIDController.IsEnabled())
+	else
 	{
 		ElevatorMotor.Set(0);
 	}
@@ -140,7 +180,7 @@ void Robot::Elevator()
 	}
 
 	// Automatic Mode is controlled by both bumpers
-	if (OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
+	if (OperatorController.GetBumperPressed(GenericHID::JoystickHand::kRightHand))
 	{
 		// If elevator is lowering and the right bumper is pressed, stop elevator where it is
 		if (m_isElevatorLowering)
@@ -157,7 +197,7 @@ void Robot::Elevator()
 				m_targetElevatorStep = GetClosestStepNumber();
 			}
 			// If right bumper has already been pressed, go to the next step.
-			else if (m_targetElevatorStep < 4)
+			else if (m_targetElevatorStep < consts::NUM_ELEVATOR_SETPOINTS - 1)
 			{
 				m_targetElevatorStep++;
 			}
@@ -167,19 +207,33 @@ void Robot::Elevator()
 		}
 	}
 	// The left bumper will lower the elevator to the bottom
-	if (OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
+	if (OperatorController.GetBumperPressed(GenericHID::JoystickHand::kLeftHand))
 	{
 		m_isElevatorLowering = true;
-		ElevatorPIDController.SetSetpoint(0);
+		ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[0]);
 		ElevatorPIDController.Enable();
 	}
 }
 
 void Robot::Intake()
 {
-	// Use the B button to intake, X button to override IntakeUltrasonic
-	if((OperatorController.GetBButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) ||
-			OperatorController.GetXButton())
+	// Use the Right Y-axis for variable intake speed
+	double intakeSpeed = applyDeadband(OperatorController.GetY(GenericHID::kRightHand));
+	if(intakeSpeed != 0)
+	{
+		// If you're spinning the intaking a cube, but it is already within the intake, set the speed to 0
+		if(intakeSpeed < 0 && IntakeUltrasonic.GetRangeInches() < consts::MIN_DISTANCE_TO_CUBE)
+		{
+			intakeSpeed = 0;
+		}
+		RightIntakeMotor.Set(intakeSpeed);
+		LeftIntakeMotor.Set(-intakeSpeed);
+	}
+
+	// If the robot isn't using variable intake control, use the B button to intake cubes.
+	// The X button overrides the IntakeUltrasonic's safety feature
+	else if((OperatorController.GetXButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) ||
+			OperatorController.GetBButton())
 	{
 		RightIntakeMotor.Set(consts::INTAKE_SPEED);
 		LeftIntakeMotor.Set(-consts::INTAKE_SPEED);
@@ -205,18 +259,48 @@ void Robot::Climb()
 	// Use the y button to climb
 	if(OperatorController.GetYButton())
 	{
-		ClimbMotor.Set(0.5);
+		ClimbMotor.Set(1);
+	}
+	else if(OperatorController.GetStartButton())
+	{
+		ClimbMotor.Set(-1);
 	}
 	else
 	{
 		ClimbMotor.Set(0);
 	}
+
+	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
+}
+
+bool Robot::IsLinkageFreeToMove(double motorSpeed)
+{
+	// If the motor has reached a limit switch and wants to move further, it isn't free to move
+	//if((motorSpeed > 0 && LinkageMotor.GetSelectedSensorPosition(0)) || (motorSpeed > 0 && LinkageMotor.GetSelectedSensorPosition(1)))
+	if(false)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 void Robot::Linkage()
 {
+
 	// Use the left y-axis to do the linkage
-	LinkageMotor.Set(OperatorController.GetY(GenericHID::JoystickHand::kLeftHand));
+	double motorSpeed = OperatorController.GetY(GenericHID::JoystickHand::kLeftHand);
+
+	if(IsLinkageFreeToMove(motorSpeed))
+	{
+		LinkageMotor.Set(motorSpeed);
+	}
+	else
+	{
+		LinkageMotor.Set(0);
+	}
 }
 
 void Robot::TeleopInit()
@@ -231,5 +315,4 @@ void Robot::TeleopPeriodic()
 	Intake();
 	Climb();
 	Linkage();
-	CurrentTest();
 }
