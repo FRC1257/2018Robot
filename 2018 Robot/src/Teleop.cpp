@@ -291,7 +291,7 @@ void Robot::Linkage()
 {
 
 	// Use the left y-axis to do the linkage
-	double motorSpeed = OperatorController.GetY(GenericHID::JoystickHand::kLeftHand);
+	double motorSpeed = -OperatorController.GetY(GenericHID::JoystickHand::kLeftHand);
 
 	if(IsLinkageFreeToMove(motorSpeed))
 	{
