@@ -59,7 +59,8 @@ private:
 	WPI_TalonSRX LinkageMotor;
 	WPI_TalonSRX RightIntakeMotor;
 	WPI_TalonSRX ClimbMotor;
-	WPI_TalonSRX ElevatorMotor;
+	WPI_TalonSRX RightElevatorMotor;
+	Talon LeftElevatorMotor;
 	WPI_TalonSRX LeftIntakeMotor;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;

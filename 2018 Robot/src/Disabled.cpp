@@ -126,6 +126,7 @@ void Robot::ZeroMotors()
 	LinkageMotor.Set(0);
 	RightIntakeMotor.Set(0);
 	ClimbMotor.Set(0);
-	ElevatorMotor.Set(0);
+	RightElevatorMotor.Set(0);
+	LeftElevatorMotor.Set(0);
 	LeftIntakeMotor.Set(0);
 }

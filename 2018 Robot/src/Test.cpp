@@ -273,12 +273,14 @@ void Robot::ManualElevatorTest()
 		ElevatorPIDController.Disable();
 		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput),
 				SmartDashboard::GetBoolean("Toggle Elevator Safety", 0));
-		ElevatorMotor.Set(output);
+		RightElevatorMotor.Set(output);
+		LeftElevatorMotor.Set(output);
 		return;
 	}
 	else if(!ElevatorPIDController.IsEnabled())
 	{
-		ElevatorMotor.Set(0);
+		RightElevatorMotor.Set(0);
+		LeftElevatorMotor.Set(0);
 	}
 }
 
@@ -400,12 +402,14 @@ void Robot::FullElevatorTest()
 		ElevatorPIDController.Disable();
 		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput),
 				SmartDashboard::GetBoolean("Toggle Elevator Safety", 0));
-		ElevatorMotor.Set(output);
+		RightElevatorMotor.Set(output);
+		LeftElevatorMotor.Set(output);
 		return;
 	}
 	else if(!ElevatorPIDController.IsEnabled())
 	{
-		ElevatorMotor.Set(0);
+		RightElevatorMotor.Set(0);
+		LeftElevatorMotor.Set(0);
 	}
 
 	// Automatic Mode is controlled by both bumpers
@@ -414,7 +418,8 @@ void Robot::FullElevatorTest()
 		// If elevator is lowering and the right bumper is pressed, stop elevator where it is
 		if (m_isElevatorLowering)
 		{
-			ElevatorMotor.Set(0);
+			RightElevatorMotor.Set(0);
+			LeftElevatorMotor.Set(0);
 			m_isElevatorLowering = false;
 			ElevatorPIDController.Disable();
 		}

@@ -17,12 +17,12 @@ double Robot::GetClosestStepNumber()
 bool isApproachingMechanicalStop(double output, double currentHeight)
 {
 	// If the elevator is moving down towards the bottom
-	if(output < 0 && currentHeight < consts::ELEVATOR_SETPOINTS[1])
+	if(output < 0 && currentHeight < consts::ELEVATOR_SETPOINTS[consts::ElevatorIncrement::SCALE_LOW])
 	{
 		return true;
 	}
 	// If the elevator is moving up towards the top
-	else if (output > 0 && currentHeight > consts::ELEVATOR_SETPOINTS[consts::NUM_ELEVATOR_SETPOINTS - 2])
+	else if (output > 0 && currentHeight > consts::ELEVATOR_SETPOINTS[consts::ElevatorIncrement::SCALE_HIGH])
 	{
 		return true;
 	}
@@ -39,8 +39,8 @@ double Robot::CapElevatorOutput(double output, bool safetyModeEnabled)
 
 	// If we're trying to run the elevator down after reaching the bottom or trying
 	// to run it up after reaching the max height, set the motor output to 0
-	if((output < 0 && currentHeight < consts::ELEVATOR_SETPOINTS[0]))// ||
-			//(output > 0 && currentHeight > consts::ELEVATOR_SETPOINTS[consts::NUM_ELEVATOR_SETPOINTS - 1]))
+	if((output < 0 && currentHeight < consts::ELEVATOR_SETPOINTS[consts::ElevatorIncrement::GROUND]))
+			// ||(output > 0 && currentHeight > consts::ELEVATOR_SETPOINTS[consts::ElevatorIncrement::MAX_HEIGHT]))
 	{
 		output = 0;
 	}
@@ -115,7 +115,7 @@ void Robot::ManualElevator()
 
 	double elevatorSpeed;
 
-	bool overrideKeysBeingPressed = OperatorController.GetBumper(GenericHID::kLeftHand) &&
+	bool overridesBeingPressed = OperatorController.GetBumper(GenericHID::kLeftHand) &&
 			OperatorController.GetBumper(GenericHID::kRightHand);
 	bool overridesJustReleased = ( (OperatorController.GetBumperReleased(GenericHID::kLeftHand) &&
 			!OperatorController.GetBumper(GenericHID::kRightHand)) || (OperatorController.GetBumperReleased(GenericHID::kRightHand) &&
@@ -124,7 +124,7 @@ void Robot::ManualElevator()
 	// If the two override keys are being pressed, allow the elevator to move past the predefined stop points
 	// --> This is done to prevent a faulty start configuration from setting the lowest elevator setting at a higher point than
 	//     intended
-	if(overrideKeysBeingPressed)
+	if(overridesBeingPressed)
 	{
 		elevatorSpeed = dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput);
 	}
@@ -132,7 +132,7 @@ void Robot::ManualElevator()
 	else if(overridesJustReleased && ElevatorPID.PIDGet() < 0)
 	{
 		elevatorSpeed = 0;
-		ElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
+		RightElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 	}
 	else
 	{
@@ -143,13 +143,20 @@ void Robot::ManualElevator()
 	if(raiseElevatorOutput != 0.0 || lowerElevatorOutput != 0.0)
 	{
 		ElevatorPIDController.Disable();
-		ElevatorMotor.Set(elevatorSpeed);
+		RightElevatorMotor.Set(elevatorSpeed);
+		LeftElevatorMotor.Set(elevatorSpeed);
 		return;
 	}
 	else
 	{
-		ElevatorMotor.Set(0);
+		RightElevatorMotor.Set(0);
+		LeftElevatorMotor.Set(0);
 	}
+
+	// Test output
+	SmartDashboard::PutBoolean("OverridesPressed", overridesBeingPressed);
+	SmartDashboard::PutBoolean("OverridesReleased", overridesJustReleased);
+	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 }
 
 // Operator Controls
@@ -171,12 +178,14 @@ void Robot::Elevator()
 	{
 		ElevatorPIDController.Disable();
 		double output = CapElevatorOutput(dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput));
-		ElevatorMotor.Set(output);
+		RightElevatorMotor.Set(output);
+		LeftElevatorMotor.Set(output);
 		return;
 	}
 	else if(!ElevatorPIDController.IsEnabled())
 	{
-		ElevatorMotor.Set(0);
+		RightElevatorMotor.Set(0);
+		LeftElevatorMotor.Set(0);
 	}
 
 	// Automatic Mode is controlled by both bumpers
@@ -185,7 +194,8 @@ void Robot::Elevator()
 		// If elevator is lowering and the right bumper is pressed, stop elevator where it is
 		if (m_isElevatorLowering)
 		{
-			ElevatorMotor.Set(0);
+			RightElevatorMotor.Set(0);
+			LeftElevatorMotor.Set(0);
 			m_isElevatorLowering = false;
 			ElevatorPIDController.Disable();
 		}
@@ -210,7 +220,7 @@ void Robot::Elevator()
 	if (OperatorController.GetBumperPressed(GenericHID::JoystickHand::kLeftHand))
 	{
 		m_isElevatorLowering = true;
-		ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[0]);
+		ElevatorPIDController.SetSetpoint(consts::ELEVATOR_SETPOINTS[consts::ElevatorIncrement::GROUND]);
 		ElevatorPIDController.Enable();
 	}
 }

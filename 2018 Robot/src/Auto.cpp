@@ -305,7 +305,7 @@ void Robot::RaiseElevator(consts::ElevatorIncrement elevatorSetpoint, double tim
 	if(dabs(elevatorHeight - ElevatorPID.PIDGet()) > consts::ELEVATOR_PID_DEADBAND)
 	{
 		SmartDashboard::PutString("Auto Status", "Raising Elevator...");
-		ElevatorMotor.Set(0);
+		RightElevatorMotor.Set(0);
 		ElevatorPIDController.SetSetpoint(elevatorHeight);
 		if(elevatorHeight > ElevatorPID.PIDGet())
 		{

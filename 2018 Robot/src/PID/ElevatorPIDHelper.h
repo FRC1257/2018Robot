@@ -11,10 +11,11 @@ class ElevatorPIDHelper : public PIDSource, public PIDOutput
 {
 private:
 	WPI_TalonSRX* m_TalonWithEncoder;
+	Talon* m_FollowerMotor;
 	static constexpr double m_DRUM_DIAMETER = 1.5;
 
 public:
-	ElevatorPIDHelper(WPI_TalonSRX* TalonWithEncoder);
+	ElevatorPIDHelper(WPI_TalonSRX* TalonWithEncoder, Talon* FollowerMotor);
 	virtual ~ElevatorPIDHelper();
 	double PIDGet() override;
 	double GetHeightInches();

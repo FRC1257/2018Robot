@@ -1,8 +1,9 @@
 #include <PID/ElevatorPIDHelper.h>
 #include <Robot.h>
 
-ElevatorPIDHelper::ElevatorPIDHelper(WPI_TalonSRX* TalonWithEncoder) :
-	m_TalonWithEncoder(TalonWithEncoder)
+ElevatorPIDHelper::ElevatorPIDHelper(WPI_TalonSRX* TalonWithEncoder, Talon* FollowerMotor) :
+	m_TalonWithEncoder(TalonWithEncoder),
+	m_FollowerMotor(FollowerMotor)
 {
 
 }
@@ -32,4 +33,5 @@ void ElevatorPIDHelper::PIDWrite(double output)
 {
 	SmartDashboard::PutNumber("Elevator PID Output", output);
 	m_TalonWithEncoder->Set(output);
+	m_FollowerMotor->Set(output);
 }

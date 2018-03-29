@@ -8,7 +8,8 @@ Robot::Robot() :
 	LinkageMotor(5),
 	RightIntakeMotor(6),
 	ClimbMotor(7),
-	ElevatorMotor(8),
+	RightElevatorMotor(8),
+	LeftElevatorMotor(0), //Extra elevator Talon is wired on a PWM channel
 	LeftIntakeMotor(9),
 	LeftMotors(FrontLeftMotor, BackLeftMotor),
 	RightMotors(FrontRightMotor, BackRightMotor),
@@ -18,7 +19,7 @@ Robot::Robot() :
 	IntakeUltrasonic(1, 0),
 	AngleSensors(SPI::Port::kMXP, SPI::kOnboardCS0),
 
-	ElevatorPID(&ElevatorMotor),
+	ElevatorPID(&RightElevatorMotor, &LeftElevatorMotor),
 	AnglePIDOut(DriveTrain),
 	DistancePID(FrontLeftMotor, DriveTrain),
 	AngleController(0.02, 0, 0.025, AngleSensors, AnglePIDOut), //(0.02525, 0, 0.025)
@@ -44,9 +45,9 @@ Robot::~Robot()
 void Robot::RobotInit()
 {
 	StopCurrentProcesses();
-	ElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
+	RightElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 	LinkageMotor.SetNeutralMode(Brake);
-	ElevatorMotor.SetNeutralMode(Brake);
+	RightElevatorMotor.SetNeutralMode(Brake);
 
 	// Current limiting
 	FrontLeftMotor.ConfigContinuousCurrentLimit(consts::FORTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
@@ -67,15 +68,15 @@ void Robot::RobotInit()
 	LeftIntakeMotor.ConfigContinuousCurrentLimit(consts::THIRTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
 	LeftIntakeMotor.EnableCurrentLimit(true);
 
-//	ElevatorMotor.ConfigContinuousCurrentLimit(consts::ELEVATOR_CONT_CURRENT_MAX, consts::ELEVATOR_CONT_CURRENT_TIMEOUT_MS);
-//	ElevatorMotor.EnableCurrentLimit(true);
+//	RightElevatorMotor.ConfigContinuousCurrentLimit(consts::ELEVATOR_CONT_CURRENT_MAX, consts::ELEVATOR_CONT_CURRENT_TIMEOUT_MS);
+//	RightElevatorMotor.EnableCurrentLimit(true);
 
 	// Linkage and Elevator Setup
 	LinkageMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_X, consts::TIMEOUT_MS);
 	LinkageMotor.SetSensorPhase(true);
 
-	ElevatorMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_X, consts::TIMEOUT_MS);
-	ElevatorMotor.SetSensorPhase(true);
+	RightElevatorMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_X, consts::TIMEOUT_MS);
+	RightElevatorMotor.SetSensorPhase(true);
 
 	// Configuring the Talon Drive Encoders
 	FrontLeftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);

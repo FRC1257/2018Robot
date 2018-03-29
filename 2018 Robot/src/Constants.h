@@ -31,20 +31,21 @@ namespace consts
 
 	// Elevator increment enum for automatic mode:
 	// - Because this is an enum and not an enum class, you can use
-	//   the enum value as an array inded for the ELEVATOR_SETPOINTS array
+	//   the enum value as an array index for the ELEVATOR_SETPOINTS array
 	enum ElevatorIncrement
 	{
 		GROUND,
 		SCALE_LOW,
 		SCALE_MID,
-		SCALE_HIGH
+		SCALE_HIGH,
+		MAX_HEIGHT
 	};
 
 	constexpr double DRIVE_SPEED_REDUCTION = 5. / 8.;
 
 	// Elevator Constants
-	constexpr int NUM_ELEVATOR_SETPOINTS = 4;
-	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {2, 20, 40, 60};
+	constexpr int NUM_ELEVATOR_SETPOINTS = 5;
+	constexpr double ELEVATOR_SETPOINTS[NUM_ELEVATOR_SETPOINTS] = {2, 20, 40, 60, 100};
 	constexpr double ELEVATOR_INCREMENT_PER_CYCLE = 35. / 20.; // 35" per second
 	constexpr double ELEVATOR_SPEED_REDUCTION = 1. / 3.;
 	constexpr int ELEVATOR_CONT_CURRENT_MAX = 60;
