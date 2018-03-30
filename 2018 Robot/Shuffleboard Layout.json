@@ -7,6 +7,7 @@
       "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 64.0,
+        "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
@@ -117,7 +118,7 @@
             "content": {
               "_type": "Graph",
               "_source0": "network_table:///SmartDashboard/Angle Sensor",
-              "_title": "SmartDashboard/Angle Sensor",
+              "_title": "/SmartDashboard/Angle Sensor",
               "Visible time": 30.0
             }
           }
@@ -130,6 +131,7 @@
       "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 128.0,
+        "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
@@ -186,6 +188,7 @@
       "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 128.0,
+        "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
@@ -252,7 +255,7 @@
             "content": {
               "_type": "Graph",
               "_source0": "network_table:///SmartDashboard/Angle Sensor",
-              "_title": "SmartDashboard/Angle Sensor",
+              "_title": "/SmartDashboard/Angle Sensor",
               "Visible time": 30.0
             }
           }
@@ -265,6 +268,7 @@
       "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 128.0,
+        "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {}
@@ -276,6 +280,7 @@
       "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 128.0,
+        "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
@@ -399,7 +404,7 @@
             "content": {
               "_type": "Graph",
               "_source0": "network_table:///SmartDashboard/Encoder R",
-              "_title": "SmartDashboard/Encoder R",
+              "_title": "/SmartDashboard/Encoder R",
               "Visible time": 30.0
             }
           },
@@ -411,7 +416,7 @@
             "content": {
               "_type": "Graph",
               "_source0": "network_table:///SmartDashboard/Angle Sensor",
-              "_title": "SmartDashboard/Angle Sensor",
+              "_title": "/SmartDashboard/Angle Sensor",
               "Visible time": 30.0
             }
           }
@@ -424,6 +429,7 @@
       "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 128.0,
+        "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
@@ -573,6 +579,7 @@
       "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 128.0,
+        "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
@@ -708,6 +715,7 @@
       "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 128.0,
+        "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
@@ -719,7 +727,14 @@
             "content": {
               "_type": "Camera Stream",
               "_source0": "camera_server://Axis Camera",
-              "_title": "Axis Camera"
+              "_title": "Axis Camera",
+              "showControls": true,
+              "showCrosshair": true,
+              "crosshairColor": "#FFFFFFFF",
+              "compression": 0.0,
+              "fps": -1,
+              "imageWidth": -1,
+              "imageHeight": -1
             }
           },
           "6,0": {
@@ -788,6 +803,56 @@
               "_type": "ComboBox Chooser",
               "_source0": "network_table:///SmartDashboard/Switch Approach",
               "_title": "Switch Approach"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Tab 9",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              4,
+              3
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Elevator Height",
+              "_title": "SmartDashboard/Elevator Height"
+            }
+          },
+          "4,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Left Released",
+              "_title": "SmartDashboard/Left Released",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
+            }
+          },
+          "4,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Right Released",
+              "_title": "SmartDashboard/Right Released",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
             }
           }
         }

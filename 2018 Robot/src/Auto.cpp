@@ -15,8 +15,6 @@ std::string WaitForGameData();
 
 void Robot::AutonomousInit()
 {
-	StopCurrentProcesses();
-
 	// Get the game data from the FMS
 	std::string gameData;
 	try
@@ -342,7 +340,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 	if(switchPosition == startPosition)
 	{
 		TurnAngle(angle);
-		DriveDistance(18.25, 2.75);
+		DriveDistance(30, 2.75);
 		DropCube(consts::ElevatorIncrement::GROUND);
 		SmartDashboard::PutString("Auto Status", "Finished SidePath");
 		return; //End auto just in case the cube misses
@@ -357,7 +355,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 		TurnAngle(angle / 2.0);
 		DriveDistance(18.7);
 
-		DropCube(consts::ElevatorIncrement::SCALE_HIGH);
+//		DropCube(consts::ElevatorIncrement::SCALE_HIGH);
 		SmartDashboard::PutString("Auto Status", "Finished SidePath");
 		return; //End auto just in case the cube misses
 	}
@@ -431,30 +429,30 @@ void Robot::MiddlePath(char switchPosition)
 	//Check which way the cube should be placed
 	if(SwitchApproachChooser->GetSelected() == consts::SwitchApproach::SIDE)
 	{
-		//If the cube is being placed from the side
-		if(switchPosition == 'L')
-		{
-			TurnAngle(-angle);
-			DriveDistance(126);
-
-			TurnAngle(angle);
-			DriveDistance(106);
-
-			TurnAngle(angle);
-			DropCube(consts::ElevatorIncrement::GROUND);
-		}
-		else if(switchPosition == 'R')
-		{
-			TurnAngle(angle);
-			DriveDistance(74);
-
-			TurnAngle(-angle);
-			DriveDistance(106);
-
-			TurnAngle(angle);
-
-			DropCube(consts::ElevatorIncrement::GROUND);
-		}
+//		//If the cube is being placed from the side
+//		if(switchPosition == 'L')
+//		{
+//			TurnAngle(-angle);
+//			DriveDistance(126);
+//
+//			TurnAngle(angle);
+//			DriveDistance(106);
+//
+//			TurnAngle(angle);
+//			DropCube(consts::ElevatorIncrement::GROUND);
+//		}
+//		else if(switchPosition == 'R')
+//		{
+//			TurnAngle(angle);
+//			DriveDistance(74);
+//
+//			TurnAngle(-angle);
+//			DriveDistance(106);
+//
+//			TurnAngle(angle);
+//
+//			DropCube(consts::ElevatorIncrement::GROUND);
+//		}
 	}
 	else
 	{

@@ -28,7 +28,9 @@ Robot::Robot() :
 	ElevatorPIDController(0.25, 0., 0., ElevatorPID, ElevatorPID),
 	m_isElevatorLowering(false),
 	m_isElevatorInAutoMode(false),
-	m_targetElevatorStep(0)
+	m_targetElevatorStep(0),
+	m_prevRBumperState(0),
+	m_prevLBumperState(0)
 {
 	AutoLocationChooser = new SendableChooser<consts::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<consts::AutoObjective>();
@@ -48,6 +50,9 @@ void Robot::RobotInit()
 	RightElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 	LinkageMotor.SetNeutralMode(Brake);
 	RightElevatorMotor.SetNeutralMode(Brake);
+
+	LeftElevatorMotor.SetInverted(false);
+
 
 	// Current limiting
 	FrontLeftMotor.ConfigContinuousCurrentLimit(consts::FORTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);

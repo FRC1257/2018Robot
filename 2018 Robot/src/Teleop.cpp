@@ -117,9 +117,13 @@ void Robot::ManualElevator()
 
 	bool overridesBeingPressed = OperatorController.GetBumper(GenericHID::kLeftHand) &&
 			OperatorController.GetBumper(GenericHID::kRightHand);
-	bool overridesJustReleased = ( (OperatorController.GetBumperReleased(GenericHID::kLeftHand) &&
-			!OperatorController.GetBumper(GenericHID::kRightHand)) || (OperatorController.GetBumperReleased(GenericHID::kRightHand) &&
-			!OperatorController.GetBumper(GenericHID::kLeftHand)));
+//	bool rightBumperJustReleased = m_prevRBumperState && !OperatorController.GetBumper(GenericHID::kRightHand);
+//	bool leftBumperJustReleased = m_prevLBumperState && !OperatorController.GetBumper(GenericHID::kLeftHand);
+//	bool overridesJustReleased = ( (leftBumperJustReleased && !OperatorController.GetBumper(GenericHID::kRightHand)) ||
+//			(rightBumperJustReleased && !OperatorController.GetBumper(GenericHID::kLeftHand)) ||
+//			(rightBumperJustReleased && leftBumperJustReleased));
+	bool overridesJustReleased = OperatorController.GetBackButton();
+//	OperatorController.GetBumperReleased()
 
 	// If the two override keys are being pressed, allow the elevator to move past the predefined stop points
 	// --> This is done to prevent a faulty start configuration from setting the lowest elevator setting at a higher point than
@@ -157,6 +161,12 @@ void Robot::ManualElevator()
 	SmartDashboard::PutBoolean("OverridesPressed", overridesBeingPressed);
 	SmartDashboard::PutBoolean("OverridesReleased", overridesJustReleased);
 	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
+
+	m_prevRBumperState = OperatorController.GetBumper(GenericHID::kRightHand);
+	m_prevLBumperState = OperatorController.GetBumper(GenericHID::kLeftHand);
+
+//	SmartDashboard::PutBoolean("Left Released", leftBumperJustReleased);
+//	SmartDashboard::PutBoolean("Right Released", rightBumperJustReleased);
 }
 
 // Operator Controls

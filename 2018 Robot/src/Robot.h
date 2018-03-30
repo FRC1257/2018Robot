@@ -86,6 +86,8 @@ private:
 	bool m_isElevatorLowering;
 	bool m_isElevatorInAutoMode;
 	int m_targetElevatorStep;
+	bool m_prevRBumperState;
+	bool m_prevLBumperState;
 
 public:
 	// Constructor and virtual functions
