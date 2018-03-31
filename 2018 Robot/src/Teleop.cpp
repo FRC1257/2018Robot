@@ -133,7 +133,7 @@ void Robot::ManualElevator()
 		elevatorSpeed = dabs(raiseElevatorOutput) - dabs(lowerElevatorOutput);
 	}
 	// If the bumpers are released and the encoder position is negative, rezero the elevator at that point
-	else if(overridesJustReleased && ElevatorPID.PIDGet() < 0)
+	else if(overridesJustReleased)
 	{
 		elevatorSpeed = 0;
 		RightElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);

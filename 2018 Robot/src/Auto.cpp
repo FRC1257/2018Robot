@@ -4,7 +4,6 @@ std::string WaitForGameData();
 
 /*
  * Fix Measurements for:
- * 	Same Side Switch                  (NEEDS TESTING)
  * 	Same Side Scale                   (NEEDS TESTING) (NEEDS ELEVATOR)
  * 	Opposite Side Switch from Side    (NEEDS TESTING) (NUMBERS MUST BE CHECKED)
  * 	Opposite Side Scale               (NEEDS TESTING) (NUMBERS MUST BE CHECKED) (NEEDS ELEVATOR)
@@ -15,6 +14,8 @@ std::string WaitForGameData();
 
 void Robot::AutonomousInit()
 {
+	StopCurrentProcesses();
+
 	// Get the game data from the FMS
 	std::string gameData;
 	try
@@ -45,11 +46,11 @@ void Robot::AutonomousInit()
 						SmartDashboard::PutString("Auto Path", "Left: Path to Switch " + gameData[0]);
 						SidePath(consts::AutoPosition::LEFT_START, gameData[0], gameData[1]);
 					}
-					else if(gameData[0] == 'R')
-					{
-						SmartDashboard::PutString("Auto Path", "Left: Path to Switch" + gameData[0]);
-						OppositeSwitch(consts::AutoPosition::LEFT_START);
-					}
+//					else if(gameData[0] == 'R')
+//					{
+//						SmartDashboard::PutString("Auto Path", "Left: Path to Switch" + gameData[0]);
+//						OppositeSwitch(consts::AutoPosition::LEFT_START);
+//					}
 					else
 					{
 						SmartDashboard::PutString("Auto Path", "Left: Drive to Baseline");
@@ -94,11 +95,11 @@ void Robot::AutonomousInit()
 						SmartDashboard::PutString("Auto Path", "Right: Path to Switch " + gameData[0]);
 						SidePath(consts::AutoPosition::RIGHT_START, gameData[0], gameData[1]);
 					}
-					else if(gameData[0] == 'L')
-					{
-						SmartDashboard::PutString("Auto Path", "Right: Path to Switch " + gameData[0]);
-						OppositeSwitch(consts::AutoPosition::RIGHT_START);
-					}
+//					else if(gameData[0] == 'L')
+//					{
+//						SmartDashboard::PutString("Auto Path", "Right: Path to Switch " + gameData[0]);
+//						OppositeSwitch(consts::AutoPosition::RIGHT_START);
+//					}
 					else
 					{
 						SmartDashboard::PutString("Auto Path", "Right: Drive to Baseline");
@@ -279,7 +280,22 @@ void Robot::DropCube(consts::ElevatorIncrement elevatorSetpoint)
 {
 	SmartDashboard::PutString("Auto Status", "Dropping Cube...");
 //	RaiseElevator(elevatorSetpoint);
+
+//	double elevatorHeight = consts::ELEVATOR_SETPOINTS[elevatorSetpoint];
+//	if(dabs(elevatorHeight - ElevatorPID.PIDGet()) > consts::ELEVATOR_PID_DEADBAND)
+//	{
+//		while(ElevatorPID.PIDGet() < elevatorHeight)
+//		{
+//			//To avoid damage, might need to vary value as the elevator height changes
+//			RightElevatorMotor.Set(1.0);
+//			LeftElevatorMotor.Set(1.0);
+//		}
+//		RightElevatorMotor.Set(0);
+//		LeftElevatorMotor.Set(0);
+//	}
 	EjectCube();
+
+
 //	RaiseElevator(consts::ElevatorIncrement::GROUND);
 	SmartDashboard::PutString("Auto Status", "Cube Dropped");
 }
@@ -353,7 +369,7 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 	if(scalePosition == startPosition)
 	{
 		TurnAngle(angle / 2.0);
-		DriveDistance(18.7);
+		DriveDistance(20);
 
 //		DropCube(consts::ElevatorIncrement::SCALE_HIGH);
 		SmartDashboard::PutString("Auto Status", "Finished SidePath");
@@ -367,7 +383,6 @@ void Robot::OppositeSwitch(consts::AutoPosition start)
 	SmartDashboard::PutString("Auto Status", "Starting OppositeSwitch...");
 	//90 for left, -90 for right
 	double angle = (start == consts::AutoPosition::LEFT_START) ? 90 : -90;
-	double secondAngle = (start == consts::AutoPosition::LEFT_START) ? 130 : -130;
 
 	if(SwitchApproachChooser->GetSelected() == consts::SwitchApproach::FRONT)
 	{
@@ -389,7 +404,7 @@ void Robot::OppositeSwitch(consts::AutoPosition start)
 		DriveDistance(171.5);
 		TurnAngle(angle);
 
-		DriveDistance(6.85);
+		DriveDistance(10);
 
 		//TENTATIVE, MIGHT NEED TO RAISE ELEVATOR
 		DropCube(consts::ElevatorIncrement::GROUND);

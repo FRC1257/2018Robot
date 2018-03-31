@@ -51,7 +51,7 @@ void Robot::RobotInit()
 	LinkageMotor.SetNeutralMode(Brake);
 	RightElevatorMotor.SetNeutralMode(Brake);
 
-	LeftElevatorMotor.SetInverted(false);
+//	LeftElevatorMotor.SetInverted(false);
 
 
 	// Current limiting
