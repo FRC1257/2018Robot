@@ -263,8 +263,15 @@ void Robot::Intake()
 		// Use the A button to eject
 		if(OperatorController.GetAButton())
 		{
-			RightIntakeMotor.Set(-consts::INTAKE_SPEED);
-			LeftIntakeMotor.Set(consts::INTAKE_SPEED);
+			double speed = consts::INTAKE_SPEED;
+
+			if(IsElevatorTooHigh())
+			{
+				speed /= 2;
+			}
+
+			RightIntakeMotor.Set(-speed);
+			LeftIntakeMotor.Set(speed);
 		}
 		else
 		{
