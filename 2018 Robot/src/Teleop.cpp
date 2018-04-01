@@ -252,11 +252,18 @@ void Robot::Intake()
 
 	// If the robot isn't using variable intake control, use the B button to intake cubes.
 	// The X button overrides the IntakeUltrasonic's safety feature
-	else if((OperatorController.GetXButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) ||
-			OperatorController.GetBButton())
+//	else if((OperatorController.GetXButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) ||
+//			OperatorController.GetBButton())
+	else if(OperatorController.GetBButton())
 	{
 		RightIntakeMotor.Set(consts::INTAKE_SPEED);
 		LeftIntakeMotor.Set(-consts::INTAKE_SPEED);
+	}
+	else if(OperatorController.GetXButton())
+	{
+		//0 is placeholder
+		RightIntakeMotor.Set(0);
+		LeftIntakeMotor.Set(0);
 	}
 	else
 	{
