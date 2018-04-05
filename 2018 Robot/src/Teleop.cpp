@@ -271,7 +271,7 @@ void Robot::Intake()
 	{
 		// Use the A button to eject
 		RightIntakeMotor.Set(-consts::INTAKE_SPEED);
-		LeftIntakeMotor.Set(consts::INTAKE_SPEED;
+		LeftIntakeMotor.Set(consts::INTAKE_SPEED);
 	}		
 	else
 	{

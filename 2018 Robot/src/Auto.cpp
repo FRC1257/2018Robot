@@ -281,19 +281,30 @@ void Robot::DropCube(consts::ElevatorIncrement elevatorSetpoint)
 	SmartDashboard::PutString("Auto Status", "Dropping Cube...");
 //	RaiseElevator(elevatorSetpoint);
 
-//	double elevatorHeight = consts::ELEVATOR_SETPOINTS[elevatorSetpoint];
-//	if(dabs(elevatorHeight - ElevatorPID.PIDGet()) > consts::ELEVATOR_PID_DEADBAND)
-//	{
-//		while(ElevatorPID.PIDGet() < elevatorHeight)
-//		{
-//			//To avoid damage, might need to vary value as the elevator height changes
+	double elevatorHeight = consts::ELEVATOR_SETPOINTS[elevatorSetpoint];
+	if(dabs(elevatorHeight - ElevatorPID.PIDGet()) > consts::ELEVATOR_PID_DEADBAND)
+	{
+		while(ElevatorPID.PIDGet() < elevatorHeight)
+		{
+			//To avoid damage, use basic p-control with an added constant output speed of 0.5
+			double error = elevatorHeight - ElevatorPID.PIDGet();
+			RightElevatorMotor.Set(limit(error * 0.03 + 0.5));
+			LeftElevatorMotor.Set(limit(error * 0.03 + 0.5));
+
 //			RightElevatorMotor.Set(1.0);
 //			LeftElevatorMotor.Set(1.0);
-//		}
-//		RightElevatorMotor.Set(0);
-//		LeftElevatorMotor.Set(0);
-//	}
+		}
+
+		// ElevatorMotors set to a slow but constant speed to keep the elevator from falling
+		// due to gravity
+		RightElevatorMotor.Set(0.25);
+		LeftElevatorMotor.Set(0.25);
+	}
 	EjectCube();
+
+	// ElevatorMotors reset to 0
+	RightElevatorMotor.Set(0);
+	LeftElevatorMotor.Set(0);
 
 
 //	RaiseElevator(consts::ElevatorIncrement::GROUND);

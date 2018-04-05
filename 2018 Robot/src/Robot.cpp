@@ -50,9 +50,8 @@ void Robot::RobotInit()
 	RightElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
 	LinkageMotor.SetNeutralMode(Brake);
 	RightElevatorMotor.SetNeutralMode(Brake);
-
-//	LeftElevatorMotor.SetInverted(false);
-
+	RightIntakeMotor.SetNeutralMode(Brake);
+	LeftIntakeMotor.SetNeutralMode(Brake);
 
 	// Current limiting
 	FrontLeftMotor.ConfigContinuousCurrentLimit(consts::FORTY_AMP_FUSE_CONT_MAX, consts::CONT_CURRENT_TIMEOUT_MS);
