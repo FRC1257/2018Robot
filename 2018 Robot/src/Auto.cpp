@@ -282,24 +282,34 @@ void Robot::DropCube(consts::ElevatorIncrement elevatorSetpoint)
 //	RaiseElevator(elevatorSetpoint);
 
 	double elevatorHeight = consts::ELEVATOR_SETPOINTS[elevatorSetpoint];
-	if(dabs(elevatorHeight - ElevatorPID.PIDGet()) > consts::ELEVATOR_PID_DEADBAND)
-	{
-		while(ElevatorPID.PIDGet() < elevatorHeight)
-		{
-			//To avoid damage, use basic p-control with an added constant output speed of 0.5
-			double error = elevatorHeight - ElevatorPID.PIDGet();
-			RightElevatorMotor.Set(limit(error * 0.03 + 0.5));
-			LeftElevatorMotor.Set(limit(error * 0.03 + 0.5));
+//	if(dabs(elevatorHeight - ElevatorPID.PIDGet()) > consts::ELEVATOR_PID_DEADBAND)
+//	{
+//		double error = elevatorHeight - ElevatorPID.PIDGet();
+//		while(error > 2)
+//		{
+//			bool inAuto = IsAutonomous();
+//			if(!inAuto)
+//			{
+//				RightElevatorMotor.Set(0);
+//				LeftElevatorMotor.Set(0);
+//				return;
+//			}
 
-//			RightElevatorMotor.Set(1.0);
-//			LeftElevatorMotor.Set(1.0);
-		}
-
-		// ElevatorMotors set to a slow but constant speed to keep the elevator from falling
-		// due to gravity
-		RightElevatorMotor.Set(0.25);
-		LeftElevatorMotor.Set(0.25);
-	}
+//			//To avoid damage, use basic p-control with an added constant output speed of 0.5
+//			error = elevatorHeight - ElevatorPID.PIDGet();
+//			RightElevatorMotor.Set(limit(error * 0.03 + 0.5, 0.8));
+//			LeftElevatorMotor.Set(limit(error * 0.03 + 0.5, 0.8));
+//		}
+//
+//		// ElevatorMotors set to a slow but constant speed to keep the elevator from falling
+//		// due to gravity
+//		RightElevatorMotor.Set(0.25);
+//		LeftElevatorMotor.Set(0.25);
+////	}
+//
+//	// ElevatorMotors reset to 0
+//	RightElevatorMotor.Set(0);
+//	LeftElevatorMotor.Set(0);
 	EjectCube();
 
 	// ElevatorMotors reset to 0
@@ -374,15 +384,26 @@ void Robot::SidePath(consts::AutoPosition start, char switchPosition, char scale
 	}
 
 	//Otherwise, go forward to a better position
-	DriveDistance(103);
+	DriveDistance(107);
 
 	//Check if the scale is nearby, and if it is, place a cube in it
 	if(scalePosition == startPosition)
 	{
-		TurnAngle(angle / 2.0);
-		DriveDistance(20);
+		if(SwitchApproachChooser->GetSelected() == consts::SwitchApproach::SIDE)
+		{
+			DriveDistance(47);
+			TurnAngle(angle);
+			DriveDistance(6);
 
-//		DropCube(consts::ElevatorIncrement::SCALE_HIGH);
+//			DropCube(consts::ElevatorIncrement::SCALE_HIGH);
+		}
+		else
+		{
+			TurnAngle(angle / 2.0);
+			DriveDistance(10);
+
+//			DropCube(consts::ElevatorIncrement::SCALE_HIGH);
+		}
 		SmartDashboard::PutString("Auto Status", "Finished SidePath");
 		return; //End auto just in case the cube misses
 	}
@@ -452,9 +473,9 @@ void Robot::MiddlePath(char switchPosition)
 	//Go forward
 	DriveDistance(48);
 
-	//Check which way the cube should be placed
-	if(SwitchApproachChooser->GetSelected() == consts::SwitchApproach::SIDE)
-	{
+	//Check which way the cube should be placed (NOW DEPRECATED)
+//	if(SwitchApproachChooser->GetSelected() == consts::SwitchApproach::SIDE)
+//	{
 //		//If the cube is being placed from the side
 //		if(switchPosition == 'L')
 //		{
@@ -479,30 +500,28 @@ void Robot::MiddlePath(char switchPosition)
 //
 //			DropCube(consts::ElevatorIncrement::GROUND);
 //		}
-	}
-	else
+//	}
+
+	// The cube is always placed from the front.
+	if(switchPosition == 'L')
 	{
-		//If the cube is being placed from the front
-		if(switchPosition == 'L')
-		{
-			TurnAngle(-angle);
-			DriveDistance(52);
+		TurnAngle(-angle);
+		DriveDistance(52);
 
-			TurnAngle(angle);
-			DriveDistance(60, 2.75);
+		TurnAngle(angle);
+		DriveDistance(64, 2.75);
 
-			DropCube(consts::ElevatorIncrement::GROUND);
-		}
-		else if(switchPosition == 'R')
-		{
-			TurnAngle(angle);
-			DriveDistance(52);
+		DropCube(consts::ElevatorIncrement::GROUND);
+	}
+	else if(switchPosition == 'R')
+	{
+		TurnAngle(angle);
+		DriveDistance(52);
 
-			TurnAngle(-angle);
-			DriveDistance(60, 2.75);
+		TurnAngle(-angle);
+		DriveDistance(64, 2.75);
 
-			DropCube(consts::ElevatorIncrement::GROUND);
-		}
+		DropCube(consts::ElevatorIncrement::GROUND);
 	}
 	SmartDashboard::PutString("Auto Status", "Finished MiddlePath");
 }

@@ -123,6 +123,7 @@ void Robot::ManualElevator()
 //			(rightBumperJustReleased && !OperatorController.GetBumper(GenericHID::kLeftHand)) ||
 //			(rightBumperJustReleased && leftBumperJustReleased));
 	bool overridesJustReleased = OperatorController.GetBackButton();
+	SmartDashboard::PutBoolean("Zeroing Elevator Encoder?", overridesJustReleased);
 //	OperatorController.GetBumperReleased()
 
 	// If the two override keys are being pressed, allow the elevator to move past the predefined stop points
@@ -242,12 +243,12 @@ void Robot::Intake()
 	if(intakeSpeed != 0)
 	{
 		// If you're spinning the intaking a cube, but it is already within the intake, set the speed to 0
-		if(intakeSpeed < 0 && IntakeUltrasonic.GetRangeInches() < consts::MIN_DISTANCE_TO_CUBE)
-		{
-			intakeSpeed = 0;
-		}
+//		if(intakeSpeed < 0 && IntakeUltrasonic.GetRangeInches() < consts::MIN_DISTANCE_TO_CUBE)
+//		{
+//			intakeSpeed = 0;
+//		}
 		RightIntakeMotor.Set(intakeSpeed);
-		LeftIntakeMotor.Set(-intakeSpeed);
+		LeftIntakeMotor.Set(-0.75 * intakeSpeed);
 	}
 
 	// If the robot isn't using variable intake control, use the B button to intake cubes.
@@ -257,7 +258,7 @@ void Robot::Intake()
 	else if(OperatorController.GetBButton())
 	{
 		RightIntakeMotor.Set(consts::INTAKE_SPEED);
-		LeftIntakeMotor.Set(-consts::INTAKE_SPEED);
+		LeftIntakeMotor.Set(-0.75 * consts::INTAKE_SPEED);
 	}
 	else if(OperatorController.GetXButton())
 	{

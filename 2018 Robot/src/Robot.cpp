@@ -22,9 +22,9 @@ Robot::Robot() :
 	ElevatorPID(&RightElevatorMotor, &LeftElevatorMotor),
 	AnglePIDOut(DriveTrain),
 	DistancePID(FrontLeftMotor, DriveTrain),
-	AngleController(0.02, 0, 0.025, AngleSensors, AnglePIDOut), //(0.02525, 0, 0.025)
+	AngleController(0.04, 0, 0.04, AngleSensors, AnglePIDOut), //(0.02525, 0, 0.025)
 	MaintainAngleController(0.04, 0.0, 0.0, AngleSensors, AnglePIDOut), //(0.03, 0.0015, 0.06)
-	DistanceController(0.04, 0, 0.08, DistancePID, DistancePID), //(0.04, 0, 0)
+	DistanceController(0.03, 0, 0.06, DistancePID, DistancePID), //(0.04, 0, 0)
 	ElevatorPIDController(0.25, 0., 0., ElevatorPID, ElevatorPID),
 	m_isElevatorLowering(false),
 	m_isElevatorInAutoMode(false),
@@ -96,7 +96,7 @@ void Robot::RobotInit()
 
 	// Configuring Angle PID Controller
 	AngleController.SetAbsoluteTolerance(1);
-	AngleController.SetOutputRange(-0.75, 0.75);
+	AngleController.SetOutputRange(-0.3, 0.3);
 
 	// Configuring Maintain Angle PID Controller
 	MaintainAngleController.SetAbsoluteTolerance(0.5);
@@ -120,8 +120,8 @@ void Robot::RobotInit()
 	AutoObjectiveChooser->AddObject("Scale", consts::AutoObjective::SCALE);
 	AutoObjectiveChooser->AddObject("Baseline", consts::AutoObjective::BASELINE);
 
-	SwitchApproachChooser->AddDefault("Front", consts::SwitchApproach::FRONT);
-	SwitchApproachChooser->AddObject("Side", consts::SwitchApproach::SIDE);
+	SwitchApproachChooser->AddDefault("Angle Shot", consts::SwitchApproach::FRONT);
+	SwitchApproachChooser->AddObject("Side Shot", consts::SwitchApproach::SIDE);
 
 	// Send the sendable choosers to SmartDashboard
 	SmartDashboard::PutData("Auto Position", AutoLocationChooser);

@@ -7,6 +7,12 @@ void Robot::TestPeriodic()
 
 void Robot::TestInit()
 {
+	SmartDashboard::PutNumber("Elevator Setpoint", 0);
+	SmartDashboard::PutBoolean("Reset Elevator Encoder?", false);
+	SmartDashboard::PutNumber("Elevator P", 0.03);
+	SmartDashboard::PutNumber("Elevator Constant", 0.5);
+	SmartDashboard::PutNumber("Elevator Limit", 0.8);
+
 	StopCurrentProcesses();
 
 	if(SmartDashboard::GetBoolean("Test Angle", 0))
@@ -62,6 +68,13 @@ void Robot::AutonomousTest()
 	//Display Data
 	SmartDashboard::PutNumber("Angle Sensor", AngleSensors.GetAngle());
 	SmartDashboard::PutNumber("Encoder R", DistancePID.PIDGet());
+
+
+	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
+	if(SmartDashboard::GetBoolean("Reset Elevator Encoder?", false)) {
+		RightElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
+		SmartDashboard::PutBoolean("Reset Elevator Encoder?", false);
+	}
 
 	if(!SmartDashboard::GetBoolean("Go Forward, Turn Right", 0))
 	{
@@ -157,8 +170,6 @@ void Robot::MaintainHeadingTest()
 	//Configure the PID controller to make sure the robot drives straight with the NavX
 	MaintainAngleController.Reset();
 	MaintainAngleController.SetSetpoint(0);
-	MaintainAngleController.SetAbsoluteTolerance(0.5);
-	MaintainAngleController.SetOutputRange(-1.0, 1.0);
 
 	MaintainAngleController.Enable();
 }
@@ -209,8 +220,6 @@ void Robot::TurnAngleTest(double angle)
 
 	AngleController.Reset();
 	AngleController.SetSetpoint(angle);
-	AngleController.SetAbsoluteTolerance(0.5);
-	AngleController.SetOutputRange(-1.0, 1.0);
 	AngleController.Enable();
 
 	SmartDashboard::PutNumber("Target Angle", angle);
@@ -452,12 +461,51 @@ void Robot::FullElevatorTest()
 void Robot::AutoElevatorTest()
 {
 	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
-	SmartDashboard::PutBoolean("Elev On Target?", ElevatorPIDController.OnTarget());
+//
+//	if(SmartDashboard::GetBoolean("Go to Increment", 0))
+//	{
+//		ElevatorPIDController.SetSetpoint(SmartDashboard::GetNumber("Desired Increment", 0));
+//	}
 
-	if(SmartDashboard::GetBoolean("Go to Increment", 0))
-	{
-		ElevatorPIDController.SetSetpoint(SmartDashboard::GetNumber("Desired Increment", 0));
-	}
+		double elevatorHeight = SmartDashboard::GetNumber("Elevator Setpoint", 0);
+		if(dabs(elevatorHeight - ElevatorPID.PIDGet()) > consts::ELEVATOR_PID_DEADBAND)
+		{
+			double error = elevatorHeight - ElevatorPID.PIDGet();
+			while(error > 1)
+			{
+				bool inAuto = IsTest();
+				if(!inAuto)
+				{
+					RightElevatorMotor.Set(0);
+					LeftElevatorMotor.Set(0);
+					return;
+				}
+
+				SmartDashboard::PutBoolean("Elev On Target?", false);
+				//To avoid damage, use basic p-control with an added constant output speed of 0.5
+				error = elevatorHeight - ElevatorPID.PIDGet();
+				RightElevatorMotor.Set(limit(error * SmartDashboard::GetNumber("Elevator P", 0) +
+						SmartDashboard::GetNumber("Elevator Constant", 0), SmartDashboard::GetNumber("Elevator Limit", 0)));
+				LeftElevatorMotor.Set(limit(error * SmartDashboard::GetNumber("Elevator P", 0) +
+						SmartDashboard::GetNumber("Elevator Constant", 0), SmartDashboard::GetNumber("Elevator Limit", 0)));
+
+				SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
+			}
+
+			// ElevatorMotors set to a slow but constant speed to keep the elevator from falling
+			// due to gravity
+			RightElevatorMotor.Set(0.25);
+			LeftElevatorMotor.Set(0.25);
+		}
+		EjectCube(consts::INTAKE_SPEED / 2.);
+
+
+		SmartDashboard::PutBoolean("Elev On Target?", true);
+		SmartDashboard::PutBoolean("Test Auto Elevator", false);
+
+		// ElevatorMotors reset to 0
+		RightElevatorMotor.Set(0);
+		LeftElevatorMotor.Set(0);
 }
 
 void Robot::LinkageTest()

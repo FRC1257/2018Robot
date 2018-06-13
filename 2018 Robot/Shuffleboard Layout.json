@@ -1,5 +1,5 @@
 {
-  "dividerPosition": 0.1930379746835443,
+  "dividerPosition": 0.2323943661971831,
   "tabPane": [
     {
       "title": "Maintain Angle Tuning",
@@ -112,7 +112,7 @@
           },
           "4,0": {
             "size": [
-              7,
+              5,
               5
             ],
             "content": {
@@ -249,7 +249,7 @@
           },
           "2,0": {
             "size": [
-              4,
+              3,
               4
             ],
             "content": {
@@ -271,7 +271,96 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "tiles": {}
+        "tiles": {
+          "0,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Error L",
+              "_title": "/SmartDashboard/Error L"
+            }
+          },
+          "1,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Error R",
+              "_title": "/SmartDashboard/Error R"
+            }
+          },
+          "0,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Left Distance",
+              "_title": "/SmartDashboard/Left Distance"
+            }
+          },
+          "1,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Right Distance",
+              "_title": "/SmartDashboard/Right Distance"
+            }
+          },
+          "2,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Motor State L",
+              "_title": "/SmartDashboard/Motor State L"
+            }
+          },
+          "3,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Motor State R",
+              "_title": "/SmartDashboard/Motor State R"
+            }
+          },
+          "2,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Error L",
+              "_title": "/SmartDashboard/Error L"
+            }
+          },
+          "3,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Error R",
+              "_title": "/SmartDashboard/Error R"
+            }
+          }
+        }
       }
     },
     {
@@ -398,7 +487,7 @@
           },
           "3,2": {
             "size": [
-              3,
+              2,
               2
             ],
             "content": {
@@ -444,7 +533,7 @@
               "_title": "SmartDashboard/Go Forward, Turn Right"
             }
           },
-          "4,0": {
+          "3,0": {
             "size": [
               1,
               1
@@ -490,7 +579,7 @@
           },
           "2,0": {
             "size": [
-              2,
+              1,
               1
             ],
             "content": {
@@ -534,7 +623,7 @@
               "_title": "/SmartDashboard/Encoder R"
             }
           },
-          "5,0": {
+          "4,0": {
             "size": [
               1,
               1
@@ -569,6 +658,28 @@
               "wheelDiameter": 80.0,
               "showVectors": true
             }
+          },
+          "5,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Left Distance",
+              "_title": "SmartDashboard/Left Distance"
+            }
+          },
+          "5,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Right Distance",
+              "_title": "SmartDashboard/Right Distance"
+            }
           }
         }
       }
@@ -596,7 +707,7 @@
           },
           "2,0": {
             "size": [
-              2,
+              1,
               1
             ],
             "content": {
@@ -640,7 +751,7 @@
               "_title": "/SmartDashboard/PID Velocity"
             }
           },
-          "5,0": {
+          "4,0": {
             "size": [
               1,
               1
@@ -651,7 +762,7 @@
               "_title": "/SmartDashboard/Auto Path"
             }
           },
-          "4,0": {
+          "3,0": {
             "size": [
               1,
               1
@@ -721,7 +832,7 @@
         "tiles": {
           "0,0": {
             "size": [
-              6,
+              4,
               3
             ],
             "content": {
@@ -737,22 +848,9 @@
               "imageHeight": -1
             }
           },
-          "6,0": {
+          "4,0": {
             "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Drive Speed Reduction?",
-              "_title": "Speed Reduced?",
-              "colorWhenTrue": "#7CFC00FF",
-              "colorWhenFalse": "#8B0000FF"
-            }
-          },
-          "6,1": {
-            "size": [
-              1,
+              2,
               1
             ],
             "content": {
@@ -761,18 +859,7 @@
               "_title": "Elevator Height"
             }
           },
-          "6,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Auto Delay",
-              "_title": "Delay"
-            }
-          },
-          "0,3": {
+          "4,1": {
             "size": [
               2,
               1
@@ -783,7 +870,7 @@
               "_title": "Auto Objective"
             }
           },
-          "2,3": {
+          "4,2": {
             "size": [
               2,
               1
@@ -793,23 +880,12 @@
               "_source0": "network_table:///SmartDashboard/Auto Position",
               "_title": "Auto Position"
             }
-          },
-          "4,3": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/Switch Approach",
-              "_title": "Switch Approach"
-            }
           }
         }
       }
     },
     {
-      "title": "Tab 9",
+      "title": "Elevator Testing",
       "autoPopulate": false,
       "autoPopulatePrefix": "",
       "widgetPane": {
@@ -820,13 +896,46 @@
         "tiles": {
           "0,0": {
             "size": [
-              4,
-              3
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Test Auto Elevator",
+              "_title": "SmartDashboard/Test Auto Elevator"
+            }
+          },
+          "2,0": {
+            "size": [
+              2,
+              1
             ],
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Elevator Height",
-              "_title": "SmartDashboard/Elevator Height"
+              "_title": "/SmartDashboard/Elevator Height"
+            }
+          },
+          "0,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Elevator Setpoint",
+              "_title": "/SmartDashboard/Elevator Setpoint"
+            }
+          },
+          "0,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Reset Elevator Encoder?",
+              "_title": "SmartDashboard/Reset Elevator Encoder?"
             }
           },
           "4,0": {
@@ -836,23 +945,202 @@
             ],
             "content": {
               "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Left Released",
-              "_title": "SmartDashboard/Left Released",
+              "_source0": "network_table:///SmartDashboard/Zeroing Elevator Encoder?",
+              "_title": "/SmartDashboard/Zeroing Elevator Encoder?",
               "colorWhenTrue": "#7CFC00FF",
               "colorWhenFalse": "#8B0000FF"
             }
           },
-          "4,1": {
+          "5,1": {
             "size": [
               2,
               1
             ],
             "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Elevator P",
+              "_title": "SmartDashboard/Elevator P"
+            }
+          },
+          "5,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Elevator Constant",
+              "_title": "SmartDashboard/Elevator Constant"
+            }
+          },
+          "5,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Elevator Limit",
+              "_title": "SmartDashboard/Elevator Limit"
+            }
+          },
+          "2,1": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Elevator Height",
+              "_title": "/SmartDashboard/Elevator Height",
+              "Visible time": 30.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Motion Profiling",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Robot Acceleration",
+              "_title": "SmartDashboard/Robot Acceleration"
+            }
+          },
+          "0,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Robot Position",
+              "_title": "SmartDashboard/Robot Position"
+            }
+          },
+          "0,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Robot Velocity",
+              "_title": "SmartDashboard/Robot Velocity"
+            }
+          },
+          "1,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Max Acc",
+              "_title": "SmartDashboard/Max Acc"
+            }
+          },
+          "1,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Max Vel",
+              "_title": "SmartDashboard/Max Vel"
+            }
+          },
+          "2,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Reset Encoders",
+              "_title": "SmartDashboard/Reset Encoders"
+            }
+          },
+          "1,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Median Acc",
+              "_title": "SmartDashboard/Median Acc"
+            }
+          },
+          "2,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
               "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Right Released",
-              "_title": "SmartDashboard/Right Released",
+              "_source0": "network_table:///SmartDashboard/Deccelerating",
+              "_title": "SmartDashboard/Deccelerating",
               "colorWhenTrue": "#7CFC00FF",
               "colorWhenFalse": "#8B0000FF"
+            }
+          },
+          "2,0": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Distance Info",
+              "_title": "/SmartDashboard/Distance Info"
+            }
+          },
+          "0,3": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Setpoint Data",
+              "_title": "/SmartDashboard/Setpoint Data"
+            }
+          },
+          "3,3": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Spongebob",
+              "_title": "/SmartDashboard/Spongebob"
+            }
+          },
+          "3,1": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Outputs",
+              "_title": "/SmartDashboard/Outputs"
             }
           }
         }

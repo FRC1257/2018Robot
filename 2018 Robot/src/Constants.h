@@ -77,6 +77,7 @@ namespace consts
 	constexpr double MIN_DISTANCE_TO_CUBE = 9.0;
 	constexpr double INTAKE_SPEED = 0.80;
 	constexpr double INTAKE_SPEED_WHILE_TURNING = 0.5;
+	constexpr double RESTING_INTAKE_SPEED = 0.05;
 }
 
 #endif

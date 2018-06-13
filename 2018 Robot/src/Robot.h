@@ -27,10 +27,10 @@ inline double PulsesToInches(double sensorPosition)
 // Absolute value of a double precision floating point number
 inline double dabs(double d) { return d > 0.0 ? d : -d; }
 inline double applyDeadband(double axisVal) { return dabs(axisVal) < 0.08 ? 0 : axisVal; }
-inline double limit(double d) {
-	if(d > 1)      return 1;
-	else if(d < 1) return -1;
-	else           return d;
+inline double limit(double d, double cap = 1) {
+	if(d > cap)      return cap;
+	else if(d < -cap) return -cap;
+	else             return d;
 }
 
 class Robot: public TimedRobot
