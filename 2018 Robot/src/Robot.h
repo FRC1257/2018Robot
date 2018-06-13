@@ -58,7 +58,6 @@ private:
 	WPI_TalonSRX BackLeftMotor;
 	WPI_TalonSRX LinkageMotor;
 	WPI_TalonSRX RightIntakeMotor;
-	WPI_TalonSRX ClimbMotor;
 	WPI_TalonSRX RightElevatorMotor;
 	Talon LeftElevatorMotor;
 	WPI_TalonSRX LeftIntakeMotor;
@@ -69,6 +68,9 @@ private:
 	XboxController OperatorController;
 	StabilizedUltrasonic IntakeUltrasonic;
 	AngleSensorGroup AngleSensors;
+
+	DoubleSolenoid LeftSolenoid;
+	DoubleSolenoid RightSolenoid;
 
 	ElevatorPIDHelper ElevatorPID;
 	AnglePIDOutput AnglePIDOut;

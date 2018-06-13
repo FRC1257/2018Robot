@@ -57,7 +57,6 @@ void Robot::TeleopTest()
 	if(SmartDashboard::GetBoolean("PID Elevator", 0)) PIDElevatorTest();
 	if(SmartDashboard::GetBoolean("Linkage", 0)) LinkageTest();
 	if(SmartDashboard::GetBoolean("Intake", 0)) IntakeTest();
-	if(SmartDashboard::GetBoolean("Climb", 0)) ClimbTest();
 }
 
 void Robot::AutonomousTest()
@@ -536,23 +535,6 @@ void Robot::IntakeTest()
 			RightIntakeMotor.Set(0);
 			LeftIntakeMotor.Set(0);
 		}
-	}
-}
-
-void Robot::ClimbTest()
-{
-	// Use the y button to climb
-	if(OperatorController.GetYButton())
-	{
-		ClimbMotor.Set(-0.5);
-	}
-	else if(OperatorController.GetStartButton())
-	{
-		ClimbMotor.Set(-0.5);
-	}
-	else
-	{
-		ClimbMotor.Set(0);
 	}
 }
 

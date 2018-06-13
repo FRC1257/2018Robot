@@ -240,33 +240,33 @@ void Robot::Intake()
 {
 	// Use the Right Y-axis for variable intake speed
 	double intakeSpeed = applyDeadband(OperatorController.GetY(GenericHID::kRightHand));
-	if(intakeSpeed != 0)
-	{
-		// If you're spinning the intaking a cube, but it is already within the intake, set the speed to 0
-//		if(intakeSpeed < 0 && IntakeUltrasonic.GetRangeInches() < consts::MIN_DISTANCE_TO_CUBE)
-//		{
-//			intakeSpeed = 0;
-//		}
-		RightIntakeMotor.Set(intakeSpeed);
-		LeftIntakeMotor.Set(-0.75 * intakeSpeed);
-	}
+//	if(intakeSpeed != 0)
+//	{
+//		// If you're spinning the intaking a cube, but it is already within the intake, set the speed to 0
+////		if(intakeSpeed < 0 && IntakeUltrasonic.GetRangeInches() < consts::MIN_DISTANCE_TO_CUBE)
+////		{
+////			intakeSpeed = 0;
+////		}
+//		RightIntakeMotor.Set(intakeSpeed);
+//		LeftIntakeMotor.Set(-0.75 * intakeSpeed);
+//	}
 
 	// If the robot isn't using variable intake control, use the B button to intake cubes.
 	// The X button overrides the IntakeUltrasonic's safety feature
 //	else if((OperatorController.GetXButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) ||
 //			OperatorController.GetBButton())
-	else if(OperatorController.GetBButton())
+//	else if(OperatorController.GetXButton())
+//	{
+//		// Use the X button to eject at half speed
+//		double speed = consts::INTAKE_SPEED / 2;
+//
+//		RightIntakeMotor.Set(-speed);
+//		LeftIntakeMotor.Set(speed);
+//	}
+	if(OperatorController.GetBButton())
 	{
 		RightIntakeMotor.Set(consts::INTAKE_SPEED);
-		LeftIntakeMotor.Set(-0.75 * consts::INTAKE_SPEED);
-	}
-	else if(OperatorController.GetXButton())
-	{
-		// Use the X button to eject at half speed
-		double speed = consts::INTAKE_SPEED / 2;
-		
-		RightIntakeMotor.Set(-speed);
-		LeftIntakeMotor.Set(speed);
+		LeftIntakeMotor.Set(-consts::INTAKE_SPEED);
 	}
 	else if(OperatorController.GetAButton())
 	{
@@ -279,25 +279,17 @@ void Robot::Intake()
 		RightIntakeMotor.Set(0);
 		LeftIntakeMotor.Set(0);
 	}
-}
 
-void Robot::Climb()
-{
-	// Use the y button to climb
-	if(OperatorController.GetYButton())
+	if(OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
-		ClimbMotor.Set(1);
+		LeftSolenoid.Set(DoubleSolenoid::Value::kReverse);
+		RightSolenoid.Set(DoubleSolenoid::Value::kReverse);
 	}
-	else if(OperatorController.GetStartButton())
+	else if(OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
-		ClimbMotor.Set(-1);
+		LeftSolenoid.Set(DoubleSolenoid::Value::kForward);
+		RightSolenoid.Set(DoubleSolenoid::Value::kForward);
 	}
-	else
-	{
-		ClimbMotor.Set(0);
-	}
-
-	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 }
 
 bool Robot::IsLinkageFreeToMove(double motorSpeed)
@@ -340,6 +332,5 @@ void Robot::TeleopPeriodic()
 	Drive();
 	ManualElevator();
 	Intake();
-	Climb();
 	Linkage();
 }

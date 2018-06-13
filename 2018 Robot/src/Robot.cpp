@@ -7,7 +7,6 @@ Robot::Robot() :
 	BackLeftMotor(4),
 	LinkageMotor(5),
 	RightIntakeMotor(6),
-	ClimbMotor(7),
 	RightElevatorMotor(8),
 	LeftElevatorMotor(0), //Extra elevator Talon is wired on a PWM channel
 	LeftIntakeMotor(9),
@@ -18,6 +17,9 @@ Robot::Robot() :
 	OperatorController(1),
 	IntakeUltrasonic(1, 0),
 	AngleSensors(SPI::Port::kMXP, SPI::kOnboardCS0),
+
+	LeftSolenoid(0),
+	RightSolenoid(1),
 
 	ElevatorPID(&RightElevatorMotor, &LeftElevatorMotor),
 	AnglePIDOut(DriveTrain),
