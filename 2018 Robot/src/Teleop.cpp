@@ -115,8 +115,7 @@ void Robot::ManualElevator()
 
 	double elevatorSpeed;
 
-	bool overridesBeingPressed = OperatorController.GetBumper(GenericHID::kLeftHand) &&
-			OperatorController.GetBumper(GenericHID::kRightHand);
+	bool overridesBeingPressed = OperatorController.GetStartButton();
 //	bool rightBumperJustReleased = m_prevRBumperState && !OperatorController.GetBumper(GenericHID::kRightHand);
 //	bool leftBumperJustReleased = m_prevLBumperState && !OperatorController.GetBumper(GenericHID::kLeftHand);
 //	bool overridesJustReleased = ( (leftBumperJustReleased && !OperatorController.GetBumper(GenericHID::kRightHand)) ||
