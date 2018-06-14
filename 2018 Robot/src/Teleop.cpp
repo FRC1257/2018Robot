@@ -162,9 +162,6 @@ void Robot::ManualElevator()
 	SmartDashboard::PutBoolean("OverridesReleased", overridesJustReleased);
 	SmartDashboard::PutNumber("Elevator Height", ElevatorPID.PIDGet());
 
-	m_prevRBumperState = OperatorController.GetBumper(GenericHID::kRightHand);
-	m_prevLBumperState = OperatorController.GetBumper(GenericHID::kLeftHand);
-
 //	SmartDashboard::PutBoolean("Left Released", leftBumperJustReleased);
 //	SmartDashboard::PutBoolean("Right Released", rightBumperJustReleased);
 }
@@ -239,16 +236,16 @@ void Robot::Intake()
 {
 	// Use the Right Y-axis for variable intake speed
 	double intakeSpeed = applyDeadband(OperatorController.GetY(GenericHID::kRightHand));
-//	if(intakeSpeed != 0)
-//	{
-//		// If you're spinning the intaking a cube, but it is already within the intake, set the speed to 0
-////		if(intakeSpeed < 0 && IntakeUltrasonic.GetRangeInches() < consts::MIN_DISTANCE_TO_CUBE)
-////		{
-////			intakeSpeed = 0;
-////		}
-//		RightIntakeMotor.Set(intakeSpeed);
-//		LeftIntakeMotor.Set(-0.75 * intakeSpeed);
-//	}
+	if(intakeSpeed != 0)
+	{
+		// If you're spinning the intaking a cube, but it is already within the intake, set the speed to 0
+//		if(intakeSpeed < 0 && IntakeUltrasonic.GetRangeInches() < consts::MIN_DISTANCE_TO_CUBE)
+//		{
+//			intakeSpeed = 0;
+//		}
+		RightIntakeMotor.Set(intakeSpeed);
+		LeftIntakeMotor.Set(-0.75 * intakeSpeed);
+	}
 
 	// If the robot isn't using variable intake control, use the B button to intake cubes.
 	// The X button overrides the IntakeUltrasonic's safety feature
@@ -291,36 +288,6 @@ void Robot::Intake()
 	}
 }
 
-bool Robot::IsLinkageFreeToMove(double motorSpeed)
-{
-	// If the motor has reached a limit switch and wants to move further, it isn't free to move
-	//if((motorSpeed > 0 && LinkageMotor.GetSelectedSensorPosition(0)) || (motorSpeed > 0 && LinkageMotor.GetSelectedSensorPosition(1)))
-	if(false)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
-}
-
-void Robot::Linkage()
-{
-
-	// Use the left y-axis to do the linkage
-	double motorSpeed = -OperatorController.GetY(GenericHID::JoystickHand::kLeftHand);
-
-	if(IsLinkageFreeToMove(motorSpeed))
-	{
-		LinkageMotor.Set(motorSpeed);
-	}
-	else
-	{
-		LinkageMotor.Set(0);
-	}
-}
-
 void Robot::TeleopInit()
 {
 	StopCurrentProcesses();
@@ -331,5 +298,4 @@ void Robot::TeleopPeriodic()
 	Drive();
 	ManualElevator();
 	Intake();
-	Linkage();
 }

@@ -56,7 +56,6 @@ private:
 	WPI_TalonSRX FrontRightMotor;
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX BackLeftMotor;
-	WPI_TalonSRX LinkageMotor;
 	WPI_TalonSRX RightIntakeMotor;
 	WPI_TalonSRX RightElevatorMotor;
 	Talon LeftElevatorMotor;
@@ -88,8 +87,6 @@ private:
 	bool m_isElevatorLowering;
 	bool m_isElevatorInAutoMode;
 	int m_targetElevatorStep;
-	bool m_prevRBumperState;
-	bool m_prevLBumperState;
 
 public:
 	// Constructor and virtual functions
@@ -132,13 +129,10 @@ public:
 	void Drive();
 	void Elevator();
 	void ManualElevator();
-	void Climb();
 	void Intake();
-	void Linkage();
 
 	// Safety Functions
 	bool IsElevatorTooHigh();
-	bool IsLinkageFreeToMove(double motorSpeed);
 
 	// Automatic elevator functionality
 	double GetClosestStepNumber();
@@ -153,9 +147,7 @@ public:
 	void PIDElevatorTest();
 	void ManualElevatorTest();
 	void AutoElevatorTest();
-	void LinkageTest();
 	void IntakeTest();
-	void ClimbTest();
 	void CurrentTest();
 	void RunMotorsTestFor(int numberOfSeconds);
 

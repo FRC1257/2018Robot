@@ -55,7 +55,6 @@ void Robot::TeleopTest()
 	}
 	if(SmartDashboard::GetBoolean("Manual Elevator", 0)) ManualElevatorTest();
 	if(SmartDashboard::GetBoolean("PID Elevator", 0)) PIDElevatorTest();
-	if(SmartDashboard::GetBoolean("Linkage", 0)) LinkageTest();
 	if(SmartDashboard::GetBoolean("Intake", 0)) IntakeTest();
 }
 
@@ -505,12 +504,6 @@ void Robot::AutoElevatorTest()
 		// ElevatorMotors reset to 0
 		RightElevatorMotor.Set(0);
 		LeftElevatorMotor.Set(0);
-}
-
-void Robot::LinkageTest()
-{
-	// Use the left y-axis to do the linkage
-	LinkageMotor.Set(OperatorController.GetY(GenericHID::JoystickHand::kLeftHand));
 }
 
 void Robot::IntakeTest()

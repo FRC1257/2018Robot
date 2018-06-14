@@ -5,7 +5,6 @@ Robot::Robot() :
 	FrontRightMotor(2),
 	FrontLeftMotor(3),
 	BackLeftMotor(4),
-	LinkageMotor(5),
 	RightIntakeMotor(6),
 	RightElevatorMotor(8),
 	LeftElevatorMotor(0), //Extra elevator Talon is wired on a PWM channel
@@ -18,8 +17,8 @@ Robot::Robot() :
 	IntakeUltrasonic(1, 0),
 	AngleSensors(SPI::Port::kMXP, SPI::kOnboardCS0),
 
-	LeftSolenoid(0),
-	RightSolenoid(1),
+	LeftSolenoid(0, 1),
+	RightSolenoid(2, 3),
 
 	ElevatorPID(&RightElevatorMotor, &LeftElevatorMotor),
 	AnglePIDOut(DriveTrain),
@@ -30,9 +29,7 @@ Robot::Robot() :
 	ElevatorPIDController(0.25, 0., 0., ElevatorPID, ElevatorPID),
 	m_isElevatorLowering(false),
 	m_isElevatorInAutoMode(false),
-	m_targetElevatorStep(0),
-	m_prevRBumperState(0),
-	m_prevLBumperState(0)
+	m_targetElevatorStep(0)
 {
 	AutoLocationChooser = new SendableChooser<consts::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<consts::AutoObjective>();
@@ -50,7 +47,6 @@ void Robot::RobotInit()
 {
 	StopCurrentProcesses();
 	RightElevatorMotor.SetSelectedSensorPosition(0, consts::PID_LOOP_ID, consts::TALON_TIMEOUT_MS);
-	LinkageMotor.SetNeutralMode(Brake);
 	RightElevatorMotor.SetNeutralMode(Brake);
 	RightIntakeMotor.SetNeutralMode(Brake);
 	LeftIntakeMotor.SetNeutralMode(Brake);
@@ -78,8 +74,6 @@ void Robot::RobotInit()
 //	RightElevatorMotor.EnableCurrentLimit(true);
 
 	// Linkage and Elevator Setup
-	LinkageMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_X, consts::TIMEOUT_MS);
-	LinkageMotor.SetSensorPhase(true);
 
 	RightElevatorMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, consts::PID_LOOP_X, consts::TIMEOUT_MS);
 	RightElevatorMotor.SetSensorPhase(true);

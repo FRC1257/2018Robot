@@ -33,9 +33,7 @@ void Robot::DisabledInit()
 	SmartDashboard::PutBoolean("Full Elevator", 0);
 	SmartDashboard::PutBoolean("Manual Elevator", 0);
 	SmartDashboard::PutBoolean("PID Elevator", 0);
-	SmartDashboard::PutBoolean("Linkage", 0);
 	SmartDashboard::PutBoolean("Intake", 0);
-	SmartDashboard::PutBoolean("Climb", 0);
 
 	SmartDashboard::PutBoolean("Toggle Elevator Safety", 0);
 }
@@ -123,9 +121,7 @@ void Robot::ZeroMotors()
 	FrontRightMotor.Set(0);
 	FrontLeftMotor.Set(0);
 	BackLeftMotor.Set(0);
-	LinkageMotor.Set(0);
 	RightIntakeMotor.Set(0);
-	ClimbMotor.Set(0);
 	RightElevatorMotor.Set(0);
 	LeftElevatorMotor.Set(0);
 	LeftIntakeMotor.Set(0);
