@@ -57,9 +57,10 @@ private:
 	WPI_TalonSRX FrontLeftMotor;
 	WPI_TalonSRX BackLeftMotor;
 	WPI_TalonSRX RightIntakeMotor;
-	WPI_TalonSRX RightElevatorMotor;
-	Talon LeftElevatorMotor;
 	WPI_TalonSRX LeftIntakeMotor;
+	WPI_TalonSRX RightElevatorMotor;
+	WPI_TalonSRX LeftElevatorMotor;
+	WPI_TalonSRX LinkageMotor;
 	SpeedControllerGroup LeftMotors;
 	SpeedControllerGroup RightMotors;
 	DifferentialDrive DriveTrain;
@@ -130,6 +131,7 @@ public:
 	void Elevator();
 	void ManualElevator();
 	void Intake();
+	void Linkage();
 
 	// Safety Functions
 	bool IsElevatorTooHigh();
@@ -148,6 +150,7 @@ public:
 	void ManualElevatorTest();
 	void AutoElevatorTest();
 	void IntakeTest();
+	void LinkageTest();
 	void CurrentTest();
 	void RunMotorsTestFor(int numberOfSeconds);
 

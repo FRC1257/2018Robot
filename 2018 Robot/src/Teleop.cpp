@@ -244,7 +244,7 @@ void Robot::Intake()
 //			intakeSpeed = 0;
 //		}
 		RightIntakeMotor.Set(intakeSpeed);
-		LeftIntakeMotor.Set(-0.75 * intakeSpeed);
+		LeftIntakeMotor.Set(-intakeSpeed);
 	}
 
 	// If the robot isn't using variable intake control, use the B button to intake cubes.
@@ -288,6 +288,13 @@ void Robot::Intake()
 	}
 }
 
+void Robot::Linkage()
+{
+	// Use the left y-axis to do the linkage
+	double motorSpeed = -OperatorController.GetY(GenericHID::JoystickHand::kLeftHand);
+	LinkageMotor.Set(motorSpeed);
+}
+
 void Robot::TeleopInit()
 {
 	StopCurrentProcesses();
@@ -298,4 +305,5 @@ void Robot::TeleopPeriodic()
 	Drive();
 	ManualElevator();
 	Intake();
+	Linkage();
 }

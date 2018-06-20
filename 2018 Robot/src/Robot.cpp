@@ -6,9 +6,10 @@ Robot::Robot() :
 	FrontLeftMotor(3),
 	BackLeftMotor(4),
 	RightIntakeMotor(6),
-	RightElevatorMotor(8),
-	LeftElevatorMotor(0), //Extra elevator Talon is wired on a PWM channel
 	LeftIntakeMotor(9),
+	RightElevatorMotor(8),
+	LeftElevatorMotor(0),
+	LinkageMotor(10),
 	LeftMotors(FrontLeftMotor, BackLeftMotor),
 	RightMotors(FrontRightMotor, BackRightMotor),
 	DriveTrain(LeftMotors, RightMotors),
