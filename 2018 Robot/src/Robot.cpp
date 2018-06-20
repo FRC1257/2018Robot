@@ -18,9 +18,6 @@ Robot::Robot() :
 	IntakeUltrasonic(1, 0),
 	AngleSensors(SPI::Port::kMXP, SPI::kOnboardCS0),
 
-	LeftSolenoid(0, 1),
-	RightSolenoid(2, 3),
-
 	ElevatorPID(&RightElevatorMotor, &LeftElevatorMotor),
 	AnglePIDOut(DriveTrain),
 	DistancePID(FrontLeftMotor, DriveTrain),

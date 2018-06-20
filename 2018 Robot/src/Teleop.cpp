@@ -275,17 +275,6 @@ void Robot::Intake()
 		RightIntakeMotor.Set(0);
 		LeftIntakeMotor.Set(0);
 	}
-
-	if(OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
-	{
-		LeftSolenoid.Set(DoubleSolenoid::Value::kReverse);
-		RightSolenoid.Set(DoubleSolenoid::Value::kReverse);
-	}
-	else if(OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
-	{
-		LeftSolenoid.Set(DoubleSolenoid::Value::kForward);
-		RightSolenoid.Set(DoubleSolenoid::Value::kForward);
-	}
 }
 
 void Robot::Linkage()
