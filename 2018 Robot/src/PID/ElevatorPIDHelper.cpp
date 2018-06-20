@@ -1,7 +1,7 @@
 #include <PID/ElevatorPIDHelper.h>
 #include <Robot.h>
 
-ElevatorPIDHelper::ElevatorPIDHelper(WPI_TalonSRX* TalonWithEncoder, Talon* FollowerMotor) :
+ElevatorPIDHelper::ElevatorPIDHelper(WPI_TalonSRX* TalonWithEncoder, WPI_TalonSRX* FollowerMotor) :
 	m_TalonWithEncoder(TalonWithEncoder),
 	m_FollowerMotor(FollowerMotor)
 {
