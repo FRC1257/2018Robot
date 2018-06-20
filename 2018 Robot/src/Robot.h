@@ -69,6 +69,9 @@ private:
 	StabilizedUltrasonic IntakeUltrasonic;
 	AngleSensorGroup AngleSensors;
 
+	DoubleSolenoid LeftSolenoid;
+	DoubleSolenoid RightSolenoid;
+
 	ElevatorPIDHelper ElevatorPID;
 	AnglePIDOutput AnglePIDOut;
 	DistancePIDHelper DistancePID;
