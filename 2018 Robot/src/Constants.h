@@ -76,8 +76,7 @@ namespace consts
 	// Intake Constants
 	constexpr double MIN_DISTANCE_TO_CUBE = 9.0;
 	constexpr double INTAKE_SPEED = 0.80;
-	constexpr double INTAKE_SPEED_WHILE_TURNING = 0.5;
-	constexpr double RESTING_INTAKE_SPEED = 0.05;
+	constexpr double RESTING_INTAKE_SPEED = INTAKE_SPEED * 3.0 / 4.0;
 }
 
 #endif

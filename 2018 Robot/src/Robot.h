@@ -66,7 +66,6 @@ private:
 	DifferentialDrive DriveTrain;
 	XboxController DriveController;
 	XboxController OperatorController;
-	StabilizedUltrasonic IntakeUltrasonic;
 	AngleSensorGroup AngleSensors;
 
 	DoubleSolenoid LeftSolenoid;

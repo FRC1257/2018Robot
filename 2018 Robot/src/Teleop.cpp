@@ -234,47 +234,8 @@ void Robot::Elevator()
 
 void Robot::Intake()
 {
-	// Use the Right Y-axis for variable intake speed
-	double intakeSpeed = applyDeadband(OperatorController.GetY(GenericHID::kRightHand));
-	if(intakeSpeed != 0)
-	{
-		// If you're spinning the intaking a cube, but it is already within the intake, set the speed to 0
-//		if(intakeSpeed < 0 && IntakeUltrasonic.GetRangeInches() < consts::MIN_DISTANCE_TO_CUBE)
-//		{
-//			intakeSpeed = 0;
-//		}
-		RightIntakeMotor.Set(intakeSpeed);
-		LeftIntakeMotor.Set(-intakeSpeed);
-	}
-
-	// If the robot isn't using variable intake control, use the B button to intake cubes.
-	// The X button overrides the IntakeUltrasonic's safety feature
-//	else if((OperatorController.GetXButton() && IntakeUltrasonic.GetRangeInches() > consts::MIN_DISTANCE_TO_CUBE) ||
-//			OperatorController.GetBButton())
-//	else if(OperatorController.GetXButton())
-//	{
-//		// Use the X button to eject at half speed
-//		double speed = consts::INTAKE_SPEED / 2;
-//
-//		RightIntakeMotor.Set(-speed);
-//		LeftIntakeMotor.Set(speed);
-//	}
-	if(OperatorController.GetBButton())
-	{
-		RightIntakeMotor.Set(consts::INTAKE_SPEED);
-		LeftIntakeMotor.Set(-consts::INTAKE_SPEED);
-	}
-	else if(OperatorController.GetAButton())
-	{
-		// Use the A button to eject
-		RightIntakeMotor.Set(-consts::INTAKE_SPEED);
-		LeftIntakeMotor.Set(consts::INTAKE_SPEED);
-	}		
-	else
-	{
-		RightIntakeMotor.Set(0);
-		LeftIntakeMotor.Set(0);
-	}
+	if(LeftSolenoid.Get() == DoubleSolenoid::Value::kReverse) LeftIntakeMotor.Set(consts::RESTING_INTAKE_SPEED);
+	if(RightSolenoid.Get() == DoubleSolenoid::Value::kReverse) RightIntakeMotor.Set(-consts::RESTING_INTAKE_SPEED);
 
 	if(OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
@@ -285,6 +246,29 @@ void Robot::Intake()
 	{
 		LeftSolenoid.Set(DoubleSolenoid::Value::kForward);
 		RightSolenoid.Set(DoubleSolenoid::Value::kForward);
+
+		RightIntakeMotor.Set(-consts::INTAKE_SPEED);
+		LeftIntakeMotor.Set(consts::INTAKE_SPEED);
+	}
+	else if(OperatorController.GetBButton())
+	{
+		RightIntakeMotor.Set(consts::INTAKE_SPEED);
+		LeftIntakeMotor.Set(-consts::INTAKE_SPEED);
+	}
+	else if(OperatorController.GetAButton())
+	{
+		RightIntakeMotor.Set(-consts::INTAKE_SPEED);
+		LeftIntakeMotor.Set(consts::INTAKE_SPEED);
+	}		
+	else
+	{
+		// Use the Right Y-axis for variable intake speed
+		double intakeSpeed = applyDeadband(OperatorController.GetY(GenericHID::kRightHand));
+		if(intakeSpeed != 0)
+		{
+			RightIntakeMotor.Set(intakeSpeed);
+			LeftIntakeMotor.Set(-intakeSpeed);
+		}
 	}
 }
 
