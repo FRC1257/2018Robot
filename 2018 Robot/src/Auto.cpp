@@ -326,7 +326,10 @@ void Robot::EjectCube(double intakeSpeed)
 	SmartDashboard::PutString("Auto Status", "Ejecting Cube...");
 	RightIntakeMotor.Set(-intakeSpeed);
 	LeftIntakeMotor.Set(intakeSpeed);
-	Wait(1.0);
+	Wait(consts::INTAKE_WAIT_TIME);
+	LeftSolenoid.Set(DoubleSolenoid::Value::kReverse);
+	RightSolenoid.Set(DoubleSolenoid::Value::kReverse);
+	Wait(1.0 - consts::INTAKE_WAIT_TIME);
 	RightIntakeMotor.Set(0);
 	LeftIntakeMotor.Set(0);
 	SmartDashboard::PutString("Auto Status", "Ejected Cube");

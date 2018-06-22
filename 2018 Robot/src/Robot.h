@@ -87,6 +87,7 @@ private:
 	bool m_isElevatorLowering;
 	bool m_isElevatorInAutoMode;
 	int m_targetElevatorStep;
+	Timer EjectTimer;
 
 public:
 	// Constructor and virtual functions

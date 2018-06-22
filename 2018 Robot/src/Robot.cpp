@@ -29,7 +29,8 @@ Robot::Robot() :
 	ElevatorPIDController(0.25, 0., 0., ElevatorPID, ElevatorPID),
 	m_isElevatorLowering(false),
 	m_isElevatorInAutoMode(false),
-	m_targetElevatorStep(0)
+	m_targetElevatorStep(0),
+	EjectTimer(0)
 {
 	AutoLocationChooser = new SendableChooser<consts::AutoPosition>();
 	AutoObjectiveChooser = new SendableChooser<consts::AutoObjective>();

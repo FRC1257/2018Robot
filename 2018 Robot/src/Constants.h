@@ -77,6 +77,7 @@ namespace consts
 	constexpr double MIN_DISTANCE_TO_CUBE = 9.0;
 	constexpr double INTAKE_SPEED = 0.80;
 	constexpr double RESTING_INTAKE_SPEED = INTAKE_SPEED * 3.0 / 4.0;
+	constexpr double INTAKE_WAIT_TIME = 0.2; //Time between pushing the cube out and opening the claw
 }
 
 #endif

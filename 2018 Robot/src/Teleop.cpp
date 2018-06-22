@@ -244,11 +244,16 @@ void Robot::Intake()
 	}
 	else if(OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
-		LeftSolenoid.Set(DoubleSolenoid::Value::kForward);
-		RightSolenoid.Set(DoubleSolenoid::Value::kForward);
-
 		RightIntakeMotor.Set(-consts::INTAKE_SPEED);
 		LeftIntakeMotor.Set(consts::INTAKE_SPEED);
+
+//		if(!EjectTimer.m_running) EjectTimer.Start();
+//
+//		if(EjectTimer.Get() > consts::INTAKE_WAIT_TIME)
+//		{
+			LeftSolenoid.Set(DoubleSolenoid::Value::kForward);
+			RightSolenoid.Set(DoubleSolenoid::Value::kForward);
+//		}
 	}
 	else if(OperatorController.GetBButton())
 	{
@@ -270,6 +275,12 @@ void Robot::Intake()
 			LeftIntakeMotor.Set(-intakeSpeed);
 		}
 	}
+
+//	if(!OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
+//	{
+//		EjectTimer.Stop();
+//		EjectTimer.Reset();
+//	}
 }
 
 void Robot::Linkage()
