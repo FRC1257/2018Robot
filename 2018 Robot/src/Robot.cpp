@@ -17,8 +17,8 @@ Robot::Robot() :
 	OperatorController(1),
 	AngleSensors(SPI::Port::kMXP, SPI::kOnboardCS0),
 
-	LeftSolenoid(0, 1),
-	RightSolenoid(2, 3),
+	LeftSolenoid(1, 0),
+	RightSolenoid(3, 2),
 
 	ElevatorPID(&RightElevatorMotor, &LeftElevatorMotor),
 	AnglePIDOut(DriveTrain),

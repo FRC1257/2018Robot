@@ -234,15 +234,12 @@ void Robot::Elevator()
 
 void Robot::Intake()
 {
-	if(LeftSolenoid.Get() == DoubleSolenoid::Value::kReverse) LeftIntakeMotor.Set(consts::RESTING_INTAKE_SPEED);
-	if(RightSolenoid.Get() == DoubleSolenoid::Value::kReverse) RightIntakeMotor.Set(-consts::RESTING_INTAKE_SPEED);
-
-	if(OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
+	if(OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
 	{
 		LeftSolenoid.Set(DoubleSolenoid::Value::kReverse);
 		RightSolenoid.Set(DoubleSolenoid::Value::kReverse);
 	}
-	else if(OperatorController.GetBumper(GenericHID::JoystickHand::kRightHand))
+	else if(OperatorController.GetBumper(GenericHID::JoystickHand::kLeftHand))
 	{
 		RightIntakeMotor.Set(-consts::INTAKE_SPEED);
 		LeftIntakeMotor.Set(consts::INTAKE_SPEED);
@@ -269,10 +266,15 @@ void Robot::Intake()
 	{
 		// Use the Right Y-axis for variable intake speed
 		double intakeSpeed = applyDeadband(OperatorController.GetY(GenericHID::kRightHand));
-		if(intakeSpeed != 0)
+		RightIntakeMotor.Set(intakeSpeed);
+		LeftIntakeMotor.Set(-intakeSpeed);
+
+		if(intakeSpeed == 0.0)
 		{
-			RightIntakeMotor.Set(intakeSpeed);
-			LeftIntakeMotor.Set(-intakeSpeed);
+//			if(LeftSolenoid.Get() == DoubleSolenoid::Value::kForward)
+//				LeftIntakeMotor.Set(-consts::RESTING_INTAKE_SPEED);
+//			if(RightSolenoid.Get() == DoubleSolenoid::Value::kForward)
+//				RightIntakeMotor.Set(consts::RESTING_INTAKE_SPEED);
 		}
 	}
 
@@ -293,6 +295,8 @@ void Robot::Linkage()
 void Robot::TeleopInit()
 {
 	StopCurrentProcesses();
+	LeftSolenoid.Set(DoubleSolenoid::Value::kForward);
+	RightSolenoid.Set(DoubleSolenoid::Value::kForward);
 }
 
 void Robot::TeleopPeriodic()

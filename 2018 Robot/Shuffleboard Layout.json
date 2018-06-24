@@ -1,5 +1,5 @@
 {
-  "dividerPosition": 0.2323943661971831,
+  "dividerPosition": 0.24208860759493672,
   "tabPane": [
     {
       "title": "Maintain Angle Tuning",
@@ -14,7 +14,7 @@
           "0,0": {
             "size": [
               2,
-              4
+              3
             ],
             "content": {
               "_type": "PID Controller",
@@ -25,7 +25,7 @@
           "2,2": {
             "size": [
               2,
-              2
+              1
             ],
             "content": {
               "_type": "Toggle Button",
@@ -44,10 +44,10 @@
               "_title": "Angle Sensor"
             }
           },
-          "0,4": {
+          "0,3": {
             "size": [
               2,
-              2
+              1
             ],
             "content": {
               "_type": "Toggle Button",
@@ -55,7 +55,7 @@
               "_title": "SmartDashboard/Enable Test Distance Output"
             }
           },
-          "0,6": {
+          "0,4": {
             "size": [
               2,
               1
@@ -66,10 +66,10 @@
               "_title": "SmartDashboard/Test Maintain Output"
             }
           },
-          "2,4": {
+          "2,3": {
             "size": [
               2,
-              2
+              1
             ],
             "content": {
               "_type": "Toggle Button",
@@ -88,7 +88,7 @@
               "_title": "SmartDashboard/Test Maintain"
             }
           },
-          "2,6": {
+          "2,4": {
             "size": [
               2,
               1
@@ -99,10 +99,10 @@
               "_title": "/SmartDashboard/Encoder R"
             }
           },
-          "4,5": {
+          "4,3": {
             "size": [
               2,
-              2
+              1
             ],
             "content": {
               "_type": "Toggle Button",
@@ -113,13 +113,35 @@
           "4,0": {
             "size": [
               5,
-              5
+              3
             ],
             "content": {
               "_type": "Graph",
               "_source0": "network_table:///SmartDashboard/Angle Sensor",
               "_title": "/SmartDashboard/Angle Sensor",
               "Visible time": 30.0
+            }
+          },
+          "9,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///LiveWindow/Ungrouped/DoubleSolenoid[0,0]",
+              "_title": "/LiveWindow/Ungrouped/DoubleSolenoid[0,0]"
+            }
+          },
+          "9,3": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///LiveWindow/Ungrouped/DoubleSolenoid[0,2]",
+              "_title": "/LiveWindow/Ungrouped/DoubleSolenoid[0,2]"
             }
           }
         }
@@ -250,7 +272,7 @@
           "2,0": {
             "size": [
               3,
-              4
+              3
             ],
             "content": {
               "_type": "Graph",
@@ -488,7 +510,7 @@
           "3,2": {
             "size": [
               2,
-              2
+              1
             ],
             "content": {
               "_type": "Graph",
@@ -500,7 +522,7 @@
           "0,2": {
             "size": [
               3,
-              2
+              1
             ],
             "content": {
               "_type": "Graph",
@@ -634,7 +656,7 @@
               "_title": "/SmartDashboard/Auto Status"
             }
           },
-          "5,1": {
+          "5,0": {
             "size": [
               1,
               1
@@ -659,7 +681,7 @@
               "showVectors": true
             }
           },
-          "5,2": {
+          "5,1": {
             "size": [
               1,
               1
@@ -670,7 +692,7 @@
               "_title": "SmartDashboard/Left Distance"
             }
           },
-          "5,3": {
+          "5,2": {
             "size": [
               1,
               1
@@ -784,7 +806,7 @@
               "_title": "SmartDashboard/Front Right Encoder"
             }
           },
-          "0,2": {
+          "0,1": {
             "size": [
               1,
               2
@@ -795,7 +817,7 @@
               "_title": "LiveWindow/Ungrouped/PIDController[1]"
             }
           },
-          "1,2": {
+          "1,1": {
             "size": [
               1,
               2
@@ -838,14 +860,7 @@
             "content": {
               "_type": "Camera Stream",
               "_source0": "camera_server://Axis Camera",
-              "_title": "Axis Camera",
-              "showControls": true,
-              "showCrosshair": true,
-              "crosshairColor": "#FFFFFFFF",
-              "compression": 0.0,
-              "fps": -1,
-              "imageWidth": -1,
-              "imageHeight": -1
+              "_title": "Axis Camera"
             }
           },
           "4,0": {
@@ -987,13 +1002,14 @@
           "2,1": {
             "size": [
               3,
-              3
+              2
             ],
             "content": {
               "_type": "Graph",
               "_source0": "network_table:///SmartDashboard/Elevator Height",
               "_title": "/SmartDashboard/Elevator Height",
-              "Visible time": 30.0
+              "Visible time": 30.0,
+              "SmartDashboard/Elevator Height visible": true
             }
           }
         }
@@ -1121,7 +1137,7 @@
               "_title": "/SmartDashboard/Setpoint Data"
             }
           },
-          "3,3": {
+          "3,2": {
             "size": [
               3,
               1
